@@ -5062,5 +5062,185 @@
   "600 N Central Ave, Beach, ND 58621, USA": {
     "lat": 46.9187988,
     "lng": -104.0058443
+  },
+  "1021 11TH St N, Wahpeton, ND 58075-3799, USA": {
+    "lat": 46.274361,
+    "lng": -96.6170999
+  },
+  "320 W 24Th St, Kearney, NE 68845-5331, USA": {
+    "lat": 40.6996141,
+    "lng": -99.0856587
+  },
+  "193 Maple Ave, Keene, NH 03431-1602, USA": {
+    "lat": 42.9570102,
+    "lng": -72.3106914
+  },
+  "100 West St, Milford, NH 03055-4871, USA": {
+    "lat": 42.8283559,
+    "lng": -71.6587151
+  },
+  "61 Locust St, Dover, NH 03820-3753, USA": {
+    "lat": 43.1932635,
+    "lng": -70.8769826
+  },
+  "65 Maple St, Littleton, NH 03561-4718, USA": {
+    "lat": 44.3091111,
+    "lng": -71.7746997
+  },
+  "221 Morningside Ave, Union Beach, NJ 07735-3014, USA": {
+    "lat": 40.4407974,
+    "lng": -74.1738728
+  },
+  "809 Oxford St, Belvidere, NJ 07823-1798, USA": {
+    "lat": 40.8248272,
+    "lng": -75.0658713
+  },
+  "555 Chestnut St, Ridgefield, NJ 07657-1825, USA": {
+    "lat": 40.8308134,
+    "lng": -73.9987643
+  },
+  "225 Glenwild Ave, Bloomingdale, NJ 07403-1422, USA": {
+    "lat": 41.0214793,
+    "lng": -74.3380454
+  },
+  "5080 Atlantic Ave, Mays Landing, NJ 08330-2098, USA": {
+    "lat": 39.4475869,
+    "lng": -74.7115222
+  },
+  "510 Chestnut St, Roselle Park, NJ 07204-1928, USA": {
+    "lat": 40.6667604,
+    "lng": -74.2652731
+  },
+  "177 Main St, Southampton, NJ 08088-8874, USA": {
+    "lat": 39.9335075,
+    "lng": -74.747577
+  },
+  "346 Claremont Ave, Jersey City, NJ 07305-1634, USA": {
+    "lat": 40.713974,
+    "lng": -74.087317
+  },
+  "685 5Th St, Secaucus, NJ 07094-3004, USA": {
+    "lat": 40.7908131,
+    "lng": -74.0672667
+  },
+  "110 N 3Rd St, Millville, NJ 08332-3302, USA": {
+    "lat": 39.3964741,
+    "lng": -75.0357421
+  },
+  "53 Liberty Pl, Weehawken, NJ 07086-7099, USA": {
+    "lat": 40.7738633,
+    "lng": -74.0182396
+  },
+  "132 New Rd, Tabernacle, NJ 08088-8574, USA": {
+    "lat": 39.8488123,
+    "lng": -74.7079905
+  },
+  "315 Washington St, Hackettstown, NJ 07840-2235, USA": {
+    "lat": 40.8521373,
+    "lng": -74.829401
+  },
+  "50 Sargent Ave, Phillipsburg, NJ 08865-1520, USA": {
+    "lat": 40.6984572,
+    "lng": -75.1834467
+  },
+  "570 Grand Ave, Leonia, NJ 07605-2102, USA": {
+    "lat": 40.8712636,
+    "lng": -73.9871427
+  },
+  "1 Grand Tour, Highlands, NJ 07732-2039, USA": {
+    "lat": 40.391628,
+    "lng": -73.987954
+  },
+  "400 2Nd Ave, Garwood, NJ 07027-1023, USA": {
+    "lat": 40.654214,
+    "lng": -74.326365
+  },
+  "384 W Main St, Freehold, NJ 07728-2546, USA": {
+    "lat": 40.242532,
+    "lng": -74.30106
+  },
+  "490 Pulis Ave, Franklin Lakes, NJ 07417-1398, USA": {
+    "lat": 41.0205231,
+    "lng": -74.2030655
+  },
+  "143 Charlotte Pl, Englewood Cliffs, NJ 07632-2681, USA": {
+    "lat": 40.8760444,
+    "lng": -73.9565392
+  },
+  "25A Leshin Ln, Hightstown, NJ 08520-4000, USA": {
+    "lat": 40.2596765,
+    "lng": -74.5297765
+  },
+  "199 4Th Ave, East Orange, NJ 07017-4803, USA": {
+    "lat": 40.7667574,
+    "lng": -74.2006081
+  },
+  "25 Depew St, Dumont, NJ 07628-3601, USA": {
+    "lat": 40.9375251,
+    "lng": -73.9878773
+  },
+  "132 Thomas St, Cranford, NJ 07016-3134, USA": {
+    "lat": 40.6535016,
+    "lng": -74.2970809
+  },
+  "23 N Main St, Cranbury, NJ 08512-3257, USA": {
+    "lat": 40.3121991,
+    "lng": -74.519729
+  },
+  "135 Locust Ave, West Long Branch, NJ 07764-2302, USA": {
+    "lat": 40.288366,
+    "lng": -74.01762
+  },
+  "125 S Black Horse Pike, Mount Ephraim, NJ 08059-1799, USA": {
+    "lat": 39.8864871,
+    "lng": -75.0882036
+  },
+  "21 W Church St, Milltown, NJ 08850-1527, USA": {
+    "lat": 40.4521423,
+    "lng": -74.4405545
+  },
+  "300 John F Kennedy Dr, Middlesex, NJ 08846-1440, USA": {
+    "lat": 40.582092,
+    "lng": -74.495348
+  },
+  "137 Hartford Rd, Medford, NJ 08055-9516, USA": {
+    "lat": 39.9012302,
+    "lng": -74.8452522
+  },
+  "4567 US Highway 9, Howell, NJ 07731-3382, USA": {
+    "lat": 40.141304,
+    "lng": -74.2236729
+  },
+  "1980 Township Dr, Marlboro, NJ 07746-2298, USA": {
+    "lat": 40.327894,
+    "lng": -74.2657972
+  },
+  "2195 Riverton Rd, Cinnaminson, NJ 08077-3729, USA": {
+    "lat": 39.9879006,
+    "lng": -74.9801042
+  },
+  "318 Ward Ave, Bordentown, NJ 08505-2300, USA": {
+    "lat": 40.1519305,
+    "lng": -74.6897113
+  },
+  "3912 32Nd St, Union City, NJ 07087-2507, USA": {
+    "lat": 40.7695091,
+    "lng": -74.0270261
+  },
+  "6028 Broadway, West New York, NJ 07093-2808, USA": {
+    "lat": 40.7867663,
+    "lng": -74.0106167
+  },
+  "300 Rochelle Ave, Rochelle Park, NJ 07662-3915, USA": {
+    "lat": 40.905579,
+    "lng": -74.077016
+  },
+  "105 Summerhill Rd, Spotswood, NJ 08884-1263, USA": {
+    "lat": 40.3986728,
+    "lng": -74.3888742
+  },
+  "145 Grove St, Bay Head, NJ 08742-5091, USA": {
+    "lat": 40.0698627,
+    "lng": -74.0495275
   }
 }

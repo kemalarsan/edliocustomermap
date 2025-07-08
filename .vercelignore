@@ -1,0 +1,11 @@
+# Ignore authentication files
+login.html
+# Ignore development files
+localhost-*.html
+*.backup
+*.log
+*.xlsx
+*.py
+test*.html
+simple.html
+debug.html
