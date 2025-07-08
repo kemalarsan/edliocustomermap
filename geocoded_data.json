@@ -2098,5 +2098,153 @@
   "6576 Smiley Ave, Saint Louis, MO 63139-2425, USA": {
     "lat": 38.6067953,
     "lng": -90.3013459
+  },
+  "1508 Bopp Rd, Saint Louis, MO 63131-4137, USA": {
+    "lat": 38.6095626,
+    "lng": -90.4335207
+  },
+  "248 New Ballwin Rd, Ballwin, MO 63021-4720, USA": {
+    "lat": 38.584537,
+    "lng": -90.5569906
+  },
+  "1850 De La Salle Dr, Saint Louis, MO 63141-8661, USA": {
+    "lat": 38.6398101,
+    "lng": -90.4605099
+  },
+  "701 N Spring Ave, Saint Louis, MO 63108-3603, USA": {
+    "lat": 38.6421005,
+    "lng": -90.2351454
+  },
+  "5850 Eichelberger St, Saint Louis, MO 63109-3494, USA": {
+    "lat": 38.580867,
+    "lng": -90.2957539
+  },
+  "425 S Lindbergh Blvd, Saint Louis, MO 63131-2799, USA": {
+    "lat": 38.6491979,
+    "lng": -90.4074804
+  },
+  "1100 White Rd, Chesterfield, MO 63017-2976, USA": {
+    "lat": 38.6540022,
+    "lng": -90.5216352
+  },
+  "711 N Grand Blvd, Saint Louis, MO 63103-1010, USA": {
+    "lat": 38.6406611,
+    "lng": -90.2308262
+  },
+  "4235 S Compton Ave, Saint Louis, MO 63111-1129, USA": {
+    "lat": 38.5797217,
+    "lng": -90.2400569
+  },
+  "5421 Thekla Ave, Saint Louis, MO 63120-2513, USA": {
+    "lat": 38.695651,
+    "lng": -90.246066
+  },
+  "310 N 15Th St, Saint Louis, MO 63103-2378, USA": {
+    "lat": 38.6311247,
+    "lng": -90.2007479
+  },
+  "3017 N 13Th St, Saint Louis, MO 63107-3924, USA": {
+    "lat": 38.6539158,
+    "lng": -90.1965369
+  },
+  "5049 Fyler Ave, Saint Louis, MO 63139-1103, USA": {
+    "lat": 38.6003502,
+    "lng": -90.2753533
+  },
+  "6651 Gravois Ave, Saint Louis, MO 63116-1125, USA": {
+    "lat": 38.5722109,
+    "lng": -90.2836278
+  },
+  "2700 Davis St, Meridian, MS 39301-5707, USA": {
+    "lat": 32.362813,
+    "lng": -88.705286
+  },
+  "1217 Hattiesburg St, Jackson, MS 39209-7411, USA": {
+    "lat": 32.2972372,
+    "lng": -90.2203547
+  },
+  "1501 V F W Rd, Greenville, MS 38701-8361, USA": {
+    "lat": 33.3563083,
+    "lng": -91.0278509
+  },
+  "150 Florence Ave, Clarksdale, MS 38614-2720, USA": {
+    "lat": 34.2105294,
+    "lng": -90.5710139
+  },
+  "1585 Mannsdale Rd, Madison, MS 39110-8298, USA": {
+    "lat": 32.4802965,
+    "lng": -90.1504948
+  },
+  "223 N Browder St, Columbus, MS 39702-5202, USA": {
+    "lat": 33.4995242,
+    "lng": -88.3849447
+  },
+  "5202 Watkins Dr, Jackson, MS 39206-2632, USA": {
+    "lat": 32.3781745,
+    "lng": -90.192746
+  },
+  "100 Holly Dr, Jackson, MS 39206-6037, USA": {
+    "lat": 32.3540354,
+    "lng": -90.1559976
+  },
+  "1291 Crosby Rd, Cleveland, MS 38732-9798, USA": {
+    "lat": 33.761333,
+    "lng": -90.7639517
+  },
+  "1900 Grove St, Vicksburg, MS 39183-3105, USA": {
+    "lat": 32.350299,
+    "lng": -90.867402
+  },
+  "1605 E Reed Rd, Greenville, MS 38703-7230, USA": {
+    "lat": 33.3855466,
+    "lng": -91.0249679
+  },
+  "2502 Salome Church Rd, Charlotte, NC 28262-0451, USA": {
+    "lat": 35.3347397,
+    "lng": -80.718467
+  },
+  "2045 Suttle Ave, Charlotte, NC 28208-5235, USA": {
+    "lat": 35.2267742,
+    "lng": -80.8712017
+  },
+  "1058 Island Creek Rd, Lake Lure, NC 28746-0498, USA": {
+    "lat": 35.4077701,
+    "lng": -82.193078
+  },
+  "520 W Holding Ave, Wake Forest, NC 27587-2845, USA": {
+    "lat": 35.9740426,
+    "lng": -78.5251344
+  },
+  "1013 Eastwood Rd, Wilmington, NC 28403-1905, USA": {
+    "lat": 34.236146,
+    "lng": -77.845554
+  },
+  "5160 Packhouse Rd, Wilson, NC 27896-7920, USA": {
+    "lat": 35.7817244,
+    "lng": -77.9738273
+  },
+  "4512 Pope Rd, Durham, NC 27707-9726, USA": {
+    "lat": 35.9335721,
+    "lng": -78.9997
+  },
+  "3020 Ligon St, Raleigh, NC 27607-5308, USA": {
+    "lat": 35.789187,
+    "lng": -78.6909805
+  },
+  "1101 Buck Jones Rd, Raleigh, NC 27606-3324, USA": {
+    "lat": 35.7682254,
+    "lng": -78.739515
+  },
+  "1380 N Martin Luther King Jr Dr, Winston Salem, NC 27101-3035, USA": {
+    "lat": 36.1045039,
+    "lng": -80.243498
+  },
+  "107 S Driver St, Durham, NC 27703-4133, USA": {
+    "lat": 35.9852175,
+    "lng": -78.8772672
+  },
+  "13440 Lucia Riverbend Hwy, Mount Holly, NC 28120-9766, USA": {
+    "lat": 35.3594796,
+    "lng": -80.9877285
   }
 }
