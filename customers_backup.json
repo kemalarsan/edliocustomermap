@@ -1112,6 +1112,446 @@
     "state": "CA"
   },
   {
+    "name": "Glendale Adventist Academy",
+    "lat": 34.156121,
+    "lng": -118.22637,
+    "url": "https://www.glendaleacademy.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Corpus Christi School",
+    "lat": 37.814241,
+    "lng": -122.214061,
+    "url": "https://www.corpuschristischool.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Assumption School",
+    "lat": 37.7197143,
+    "lng": -122.1368453,
+    "url": "https://www.assumptionschool-sl.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Aquinas High School",
+    "lat": 34.1424664,
+    "lng": -117.2454376,
+    "url": "https://www.aquinashs.net",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "All Souls Catholic School",
+    "lat": 37.657277,
+    "lng": -122.4152816,
+    "url": "https://www.ssfallsoulsschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "All Hallows Academy",
+    "lat": 32.8331947,
+    "lng": -117.2517762,
+    "url": "https://www.allhallowsacademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Al-Arqam Islamic School & College Prep",
+    "lat": 38.5007857,
+    "lng": -121.4310363,
+    "url": "https://www.alarqamislamicschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Rose and Alex Pilibos Armenian School",
+    "lat": 34.101366,
+    "lng": -118.2984405,
+    "url": "https://www.pilibos.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Ribet Academy",
+    "lat": 34.1114016,
+    "lng": -118.2434314,
+    "url": "https://www.ribetacademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Holy Martyrs Ferrahian High School",
+    "lat": 34.166874,
+    "lng": -118.518454,
+    "url": "https://www.ferrahian.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Mater Dei High School",
+    "lat": 33.7260273,
+    "lng": -117.8837551,
+    "url": "https://www.materdei.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Junipero Serra High School",
+    "lat": 33.897087,
+    "lng": -118.3177227,
+    "url": "https://www.la-serrahs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "St. John Baptist de la Salle School",
+    "lat": 34.2648345,
+    "lng": -118.5113424,
+    "url": "https://www.sjbdls.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "American Martyrs School",
+    "lat": 33.8909249,
+    "lng": -118.405065,
+    "url": "https://www.americanmartyrsschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Holy Names High School",
+    "lat": 37.8394834,
+    "lng": -122.2308287,
+    "url": "https://www.hnhsoakland.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Holy Angels Elementary School",
+    "lat": 34.1309414,
+    "lng": -118.0444726,
+    "url": "https://www.holyangelsarcadia.net",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Highland Hall Waldorf School",
+    "lat": 34.2456813,
+    "lng": -118.5056871,
+    "url": "https://www.highlandhall.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "College Prep High School",
+    "lat": 33.7385588,
+    "lng": -116.9367544,
+    "url": "https://covidinfo.hemetusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Sequoia Union Elementary School",
+    "lat": 36.3766951,
+    "lng": -119.0374117,
+    "url": "https://www.sequoiaunion.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Thomas Edison Charter Academy",
+    "lat": 37.7544096,
+    "lng": -122.4260712,
+    "url": "https://www.teca-sf.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Lifeline Education Charter School",
+    "lat": 33.8755428,
+    "lng": -118.2147594,
+    "url": "https://www.lifelinecharterschool.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Our Lady of Refuge Catholic Church",
+    "lat": 33.79813,
+    "lng": -118.131513,
+    "url": "https://www.ourladyofrefuge.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Fortune School",
+    "lat": 38.5022015,
+    "lng": -121.4318552,
+    "url": "https://www.fortuneschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Slvusd Charter",
+    "lat": 37.0820771,
+    "lng": -122.0732893,
+    "url": "https://charter.slvusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Margaret M. Bloomfield High School",
+    "lat": 33.9802653,
+    "lng": -118.2302661,
+    "url": "https://www.bloomfieldhs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "ICEF View Park Preparatory Middle School",
+    "lat": 33.9939539,
+    "lng": -118.3311063,
+    "url": "https://vpms-old.icefps.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "ICEF View Park Preparatory Charter High School",
+    "lat": 33.990744,
+    "lng": -118.331121,
+    "url": "https://vphs-old.icefps.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "School of Extended Educational Options (SEEO)",
+    "lat": 34.062987,
+    "lng": -117.722276,
+    "url": "https://seeo.pusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alan Rowe College Prep",
+    "lat": 38.3815426,
+    "lng": -121.3992041,
+    "url": "https://www.alanrowecollegeprep.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Pinnacle Academy Charter",
+    "lat": 36.2089994,
+    "lng": -121.1328985,
+    "url": "https://www.pinnaclehs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "ICEF Innovation Los Angeles",
+    "lat": 33.997461,
+    "lng": -118.2916124,
+    "url": "https://iila-old.icefps.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Ephraim Williams College Prep Middle School",
+    "lat": 38.543789,
+    "lng": -121.4538419,
+    "url": "https://www.ephraimwilliamscollegeprep.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "William Lee College Prep",
+    "lat": 38.544382,
+    "lng": -121.45263,
+    "url": "https://www.williamleecollegeprep.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Kory Hunter Middle School",
+    "lat": 33.987395,
+    "lng": -118.247628,
+    "url": "https://www.koryhunterms.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Morgan Mckinzie High School",
+    "lat": 34.0357652,
+    "lng": -118.1879863,
+    "url": "https://www.mckinziehs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Marine - Innovation & Technology 6-12 Complex",
+    "lat": 34.2335153,
+    "lng": -118.3981235,
+    "url": "https://www.alliancemit.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Porterville Military Academy",
+    "lat": 36.0922053,
+    "lng": -119.037692,
+    "url": "https://pma.portervilleschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Child Development Centers - CDC",
+    "lat": 33.8616069,
+    "lng": -118.3610835,
+    "url": "https://cdc.rbusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Zion Lutheran School",
+    "lat": 34.5288833,
+    "lng": -117.3354492,
+    "url": "https://elementary.zionvv.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Calvary Chapel Junior High School",
+    "lat": 33.7018594,
+    "lng": -117.9131932,
+    "url": "https://www.ms.calvaryschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "IV Home School Academy",
+    "lat": 32.7929351,
+    "lng": -115.5821259,
+    "url": "https://www.ivhsa.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Capitol Collegiate",
+    "lat": 38.4813311,
+    "lng": -121.4923906,
+    "url": "https://www.capitolcollegiate.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "San Jose Charter Academy",
+    "lat": 34.0616542,
+    "lng": -117.9599668,
+    "url": "https://www.sanjosecharteracademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance College-Ready Middle Academy 12",
+    "lat": 33.9975196,
+    "lng": -118.272818,
+    "url": "https://www.crma12.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Susan & Eric Smidt Technology High School",
+    "lat": 34.0684326,
+    "lng": -118.2181789,
+    "url": "https://www.smidttech.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Nestor Language Academy Charter School",
+    "lat": 32.5705649,
+    "lng": -117.0827859,
+    "url": "https://nestor.sbusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "San Diego Global Vision Academy",
+    "lat": 32.7623975,
+    "lng": -117.1190728,
+    "url": "https://www.sdgva.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Ted K. Tajima High School",
+    "lat": 34.0635393,
+    "lng": -118.2612537,
+    "url": "https://www.tajimahigh.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Cindy & Bill Simon Technology Academy High School",
+    "lat": 33.9387043,
+    "lng": -118.2389232,
+    "url": "https://www.simontechnology.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Nuview Bridge Early College High School",
+    "lat": 33.8073623,
+    "lng": -117.1476488,
+    "url": "https://nbechs.nuviewusd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance College-Ready Middle Academy 4",
+    "lat": 33.9480506,
+    "lng": -118.2739722,
+    "url": "https://www.crma4.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Keyes To Learning Charter School",
+    "lat": 37.5558342,
+    "lng": -120.9108934,
+    "url": "https://www.ktlcharterschool.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "CORE Charter School",
+    "lat": 39.1536409,
+    "lng": -121.5793259,
+    "url": "https://www.corecharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Six Rivers Charter High School",
+    "lat": 40.8755781,
+    "lng": -124.0897988,
+    "url": "https://sixriverscharter.nohum.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Jack H. Skirball Middle School",
+    "lat": 33.930183,
+    "lng": -118.2649575,
+    "url": "https://www.skirballmiddle.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
     "name": "Alliance Renee & Meyer Luskin Academy High School",
     "lat": 33.9764532,
     "lng": -118.3249849,
@@ -1120,10 +1560,650 @@
     "state": "CA"
   },
   {
+    "name": "Alliance Ouchi-O'Donovan 6-12 Complex",
+    "lat": 33.9936413,
+    "lng": -118.3224225,
+    "url": "https://www.ouchihs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Patti & Peter Neuwirth Leadership Academy",
+    "lat": 34.0018188,
+    "lng": -118.2738727,
+    "url": "https://www.neuwirthleadership.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Dr. Olga Mohan High School",
+    "lat": 34.0365769,
+    "lng": -118.271278,
+    "url": "https://www.mohanhs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Alliance Collins Family College-Ready High School",
+    "lat": 33.9770006,
+    "lng": -118.2338316,
+    "url": "https://www.collinsfamilyjaguars.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Superior Street Elementary",
+    "lat": 34.2479226,
+    "lng": -118.5752961,
+    "url": "https://superiores.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Hilldale School",
+    "lat": 37.6984,
+    "lng": -122.4584393,
+    "url": "https://www.hilldaleschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Van Gogh Street Elementary",
+    "lat": 34.3056768,
+    "lng": -118.5054325,
+    "url": "https://vangoghcharter.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Justice Street Elementary",
+    "lat": 34.2154899,
+    "lng": -118.63504,
+    "url": "https://justicestacademyes.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Welby Way Elementary",
+    "lat": 34.192143,
+    "lng": -118.6379426,
+    "url": "https://welbywayces.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Dixie Canyon Avenue Elementary",
+    "lat": 34.1478605,
+    "lng": -118.424775,
+    "url": "https://dixiecanyones.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Castlebay Lane Charter Elementary",
+    "lat": 34.2933881,
+    "lng": -118.5475987,
+    "url": "https://www.castlebaylanecharter.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Woodlake Elementary Community Charter",
+    "lat": 34.1758667,
+    "lng": -118.6211339,
+    "url": "https://woodlakeces.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Open Charter Magnet School",
+    "lat": 33.9681085,
+    "lng": -118.3783925,
+    "url": "https://opencharteres.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Calabash Charter Academy",
+    "lat": 34.1579823,
+    "lng": -118.6290515,
+    "url": "https://calabashacad.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Brookfield School",
+    "lat": 38.516321,
+    "lng": -121.5258715,
+    "url": "https://www.brookfieldschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Calvary Chapel High School",
+    "lat": 33.6976527,
+    "lng": -117.9090474,
+    "url": "https://www.hs.calvaryschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Harmony Magnet Academy",
+    "lat": 36.142975,
+    "lng": -119.0649951,
+    "url": "https://harmony.portervilleschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "The Academy of Alameda",
+    "lat": 37.776499,
+    "lng": -122.284703,
+    "url": "https://www.aoaschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Westside Innovative School House",
+    "lat": 33.9678148,
+    "lng": -118.404001,
+    "url": "https://www.wishcharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Ceiba College Preparatory Academy",
+    "lat": 36.9046312,
+    "lng": -121.7593593,
+    "url": "https://www.ceibaschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Butterfield Charter School",
+    "lat": 36.0922053,
+    "lng": -119.037692,
+    "url": "https://butterfield.portervilleschools.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Workforce Academy",
+    "lat": 35.3439008,
+    "lng": -119.0653696,
+    "url": "https://workforce.kernhigh.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Riverside Drive Charter School",
+    "lat": 34.157531,
+    "lng": -118.4175178,
+    "url": "https://www.riversidedrivecharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "North County Trade Tech High School",
+    "lat": 33.2139769,
+    "lng": -117.2559736,
+    "url": "https://www.tradetechhigh.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "City Honors International Preparatory High School",
+    "lat": 33.964337,
+    "lng": -118.3557157,
+    "url": "https://cityhonors.inglewoodusd.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Wilbur Charter for Enriched Academics",
+    "lat": 34.165738,
+    "lng": -118.544639,
+    "url": "https://wilburcharteres.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Mountain Oaks School",
+    "lat": 38.1890485,
+    "lng": -120.6918818,
+    "url": "https://www.mountainoaks.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Architecture, Construction & Engineering Charter High School",
+    "lat": 34.206547,
+    "lng": -119.0762196,
+    "url": "https://www.acecharterhigh.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Calvert Street Elementary",
+    "lat": 34.1823245,
+    "lng": -118.5651745,
+    "url": "https://calvertes.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "All Tribes American Indian Charter School",
+    "lat": 33.201603,
+    "lng": -117.0313976,
+    "url": "https://www.alltribescharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Knollwood Elementary",
+    "lat": 34.2848661,
+    "lng": -118.4937635,
+    "url": "https://knollwoodacad.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Nestle Avenue Charter Elementary",
+    "lat": 34.161604,
+    "lng": -118.531229,
+    "url": "https://www.nestleavecharter.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Santa Rosa Academy",
+    "lat": 33.677653,
+    "lng": -117.1786671,
+    "url": "https://www.sra.mn",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Dearborn Elementary Charter Academy",
+    "lat": 34.2387064,
+    "lng": -118.5083153,
+    "url": "https://www.dearbornelem.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Canyon Charter School",
+    "lat": 34.0319318,
+    "lng": -118.5120139,
+    "url": "https://canyonces.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Serrania Charter For Enriched Studies",
+    "lat": 34.160151,
+    "lng": -118.588258,
+    "url": "https://serraniaavees.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Sherman Oaks Elementary Charter",
+    "lat": 34.149896,
+    "lng": -118.4551762,
+    "url": "https://www.shermanoakselementarycharter.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Pasadena Rosebud Academy",
+    "lat": 34.1858766,
+    "lng": -118.1508424,
+    "url": "https://www.rosebudacademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "John Adams Academy-Roseville",
+    "lat": 38.753358,
+    "lng": -121.267027,
+    "url": "https://www.johnadamsacademy.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Redding STEM Academy",
+    "lat": 40.6306386,
+    "lng": -122.3994815,
+    "url": "https://www.rstem.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Hesby Oaks Leadership Charter",
+    "lat": 34.162044,
+    "lng": -118.473647,
+    "url": "https://hesbycharter.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Carpenter Community Charter School",
+    "lat": 34.141319,
+    "lng": -118.391831,
+    "url": "https://carpenteres.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "EJE Academies Charter School",
+    "lat": 32.7849336,
+    "lng": -116.9698339,
+    "url": "https://www.ejeacademies.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Academia Moderna Charter School (Alta PS)",
+    "lat": 33.965782,
+    "lng": -118.2165354,
+    "url": "https://www.academiamoderna.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
     "name": "The O'Farrell Charter School",
     "lat": 32.702541,
     "lng": -117.064835,
     "url": "https://www.ofarrellschool.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Harriet Tubman Village Charter School",
+    "lat": 32.769798,
+    "lng": -117.0497884,
+    "url": "https://www.tubmancharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Edward B Cole Sr. Academy",
+    "lat": 33.7443535,
+    "lng": -117.8641288,
+    "url": "https://www.ebcacademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Paul Revere Charter Middle School",
+    "lat": 34.0574506,
+    "lng": -118.4950009,
+    "url": "https://paulreverems.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Global Education Collaborative",
+    "lat": 34.00843,
+    "lng": -118.282821,
+    "url": "https://www.geaschool.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "New Los Angeles Middle School",
+    "lat": 34.040359,
+    "lng": -118.3578,
+    "url": "https://www.newlamiddle.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Pathways To College",
+    "lat": 34.4176156,
+    "lng": -117.3077778,
+    "url": "https://www.pathwaysk8.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Summit Leadership Academy High Desert",
+    "lat": 34.4122397,
+    "lng": -117.3896738,
+    "url": "https://www.slahd.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "James Jordan Middle School",
+    "lat": 34.2169982,
+    "lng": -118.5388266,
+    "url": "https://www.jamesjordanms.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Today's Fresh Start Charter School",
+    "lat": 34.0028482,
+    "lng": -118.3315568,
+    "url": "https://www.todaysfreshstart.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Westwood Charter School",
+    "lat": 34.0476328,
+    "lng": -118.4302426,
+    "url": "https://westwoodces.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Darnall Charter School",
+    "lat": 32.7460379,
+    "lng": -117.0674113,
+    "url": "https://www.darnallcharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Sol Aureus College Preparatory",
+    "lat": 38.507108,
+    "lng": -121.5259545,
+    "url": "https://sacprep.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Port of Los Angeles High School (Pola)",
+    "lat": 33.7399336,
+    "lng": -118.2824321,
+    "url": "https://www.polahs.net",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Synergy Academies",
+    "lat": 34.015519,
+    "lng": -118.2482334,
+    "url": "https://www.wearesynergy.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Dr. Theodore T. Alexander Science Center",
+    "lat": 34.017174,
+    "lng": -118.2828376,
+    "url": "https://alexanderes.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Palisades Charter Elementary School",
+    "lat": 34.0506829,
+    "lng": -118.4750307,
+    "url": "https://palisadesces.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Montague Charter Academy for the Arts and Sciences",
+    "lat": 34.2372933,
+    "lng": -118.4254275,
+    "url": "https://www.montaguecharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Wilder's Preparatory Academy Charter School",
+    "lat": 33.9735944,
+    "lng": -118.3574957,
+    "url": "https://www.wpacs.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Center for Advanced Learning",
+    "lat": 34.0106323,
+    "lng": -118.2564023,
+    "url": "https://www.centeradvancedlearning.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "San Jacinto Valley Academy",
+    "lat": 33.7710771,
+    "lng": -116.9587272,
+    "url": "https://www.sjva.net",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Greater San Diego Academy",
+    "lat": 32.7292161,
+    "lng": -116.8559305,
+    "url": "https://www.gsdacademy.com",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Oakland Military Institute College Preparatory Academy",
+    "lat": 37.8292445,
+    "lng": -122.2726353,
+    "url": "https://www.oakmil.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "High Tech Los Angeles Charter High School",
+    "lat": 34.1866507,
+    "lng": -118.474126,
+    "url": "https://www.ht-la.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Keiller Leadership Academy",
+    "lat": 32.713622,
+    "lng": -117.042435,
+    "url": "https://www.mykla.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Watts Learning Center",
+    "lat": 33.9501706,
+    "lng": -118.2785653,
+    "url": "https://www.wattslearningcenter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Gaspar De Portola Middle School",
+    "lat": 34.1672036,
+    "lng": -118.5414133,
+    "url": "https://portolams.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Pacoima Charter School",
+    "lat": 34.269238,
+    "lng": -118.414869,
+    "url": "https://www.pacoimacharter.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Marquez Charter School",
+    "lat": 34.0458421,
+    "lng": -118.5478198,
+    "url": "https://marquezres.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Cleveland Charter High School",
+    "lat": 34.2182056,
+    "lng": -118.5490772,
+    "url": "https://www.clevelandhs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Sylmar Charter High School",
+    "lat": 34.3078363,
+    "lng": -118.4404079,
+    "url": "https://www.sylmarhs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Taft Charter High School",
+    "lat": 34.1681588,
+    "lng": -118.5721509,
+    "url": "https://tafths.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "University High School Charter",
+    "lat": 34.046041,
+    "lng": -118.460718,
+    "url": "https://universityhs.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Chatsworth Charter High School",
+    "lat": 34.2523464,
+    "lng": -118.5842838,
+    "url": "https://www.chatsworthhs.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Kenter Canyon Elementary",
+    "lat": 34.0701278,
+    "lng": -118.4885192,
+    "url": "https://kentercanyones.lausd.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "Louis Armstrong Middle School",
+    "lat": 34.162965,
+    "lng": -118.4285091,
+    "url": "https://www.louisarmstrongms.org",
+    "type": "charter",
+    "state": "CA"
+  },
+  {
+    "name": "HighTech LA Middle School",
+    "lat": 34.162965,
+    "lng": -118.4285091,
+    "url": "https://www.htla-ms.org",
     "type": "charter",
     "state": "CA"
   },
@@ -1144,10 +2224,26 @@
     "state": "AZ"
   },
   {
+    "name": "Rex & Margaret Fortune School of Education",
+    "lat": 38.5022015,
+    "lng": -121.4318552,
+    "url": "https://www.fortuneschool.us",
+    "type": "district",
+    "state": "CA"
+  },
+  {
     "name": "Oro Grande School District",
     "lat": 34.5987742,
     "lng": -117.3320593,
     "url": "https://www.orogrande.net",
+    "type": "district",
+    "state": "CA"
+  },
+  {
+    "name": "San Lorenzo Valley Unified",
+    "lat": 37.0820771,
+    "lng": -122.0732893,
+    "url": "https://www.slvusd.org",
     "type": "district",
     "state": "CA"
   }
