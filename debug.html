@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug - Customer Data Check</title>
+    <script>
+        // Check if running in authenticated environment
+        (function() {
+            const auth = sessionStorage.getItem('edlio_auth');
+            if (!auth) {
+                document.write('<p>Not authenticated - redirecting to login...</p>');
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 1000);
+                return;
+            }
+        })();
+    </script>
+</head>
+<body>
+    <h1>Customer Data Debug</h1>
+    <p>Checking customer data...</p>
+    
+    <!-- Inline customer data -->
+    <script>
+        // Real Edlio customer data from Excel files (partial geocoding)
+        // Generated on 2025-07-08 12:21:56
+        // Total customers: 281 (geocoding in progress...)
+        const customers = [
+            { name: "McGill-Toolen Catholic High School", lat: 30.6886812, lng: -88.071732, url: "https://www.mcgill-toolen.org", type: "charter", state: "AL" },
+            { name: "Alliance Tennenbaum Family Technology High School", lat: 34.101316, lng: -118.2362099, url: "https://www.tennenbaumtech.org", type: "charter", state: "CA" },
+            { name: "ICEF Vista Middle Charter Academy", lat: 33.9954594, lng: -118.4188466, url: "https://ivms-old.icefps.org", type: "charter", state: "CA" },
+            { name: "Alliance Virgil Roberts Leadership Academy", lat: 33.9764532, lng: -118.3249849, url: "https://www.avrlacademy.org", type: "charter", state: "CA" },
+            { name: "Alliance Judy Ivie Burton Technology Academy High School", lat: 33.9445123, lng: -118.278053, url: "https://www.burtontech.org", type: "charter", state: "CA" },
+            { name: "Alliance Gertz-Ressler/Richard Merkin 6-12 Complex", lat: 34.0369889, lng: -118.2822485, url: "https://www.merkinms.org", type: "charter", state: "CA" },
+            { name: "Alliance Marc & Eva Stern Math and Science School", lat: 34.0664949, lng: -118.1671415, url: "https://www.sternmass.org", type: "charter", state: "CA" },
+            { name: "Alliance Piera Barbaglia Shaheen Health Services Academy", lat: 33.9607236, lng: -118.2940871, url: "https://www.pbshsa.org", type: "charter", state: "CA" }
+        ];
+    </script>
+    
+    <script>
+        // Debug information
+        document.write('<p>Total customers loaded: ' + customers.length + '</p>');
+        
+        // Find LA area customers
+        const laCustomers = customers.filter(c => 
+            c.lat >= 33.9 && c.lat <= 34.2 && 
+            c.lng >= -118.5 && c.lng <= -118.0
+        );
+        
+        document.write('<p>LA area customers: ' + laCustomers.length + '</p>');
+        document.write('<ul>');
+        laCustomers.forEach(c => {
+            document.write('<li>' + c.name + ' (' + c.lat + ', ' + c.lng + ')</li>');
+        });
+        document.write('</ul>');
+        
+        // Check authentication
+        const auth = sessionStorage.getItem('edlio_auth');
+        if (auth) {
+            const authData = JSON.parse(auth);
+            document.write('<p>Authenticated as: ' + authData.email + '</p>');
+        }
+    </script>
+</body>
+</html>
