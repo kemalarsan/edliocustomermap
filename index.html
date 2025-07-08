@@ -5,23 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edlio Customer Map</title>
     
-    <script>
-        // Authentication check
-        (function() {
-            const auth = sessionStorage.getItem('edlio_auth');
-            if (!auth) {
-                window.location.href = '/login.html';
-                return;
-            }
-            
-            const authData = JSON.parse(auth);
-            // Check if auth is more than 24 hours old
-            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
-                sessionStorage.removeItem('edlio_auth');
-                window.location.href = '/login.html';
-            }
-        })();
-    </script>
+    <!-- Authentication temporarily disabled -->
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

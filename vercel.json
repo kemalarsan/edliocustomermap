@@ -1,22 +1,4 @@
 {
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/login.html"
-    },
-    {
-      "src": "/debug.html",
-      "dest": "/debug.html"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/login.html",
-      "dest": "/login.html"
-    }
-  ],
   "headers": [
     {
       "source": "/data.js",
