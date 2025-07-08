@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edlio Customer Map</title>
+    <title>Edlio Customer Map - Localhost</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -32,10 +32,11 @@
         #map {
             flex: 1;
             height: 100%;
+            background-color: #e0e0e0;
         }
         
         .sidebar {
-            width: 400px;
+            width: 350px;
             background-color: white;
             box-shadow: -2px 0 8px rgba(0,0,0,0.1);
             padding: 20px;
@@ -59,6 +60,10 @@
             font-size: 14px;
             color: #666;
             margin-bottom: 20px;
+        }
+        
+        .customer-list {
+            list-style: none;
         }
         
         .customer-item {
@@ -96,7 +101,6 @@
             font-size: 14px;
             display: block;
             margin-bottom: 5px;
-            word-break: break-all;
         }
         
         .customer-url:hover {
@@ -128,36 +132,51 @@
             background: #0052a3;
         }
         
-        /* Debug styles removed for production */
-        
         .loading {
             text-align: center;
             color: #666;
-            padding: 20px;
+            font-style: italic;
         }
         
         .no-customers {
             text-align: center;
             color: #666;
-            padding: 40px 20px;
             font-style: italic;
+            padding: 20px;
+        }
+        
+        .customer-count {
+            color: #0066cc;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .debug-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="map"></div>
-        
-        <!-- Debug info hidden in production -->
-        
+        <div class="debug-info">
+            <div>Status: <span id="status">Loading...</span></div>
+            <div>Total: <span id="total-count">-</span></div>
+            <div>Zoom: <span id="zoom-level">-</span></div>
+            <div>In view: <span id="view-count">-</span></div>
+        </div>
         <button class="toggle-sidebar" onclick="toggleSidebar()">Toggle List</button>
-        
         <div class="sidebar" id="sidebar">
             <h2>Customers in View</h2>
-            <div class="sidebar-info">
-                Pan and zoom the map to see customers in different areas.
-                <br>Customers will appear here with clickable URLs.
-            </div>
+            <div class="sidebar-info">Zoom in to see customers within driving distance</div>
             <div id="customerListContainer">
                 <div class="loading">Loading customer data...</div>
             </div>
@@ -168,100 +187,73 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Leaflet MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <!-- Leaflet Heat JS -->
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     
     <script src="data.js"></script>
     <script>
-        // Debug elements (hidden in production)
-        const statusEl = { textContent: '', style: {} };
-        const totalCountEl = { textContent: '' };
-        const zoomLevelEl = { textContent: '' };
-        const viewCountEl = { textContent: '' };
-        
-        let map;
-        let markers;
+        // Debug elements
+        const statusEl = document.getElementById('status');
+        const totalCountEl = document.getElementById('total-count');
+        const zoomLevelEl = document.getElementById('zoom-level');
+        const viewCountEl = document.getElementById('view-count');
         
         // Initialize map
-        function initMap() {
-            map = L.map('map').setView([39.8283, -98.5795], 4);
-            
-            // Add tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-            
-            // Update debug info
-            updateDebugInfo();
-            
-            // Set up event listeners
-            map.on('moveend', updateSidebar);
-            map.on('zoomend', updateSidebar);
-            map.on('zoomend', updateDebugInfo);
-        }
+        const map = L.map('map').setView([39.8283, -98.5795], 4);
         
-        // Update debug information
-        function updateDebugInfo() {
-            if (map) {
-                zoomLevelEl.textContent = map.getZoom();
-            }
-        }
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
         
-        // Check if customers data exists and initialize
-        function initCustomers() {
-            if (typeof customers === 'undefined') {
-                statusEl.textContent = 'ERROR: No data';
-                statusEl.style.color = 'red';
-                document.getElementById('customerListContainer').innerHTML = '<div class="no-customers">Failed to load customer data</div>';
-                return;
-            }
-            
+        // Check if customers data exists
+        if (typeof customers === 'undefined') {
+            statusEl.textContent = 'ERROR: No data';
+            document.getElementById('customerListContainer').innerHTML = '<div class="no-customers">Failed to load customer data</div>';
+        } else {
             statusEl.textContent = 'SUCCESS';
-            statusEl.style.color = 'green';
             totalCountEl.textContent = customers.length;
             
             // Create marker cluster group
-            markers = L.markerClusterGroup({
+            const markers = L.markerClusterGroup({
                 chunkedLoading: true,
-                maxClusterRadius: 50,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false
+                maxClusterRadius: 80
             });
             
             // Add customers to map
-            customers.forEach((customer, index) => {
-                if (customer.lat && customer.lng) {
-                    const marker = L.marker([customer.lat, customer.lng])
-                        .bindPopup(`
-                            <div style="min-width: 250px;">
-                                <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> ${customer.type}</p>
-                                <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
-                                <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
-                            </div>
-                        `);
-                    markers.addLayer(marker);
-                }
+            customers.forEach(customer => {
+                const marker = L.marker([customer.lat, customer.lng])
+                    .bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h3 style="margin: 0 0 8px 0; color: #333;">${customer.name}</h3>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> ${customer.type}</p>
+                            <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
+                            <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none;">Visit Website →</a>
+                        </div>
+                    `);
+                markers.addLayer(marker);
             });
             
             map.addLayer(markers);
             
-            // Initial sidebar update
+            // Update sidebar on initial load
             updateSidebar();
         }
         
         // Update sidebar with customers in current view
         function updateSidebar() {
-            if (typeof customers === 'undefined' || !map) {
+            const zoom = map.getZoom();
+            zoomLevelEl.textContent = zoom;
+            
+            if (typeof customers === 'undefined') {
                 return;
             }
             
             const bounds = map.getBounds();
             const customersInView = customers.filter(customer => {
-                if (customer.lat && customer.lng) {
-                    const latLng = L.latLng(customer.lat, customer.lng);
-                    return bounds.contains(latLng);
-                }
-                return false;
+                const latLng = L.latLng(customer.lat, customer.lng);
+                return bounds.contains(latLng);
             });
             
             viewCountEl.textContent = customersInView.length;
@@ -269,7 +261,7 @@
             const container = document.getElementById('customerListContainer');
             
             if (customersInView.length === 0) {
-                container.innerHTML = '<div class="no-customers">No customers in current view.<br><br>Try zooming in to a specific area or panning to different regions.</div>';
+                container.innerHTML = '<div class="no-customers">No customers in current view.<br>Try zooming in to a specific area.</div>';
                 return;
             }
             
@@ -280,17 +272,17 @@
             const customerListHTML = customersInView.map(customer => `
                 <div class="customer-item">
                     <div class="customer-name">${customer.name}</div>
-                    <div class="customer-state">${customer.state} - ${customer.type}</div>
+                    <div class="customer-state">${customer.state}</div>
                     <a href="${customer.url}" target="_blank" class="customer-url">${customer.url}</a>
                     <div class="customer-location">${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</div>
                 </div>
             `).join('');
             
             container.innerHTML = `
-                <div style="margin-bottom: 15px; padding: 10px; background-color: #e3f2fd; border-radius: 5px;">
-                    <strong style="color: #0066cc;">${customersInView.length}</strong> customers in current view
+                <div style="margin-bottom: 15px;">
+                    <span class="customer-count">${customersInView.length}</span> customers in view
                 </div>
-                <div>
+                <div class="customer-list">
                     ${customerListHTML}
                 </div>
             `;
@@ -302,11 +294,10 @@
             sidebar.classList.toggle('hidden');
         }
         
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initMap();
-            // Small delay to ensure data.js is loaded
-            setTimeout(initCustomers, 100);
+        // Update sidebar on map move/zoom
+        map.on('moveend', updateSidebar);
+        map.on('zoomend', () => {
+            updateSidebar();
         });
     </script>
 </body>
