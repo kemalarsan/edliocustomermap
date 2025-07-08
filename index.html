@@ -246,6 +246,32 @@
                 </div>
             </div>
             
+            <div class="filter-group">
+                <label>Edlio Products:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="filter-cms" checked>
+                        <span>CMS</span>
+                        <span class="count" id="count-cms">-</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="filter-mobile" checked>
+                        <span>Mobile App</span>
+                        <span class="count" id="count-mobile">-</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="filter-masscomm" checked>
+                        <span>Mass Communications</span>
+                        <span class="count" id="count-masscomm">-</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="filter-payments" checked>
+                        <span>Payments</span>
+                        <span class="count" id="count-payments">-</span>
+                    </div>
+                </div>
+            </div>
+            
             <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
                 <div style="font-size: 14px; color: #666;">
                     <strong>Total Showing:</strong> <span id="total-showing">-</span>
@@ -332,7 +358,7 @@
         
         // Update type counts
         function updateTypeCounts() {
-            const counts = {
+            const typeCounts = {
                 charter: 0,
                 district: 0,
                 private: 0,
@@ -340,33 +366,85 @@
                 esc: 0
             };
             
+            const productCounts = {
+                cms: 0,
+                mobile: 0,
+                masscomm: 0,
+                payments: 0
+            };
+            
             allCustomers.forEach(customer => {
+                // Count school types
                 const normalizedType = normalizeType(customer.type);
-                if (counts[normalizedType] !== undefined) {
-                    counts[normalizedType]++;
+                if (typeCounts[normalizedType] !== undefined) {
+                    typeCounts[normalizedType]++;
+                }
+                
+                // Count products (when product data is available)
+                if (customer.products) {
+                    if (customer.products.cms) productCounts.cms++;
+                    if (customer.products.mobile) productCounts.mobile++;
+                    if (customer.products.masscomm) productCounts.masscomm++;
+                    if (customer.products.payments) productCounts.payments++;
+                } else {
+                    // Temporary: assume all have CMS until product data is provided
+                    productCounts.cms++;
                 }
             });
             
-            Object.keys(counts).forEach(type => {
+            // Update school type counts
+            Object.keys(typeCounts).forEach(type => {
                 const countEl = document.getElementById(`count-${type}`);
-                if (countEl) countEl.textContent = counts[type];
+                if (countEl) countEl.textContent = typeCounts[type];
+            });
+            
+            // Update product counts
+            Object.keys(productCounts).forEach(product => {
+                const countEl = document.getElementById(`count-${product}`);
+                if (countEl) countEl.textContent = productCounts[product];
             });
         }
         
         // Apply filters and update map
         function applyFilters() {
-            const activeFilters = [];
+            const activeTypeFilters = [];
+            const activeProductFilters = [];
             
+            // Collect active school type filters
             ['charter', 'district', 'private', 'cmo', 'esc'].forEach(type => {
                 const checkbox = document.getElementById(`filter-${type}`);
                 if (checkbox && checkbox.checked) {
-                    activeFilters.push(type);
+                    activeTypeFilters.push(type);
+                }
+            });
+            
+            // Collect active product filters
+            ['cms', 'mobile', 'masscomm', 'payments'].forEach(product => {
+                const checkbox = document.getElementById(`filter-${product}`);
+                if (checkbox && checkbox.checked) {
+                    activeProductFilters.push(product);
                 }
             });
             
             filteredCustomers = allCustomers.filter(customer => {
+                // Check school type filter
                 const normalizedType = normalizeType(customer.type);
-                return activeFilters.includes(normalizedType);
+                const passesTypeFilter = activeTypeFilters.includes(normalizedType);
+                
+                // Check product filter
+                let passesProductFilter = true;
+                if (customer.products) {
+                    // If product data exists, check if customer has any of the selected products
+                    passesProductFilter = activeProductFilters.some(product => 
+                        customer.products[product] === true
+                    );
+                } else {
+                    // If no product data, assume all have CMS (temporary)
+                    passesProductFilter = activeProductFilters.includes('cms');
+                }
+                
+                // Both filters must pass (AND logic between filter groups)
+                return passesTypeFilter && passesProductFilter;
             });
             
             updateMap();
@@ -425,6 +503,14 @@
             // Set up filter event listeners
             ['charter', 'district', 'private', 'cmo', 'esc'].forEach(type => {
                 const checkbox = document.getElementById(`filter-${type}`);
+                if (checkbox) {
+                    checkbox.addEventListener('change', applyFilters);
+                }
+            });
+            
+            // Set up product filter event listeners
+            ['cms', 'mobile', 'masscomm', 'payments'].forEach(product => {
+                const checkbox = document.getElementById(`filter-${product}`);
                 if (checkbox) {
                     checkbox.addEventListener('change', applyFilters);
                 }
