@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edlio Customer Map</title>
     
+    <script>
+        // Authentication check
+        (function() {
+            const auth = sessionStorage.getItem('edlio_auth');
+            if (!auth) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            const authData = JSON.parse(auth);
+            // Check if auth is more than 24 hours old
+            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+                sessionStorage.removeItem('edlio_auth');
+                window.location.href = '/login.html';
+            }
+        })();
+    </script>
+    
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Leaflet MarkerCluster CSS -->
@@ -115,6 +133,39 @@
             background-color: #f5f5f5;
         }
         
+        .user-info {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            z-index: 1000;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-email {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            color: #dc3545;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f8d7da;
+        }
+        
         .loading {
             text-align: center;
             padding: 40px;
@@ -164,6 +215,10 @@
 <body>
     <div class="container">
         <div id="map"></div>
+        <div class="user-info">
+            <span class="user-email" id="userEmail"></span>
+            <a href="#" class="logout-btn" onclick="logout(); return false;">Logout</a>
+        </div>
         <button class="toggle-sidebar" onclick="toggleSidebar()">Toggle List</button>
         <div class="sidebar" id="sidebar">
             <h2>Customers in View</h2>
@@ -185,6 +240,16 @@
     <script src="data.js"></script>
     
     <script>
+        // Display user email
+        const authData = JSON.parse(sessionStorage.getItem('edlio_auth'));
+        document.getElementById('userEmail').textContent = authData.email;
+        
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('edlio_auth');
+            window.location.href = '/login.html';
+        }
+        
         // Initialize map centered on USA
         const map = L.map('map').setView([39.8283, -98.5795], 4);
         

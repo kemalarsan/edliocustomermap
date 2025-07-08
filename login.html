@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edlio Customer Map - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #0066cc;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .info {
+            background-color: #e8f4fd;
+            border: 1px solid #bee5eb;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #0c5460;
+            font-size: 14px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0052a3;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0066cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>Edlio Customer Map</h1>
+            <p>Sales Intelligence Tool</p>
+        </div>
+        
+        <div class="info">
+            This tool is exclusively for Edlio team members. Please use your @edlio.com email address to access.
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="yourname@edlio.com" 
+                    required
+                    pattern="[a-zA-Z0-9._%+-]+@edlio\.com$"
+                >
+                <div class="error" id="error">Please use your @edlio.com email address</div>
+            </div>
+            
+            <button type="submit">Access Customer Map</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Verifying access...
+        </div>
+    </div>
+    
+    <script>
+        // Simple client-side authentication
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const errorMsg = document.getElementById('error');
+        const loading = document.getElementById('loading');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim().toLowerCase();
+            
+            // Validate email domain
+            if (!email.endsWith('@edlio.com')) {
+                errorMsg.style.display = 'block';
+                emailInput.focus();
+                return;
+            }
+            
+            errorMsg.style.display = 'none';
+            loading.style.display = 'block';
+            form.querySelector('button').disabled = true;
+            
+            // Store authentication in sessionStorage
+            sessionStorage.setItem('edlio_auth', JSON.stringify({
+                email: email,
+                timestamp: Date.now()
+            }));
+            
+            // Simulate verification delay
+            setTimeout(() => {
+                // Redirect to main map
+                window.location.href = '/index.html';
+            }, 1000);
+        });
+        
+        // Clear error on input
+        emailInput.addEventListener('input', () => {
+            errorMsg.style.display = 'none';
+        });
+        
+        // Check if already authenticated
+        const auth = sessionStorage.getItem('edlio_auth');
+        if (auth) {
+            const authData = JSON.parse(auth);
+            // Check if auth is less than 24 hours old
+            if (Date.now() - authData.timestamp < 24 * 60 * 60 * 1000) {
+                window.location.href = '/index.html';
+            }
+        }
+    </script>
+</body>
+</html>
