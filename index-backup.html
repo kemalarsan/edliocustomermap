@@ -34,66 +34,6 @@
             height: 100%;
         }
         
-        .controls {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            max-width: 300px;
-        }
-        
-        .controls h3 {
-            margin: 0 0 15px 0;
-            color: #333;
-            font-size: 16px;
-            border-bottom: 2px solid #0066cc;
-            padding-bottom: 8px;
-        }
-        
-        .filter-group {
-            margin-bottom: 15px;
-        }
-        
-        .filter-group label {
-            font-weight: 600;
-            color: #555;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .checkbox-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-        
-        .checkbox-item span {
-            font-size: 14px;
-            color: #333;
-        }
-        
-        .count {
-            color: #666;
-            font-size: 12px;
-            margin-left: auto;
-        }
-        
         .sidebar {
             width: 400px;
             background-color: white;
@@ -188,6 +128,8 @@
             background: #0052a3;
         }
         
+        /* Debug styles removed for production */
+        
         .loading {
             text-align: center;
             color: #666;
@@ -200,58 +142,13 @@
             padding: 40px 20px;
             font-style: italic;
         }
-        
-        .type-charter { color: #e74c3c; }
-        .type-district { color: #3498db; }
-        .type-private { color: #9b59b6; }
-        .type-cmo { color: #f39c12; }
-        .type-esc { color: #27ae60; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="map"></div>
         
-        <div class="controls">
-            <h3>🎯 School Filters</h3>
-            
-            <div class="filter-group">
-                <label>School Type:</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="filter-charter" checked>
-                        <span>Charter Schools</span>
-                        <span class="count" id="count-charter">-</span>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="filter-district" checked>
-                        <span>Public School Districts</span>
-                        <span class="count" id="count-district">-</span>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="filter-private" checked>
-                        <span>Private Schools</span>
-                        <span class="count" id="count-private">-</span>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="filter-cmo" checked>
-                        <span>CMO</span>
-                        <span class="count" id="count-cmo">-</span>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="filter-esc" checked>
-                        <span>ESC (Texas)</span>
-                        <span class="count" id="count-esc">-</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
-                <div style="font-size: 14px; color: #666;">
-                    <strong>Total Showing:</strong> <span id="total-showing">-</span>
-                </div>
-            </div>
-        </div>
+        <!-- Debug info hidden in production -->
         
         <button class="toggle-sidebar" onclick="toggleSidebar()">Toggle List</button>
         
@@ -259,7 +156,7 @@
             <h2>Customers in View</h2>
             <div class="sidebar-info">
                 Pan and zoom the map to see customers in different areas.
-                <br>Use filters to show specific school types.
+                <br>Customers will appear here with clickable URLs.
             </div>
             <div id="customerListContainer">
                 <div class="loading">Loading customer data...</div>
@@ -274,10 +171,14 @@
     
     <script src="data.js"></script>
     <script>
+        // Debug elements (hidden in production)
+        const statusEl = { textContent: '', style: {} };
+        const totalCountEl = { textContent: '' };
+        const zoomLevelEl = { textContent: '' };
+        const viewCountEl = { textContent: '' };
+        
         let map;
         let markers;
-        let allCustomers = [];
-        let filteredCustomers = [];
         
         // Initialize map
         function initMap() {
@@ -288,99 +189,36 @@
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
             
+            // Update debug info
+            updateDebugInfo();
+            
             // Set up event listeners
             map.on('moveend', updateSidebar);
             map.on('zoomend', updateSidebar);
+            map.on('zoomend', updateDebugInfo);
         }
         
-        // Normalize school types for filtering
-        function normalizeType(type) {
-            if (!type) return 'other';
-            const t = type.toLowerCase();
-            if (t.includes('charter')) return 'charter';
-            if (t.includes('district')) return 'district';
-            if (t.includes('private') || t.includes('catholic') || t.includes('christian')) return 'private';
-            if (t.includes('cmo')) return 'cmo';
-            if (t.includes('esc')) return 'esc';
-            return t;
-        }
-        
-        // Get marker color based on school type
-        function getMarkerColor(type) {
-            const normalizedType = normalizeType(type);
-            switch (normalizedType) {
-                case 'charter': return '#e74c3c';
-                case 'district': return '#3498db';
-                case 'private': return '#9b59b6';
-                case 'cmo': return '#f39c12';
-                case 'esc': return '#27ae60';
-                default: return '#95a5a6';
+        // Update debug information
+        function updateDebugInfo() {
+            if (map) {
+                zoomLevelEl.textContent = map.getZoom();
             }
         }
         
-        // Create custom colored marker
-        function createColoredMarker(lat, lng, color) {
-            return L.circleMarker([lat, lng], {
-                radius: 6,
-                fillColor: color,
-                color: '#fff',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
-            });
-        }
-        
-        // Update type counts
-        function updateTypeCounts() {
-            const counts = {
-                charter: 0,
-                district: 0,
-                private: 0,
-                cmo: 0,
-                esc: 0
-            };
-            
-            allCustomers.forEach(customer => {
-                const normalizedType = normalizeType(customer.type);
-                if (counts[normalizedType] !== undefined) {
-                    counts[normalizedType]++;
-                }
-            });
-            
-            Object.keys(counts).forEach(type => {
-                const countEl = document.getElementById(`count-${type}`);
-                if (countEl) countEl.textContent = counts[type];
-            });
-        }
-        
-        // Apply filters and update map
-        function applyFilters() {
-            const activeFilters = [];
-            
-            ['charter', 'district', 'private', 'cmo', 'esc'].forEach(type => {
-                const checkbox = document.getElementById(`filter-${type}`);
-                if (checkbox && checkbox.checked) {
-                    activeFilters.push(type);
-                }
-            });
-            
-            filteredCustomers = allCustomers.filter(customer => {
-                const normalizedType = normalizeType(customer.type);
-                return activeFilters.includes(normalizedType);
-            });
-            
-            updateMap();
-            updateSidebar();
-            
-            document.getElementById('total-showing').textContent = filteredCustomers.length;
-        }
-        
-        // Update map with filtered customers
-        function updateMap() {
-            if (markers) {
-                map.removeLayer(markers);
+        // Check if customers data exists and initialize
+        function initCustomers() {
+            if (typeof customers === 'undefined') {
+                statusEl.textContent = 'ERROR: No data';
+                statusEl.style.color = 'red';
+                document.getElementById('customerListContainer').innerHTML = '<div class="no-customers">Failed to load customer data</div>';
+                return;
             }
             
+            statusEl.textContent = 'SUCCESS';
+            statusEl.style.color = 'green';
+            totalCountEl.textContent = customers.length;
+            
+            // Create marker cluster group
             markers = L.markerClusterGroup({
                 chunkedLoading: true,
                 maxClusterRadius: 50,
@@ -388,15 +226,15 @@
                 showCoverageOnHover: false
             });
             
-            filteredCustomers.forEach(customer => {
+            // Add customers to map
+            customers.forEach((customer, index) => {
                 if (customer.lat && customer.lng) {
-                    const color = getMarkerColor(customer.type);
-                    const marker = createColoredMarker(customer.lat, customer.lng, color)
+                    const marker = L.marker([customer.lat, customer.lng])
                         .bindPopup(`
                             <div style="min-width: 250px;">
                                 <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizeType(customer.type)}">${customer.type}</span></p>
+                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> ${customer.type}</p>
                                 <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
                             </div>
@@ -406,41 +244,19 @@
             });
             
             map.addLayer(markers);
-        }
-        
-        // Initialize customers
-        function initCustomers() {
-            if (typeof customers === 'undefined') {
-                document.getElementById('customerListContainer').innerHTML = '<div class="no-customers">Failed to load customer data</div>';
-                return;
-            }
             
-            allCustomers = customers;
-            filteredCustomers = customers;
-            
-            updateTypeCounts();
-            updateMap();
+            // Initial sidebar update
             updateSidebar();
-            
-            // Set up filter event listeners
-            ['charter', 'district', 'private', 'cmo', 'esc'].forEach(type => {
-                const checkbox = document.getElementById(`filter-${type}`);
-                if (checkbox) {
-                    checkbox.addEventListener('change', applyFilters);
-                }
-            });
-            
-            applyFilters();
         }
         
         // Update sidebar with customers in current view
         function updateSidebar() {
-            if (!map || filteredCustomers.length === 0) {
+            if (typeof customers === 'undefined' || !map) {
                 return;
             }
             
             const bounds = map.getBounds();
-            const customersInView = filteredCustomers.filter(customer => {
+            const customersInView = customers.filter(customer => {
                 if (customer.lat && customer.lng) {
                     const latLng = L.latLng(customer.lat, customer.lng);
                     return bounds.contains(latLng);
@@ -448,10 +264,12 @@
                 return false;
             });
             
+            viewCountEl.textContent = customersInView.length;
+            
             const container = document.getElementById('customerListContainer');
             
             if (customersInView.length === 0) {
-                container.innerHTML = '<div class="no-customers">No customers in current view.<br><br>Try zooming in to a specific area or adjusting filters.</div>';
+                container.innerHTML = '<div class="no-customers">No customers in current view.<br><br>Try zooming in to a specific area or panning to different regions.</div>';
                 return;
             }
             
@@ -462,7 +280,7 @@
             const customerListHTML = customersInView.map(customer => `
                 <div class="customer-item">
                     <div class="customer-name">${customer.name}</div>
-                    <div class="customer-state">${customer.state} - <span class="type-${normalizeType(customer.type)}">${customer.type}</span></div>
+                    <div class="customer-state">${customer.state} - ${customer.type}</div>
                     <a href="${customer.url}" target="_blank" class="customer-url">${customer.url}</a>
                     <div class="customer-location">${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</div>
                 </div>
@@ -487,6 +305,7 @@
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
+            // Small delay to ensure data.js is loaded
             setTimeout(initCustomers, 100);
         });
     </script>
