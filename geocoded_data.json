@@ -6270,5 +6270,1241 @@
   "116 Casper Ave, Newcastle, WY 82701-2705, USA": {
     "lat": 43.8493359,
     "lng": -104.2100934
+  },
+  "4204 Kepler St, Whitecourt, AB, T7S 0A3": {
+    "lat": 54.1292194,
+    "lng": -115.6672815
+  },
+  "9902 101 St, Grande Prairie, AB, T8V 2P4": {
+    "lat": 55.16998,
+    "lng": -118.7978655
+  },
+  "200 Boundary Rd, Spruce Grove, AB, T7X 3B4": {
+    "lat": 53.5488328,
+    "lng": -113.9574789
+  },
+  "8611A 108 St, Grande Prairie, AB, T8V 4C5": {
+    "lat": 55.1740325,
+    "lng": -118.8207028
+  },
+  "1680 N Clearwater, Delta Junction, AK, 99737": {
+    "lat": 64.0371802,
+    "lng": -145.7152276
+  },
+  "1501 Old Shell Rd, Mobile, AL, 36604-2291": {
+    "lat": 30.6886812,
+    "lng": -88.071732
+  },
+  "215 S Broad St, Lowndesboro, AL, 36752-4307": {
+    "lat": 32.2753075,
+    "lng": -86.6112905
+  },
+  "403 Cedar St, Talladega, AL, 35160-2701": {
+    "lat": 33.4310641,
+    "lng": -86.0946673
+  },
+  "241 S Main St, Arab, AL, 35016-1353": {
+    "lat": 34.313313,
+    "lng": -86.4959284
+  },
+  "5801 Summerville Rd, Smiths Station, AL, 36877-5008": {
+    "lat": 32.5373303,
+    "lng": -85.095193
+  },
+  "2006 Highway 18, Lake City, AR, 72437-8806": {
+    "lat": 35.8237757,
+    "lng": -90.4284662
+  },
+  "1815 Rahling Rd, Little Rock, AR, 72223-4677": {
+    "lat": 34.7713784,
+    "lng": -92.4521146
+  },
+  "161 Walnut St, Marianna, AR, 72360-2037": {
+    "lat": 34.7772592,
+    "lng": -90.7613276
+  },
+  "221 N Pine Ave, Trumann, AR, 72472-2712": {
+    "lat": 35.6733879,
+    "lng": -90.5175367
+  },
+  "803 W Drew Ave, Monette, AR, 72447": {
+    "lat": 35.8907556,
+    "lng": -90.3505179
+  },
+  "506 E Pine St, Taylor, AR, 71861-9496": {
+    "lat": 33.099405,
+    "lng": -93.455725
+  },
+  "5410 Landers Rd, North Little Rock, AR, 72117-1935": {
+    "lat": 34.7920941,
+    "lng": -92.2227091
+  },
+  "12200 Westhaven Dr, Little Rock, AR, 72211-5600": {
+    "lat": 34.7513181,
+    "lng": -92.4093422
+  },
+  "1621 Dr Martin Luther King Dr, Little Rock, AR, 72202-6068": {
+    "lat": 34.7435644,
+    "lng": -92.2883246
+  },
+  "23 Corporate Hill Dr, Little Rock, AR, 72205-4537": {
+    "lat": 34.7508598,
+    "lng": -92.3874867
+  },
+  "751 Rankin St, Ashdown, AR, 71822-3627": {
+    "lat": 33.6717962,
+    "lng": -94.1211212
+  },
+  "1560 W 6Th St, Waldron, AR, 72958-8343": {
+    "lat": 34.8966762,
+    "lng": -94.1016438
+  },
+  "504 W Main St, Bradford, AR, 72020-9151": {
+    "lat": 35.425036,
+    "lng": -91.460951
+  },
+  "801 W 29Th St, Little Rock, AR, 72211": {
+    "lat": 34.720556,
+    "lng": -92.282856
+  },
+  "1302 Melissa Dr, Bentonville, AR, 72712-7942": {
+    "lat": 36.3620412,
+    "lng": -94.2282033
+  },
+  "693 White Rd, Springdale, AR, 72762-2795": {
+    "lat": 36.1909006,
+    "lng": -94.165165
+  },
+  "3216 N State Line Ave, Texarkana, AR, 71854-2667": {
+    "lat": 33.4534338,
+    "lng": -94.0430202
+  },
+  "1445 E Indian School Rd, Phoenix, AZ, 85014-4929": {
+    "lat": 33.4943468,
+    "lng": -112.0511958
+  },
+  "1150 N Dobson Rd, Chandler, AZ, 85224-4099": {
+    "lat": 33.324833,
+    "lng": -111.8765015
+  },
+  "4602 N 31St Ave, Phoenix, AZ, 85017-3499": {
+    "lat": 33.5047509,
+    "lng": -112.1268328
+  },
+  "7785 W Peoria Ave, Peoria, AZ, 85345-5922": {
+    "lat": 33.5804636,
+    "lng": -112.2273963
+  },
+  "4250 W 16Th St, Yuma, AZ, 85364-4031": {
+    "lat": 32.6986227,
+    "lng": -114.6257886
+  },
+  "1840 E Benson Hwy, Tucson, AZ, 85714-1770": {
+    "lat": 32.1694206,
+    "lng": -110.9440746
+  },
+  "445 S Old Highway 188, Tonto Basin, AZ, 85553": {
+    "lat": 33.8708853,
+    "lng": -111.3134876
+  },
+  "800 N Apache Ave, Winslow, AZ, 86047-3819": {
+    "lat": 35.027846,
+    "lng": -110.69276
+  },
+  "3140 W Buckeye Rd, Phoenix, AZ, 85009-5637": {
+    "lat": 33.4373783,
+    "lng": -112.1281604
+  },
+  "700 W Beale St, Kingman, AZ, 86401-5711": {
+    "lat": 35.1906022,
+    "lng": -114.0649535
+  },
+  "220 Ruger Rd, Prescott, AZ, 86301-9114": {
+    "lat": 34.648134,
+    "lng": -112.4331292
+  },
+  "4535 N 28Th St, Phoenix, AZ, 85016-4930": {
+    "lat": 33.5037935,
+    "lng": -112.0210388
+  },
+  "4540 W Glendale Ave, Glendale, AZ, 85301-2809": {
+    "lat": 33.5394137,
+    "lng": -112.1568652
+  },
+  "5701 W Mcdowell Rd, Phoenix, AZ, 85035-4947": {
+    "lat": 33.4649909,
+    "lng": -112.1831633
+  },
+  "6633 W Camelback Rd, Phoenix, AZ, 85033-1614": {
+    "lat": 33.5088111,
+    "lng": -112.2024291
+  },
+  "434 W Lerdo Rd, Tucson, AZ, 85756-6655": {
+    "lat": 32.1322498,
+    "lng": -110.9759975
+  },
+  "1557 W Prince Rd, Tucson, AZ, 85705-3023": {
+    "lat": 32.2721413,
+    "lng": -110.9995224
+  },
+  "3420 N Burbank St, Kingman, AZ, 86409-3105": {
+    "lat": 35.2241988,
+    "lng": -114.029066
+  },
+  "12775 N 175Th Ave, Surprise, AZ, 85388-5088": {
+    "lat": 33.599408,
+    "lng": -112.434862
+  },
+  "7102 W Valley Crest Pl, Tucson, AZ, 85757-8709": {
+    "lat": 32.1311061,
+    "lng": -111.1177882
+  },
+  "5818 N 7Th St, Phoenix, AZ, 85014-5806": {
+    "lat": 33.5221705,
+    "lng": -112.0650861
+  },
+  "2598 Starlite Ln, Lake Havasu City, AZ, 86403-4946": {
+    "lat": 34.491545,
+    "lng": -114.317163
+  },
+  "15533 W Paradise Ln, Surprise, AZ, 85374-5851": {
+    "lat": 33.6302882,
+    "lng": -112.3955808
+  },
+  "4120 E Acoma Dr, Phoenix, AZ, 85032-4753": {
+    "lat": 33.6201341,
+    "lng": -111.9930527
+  },
+  "115 N. Columbia Avenue, Somerton, AZ, 85350-2759": {
+    "lat": 32.5976235,
+    "lng": -114.7064447
+  },
+  "1233 N Main St, San Luis, AZ, 85349": {
+    "lat": 32.5008673,
+    "lng": -114.7858308
+  },
+  "1445 W Baseline Rd, Phoenix, AZ, 85041-7010": {
+    "lat": 33.3775821,
+    "lng": -112.0910468
+  },
+  "16850 N 16Th St, Phoenix, AZ, 85022-3082": {
+    "lat": 33.6399718,
+    "lng": -112.0482771
+  },
+  "732 W Roger Rd, Tucson, AZ, 85705-2621": {
+    "lat": 32.2793305,
+    "lng": -110.9830757
+  },
+  "1122 N G Ave, Douglas, AZ, 85607-1927": {
+    "lat": 31.3496477,
+    "lng": -109.5547176
+  },
+  "3120 N 137Th Ave, Avondale, AZ, 85392-1210": {
+    "lat": 33.4819248,
+    "lng": -112.3559995
+  },
+  "2001 Third Ave, Trail, BC, V1R 1R6": {
+    "lat": 49.0981519,
+    "lng": -117.7005934
+  },
+  "400 Hollis Rd, Ashcroft, BC, V0K 1A0": {
+    "lat": 50.7317733,
+    "lng": -121.2725713
+  },
+  "6161 Okanagan St, Oliver, BC, V0H 1T0": {
+    "lat": 49.1831015,
+    "lng": -119.5537406
+  },
+  "425 Jermyn Ave, Penticton, BC, V2A 1Z4": {
+    "lat": 49.4917895,
+    "lng": -119.5844946
+  },
+  "2121 Lonsdale Ave, North Vancouver, BC, V7M 2K6": {
+    "lat": 49.3181953,
+    "lng": -123.0724442
+  },
+  "2100 Ferry Ave, Prince George, BC, V2L 4R5": {
+    "lat": 53.8881579,
+    "lng": -122.7738198
+  },
+  "6975 Rupert St, Port Hardy, BC, V0N 2P0": {
+    "lat": 50.7194485,
+    "lng": -127.4953412
+  },
+  "2501 W 7Th St, Los Angeles, CA, 90057-3801": {
+    "lat": 34.05872,
+    "lng": -118.281617
+  },
+  "201 Brewington Ave, Watsonville, CA, 95076-4022": {
+    "lat": 36.919409,
+    "lng": -121.7524102
+  },
+  "217 N 10Th St, Montebello, CA, 90640-4604": {
+    "lat": 34.0131561,
+    "lng": -118.110141
+  },
+  "1320 N Acacia Ave, Fullerton, CA, 92831-1202": {
+    "lat": 33.8840406,
+    "lng": -117.8974961
+  },
+  "658 E Adams Ave, Fowler, CA, 93625-2198": {
+    "lat": 36.634573,
+    "lng": -119.6752717
+  },
+  "1929 W Pico Blvd, Los Angeles, CA, 90006-5008": {
+    "lat": 34.0464214,
+    "lng": -118.2806473
+  },
+  "415 31St St, San Diego, CA, 92102-4236": {
+    "lat": 32.709866,
+    "lng": -117.126339
+  },
+  "1405 North San Fernando Blvd, Burbank, CA, 91504-4182": {
+    "lat": 34.1902296,
+    "lng": -118.3219691
+  },
+  "3530 Camino Del Rio N, San Diego, CA, 92108-1743": {
+    "lat": 32.7771599,
+    "lng": -117.1219805
+  },
+  "19175 3RD St, Oro Grande, CA, 92368": {
+    "lat": 34.5987742,
+    "lng": -117.3320593
+  },
+  "202 S Clay St, Independence, CA, 93526": {
+    "lat": 36.8023775,
+    "lng": -118.1967764
+  },
+  "1492 Pine Flat Rd, Santa Cruz, CA, 95060-9712": {
+    "lat": 37.0616743,
+    "lng": -122.1486165
+  },
+  "1557 W Mable St, Anaheim, CA, 92802-1092": {
+    "lat": 33.8300377,
+    "lng": -117.93514
+  },
+  "14983 Road 208, Porterville, CA, 93257-9318": {
+    "lat": 36.0615734,
+    "lng": -119.1088989
+  },
+  "315 S Lower Sacramento Rd, Lodi, CA, 95242-3322": {
+    "lat": 38.1290835,
+    "lng": -121.3064855
+  },
+  "6130 Skyline Dr, San Diego, CA, 92114-5620": {
+    "lat": 32.702541,
+    "lng": -117.064835
+  },
+  "4034 Irving Pl, Culver City, CA, 90232-2810": {
+    "lat": 34.0224976,
+    "lng": -118.3938933
+  },
+  "11204 Asher St, El Monte, CA, 91731-3404": {
+    "lat": 34.0674799,
+    "lng": -118.0325589
+  },
+  "5150 Wilson St, La Mesa, CA, 91942-9017": {
+    "lat": 32.773075,
+    "lng": -117.007159
+  },
+  "655 W Sierra Madre Ave, Glendora, CA, 91741-1997": {
+    "lat": 34.1469992,
+    "lng": -117.8763692
+  },
+  "19722 Collier St, Woodland Hills, CA, 91364-3618": {
+    "lat": 34.1647796,
+    "lng": -118.5627547
+  },
+  "13082 Bowen St, Garden Grove, CA, 92843-1001": {
+    "lat": 33.7726646,
+    "lng": -117.9501347
+  },
+  "1333 Grand Ave, Sacramento, CA, 95838-3654": {
+    "lat": 38.6375781,
+    "lng": -121.4350718
+  },
+  "2285 Murray Ridge Rd, San Diego, CA, 92123-3934": {
+    "lat": 32.786391,
+    "lng": -117.144214
+  },
+  "7357 Jordan Ave, Canoga Park, CA, 91303-1238": {
+    "lat": 34.2038599,
+    "lng": -118.6029633
+  },
+  "800 Broadway St, King City, CA, 93930-3326": {
+    "lat": 36.208453,
+    "lng": -121.133627
+  },
+  "6829 Stockton Blvd, Sacramento, CA, 95823-2395": {
+    "lat": 38.5022015,
+    "lng": -121.4318552
+  },
+  "585 Willow Ave, Hayward, CA, 94541-2424": {
+    "lat": 37.6755713,
+    "lng": -122.0980317
+  },
+  "6624 Lockhurst Dr, West Hills, CA, 91307-3135": {
+    "lat": 34.1905749,
+    "lng": -118.6489242
+  },
+  "1690 Church St, San Francisco, CA, 94131-2453": {
+    "lat": 37.7438894,
+    "lng": -122.4271031
+  },
+  "2151 N Soto St, Los Angeles, CA, 90032-3629": {
+    "lat": 34.0683432,
+    "lng": -118.1954079
+  },
+  "910 S Fairfax Ave, Los Angeles, CA, 90036-4419": {
+    "lat": 34.0596968,
+    "lng": -118.3627734
+  },
+  "2280 Damien Ave, La Verne, CA, 91750-5296": {
+    "lat": 34.1036814,
+    "lng": -117.7883813
+  },
+  "960 S Soto St, Los Angeles, CA, 90023-1323": {
+    "lat": 34.0324954,
+    "lng": -118.2158463
+  },
+  "5862 C St, Chino, CA, 91710-4471": {
+    "lat": 34.0165014,
+    "lng": -117.6773763
+  },
+  "5430 Torrance Blvd, Torrance, CA, 90503-4084": {
+    "lat": 33.8375211,
+    "lng": -118.3718332
+  },
+  "1791 W Acacia Ave, Hemet, CA, 92545-3637": {
+    "lat": 33.7437165,
+    "lng": -116.9909445
+  },
+  "329 N Garfield Ave, Montebello, CA, 90640-3803": {
+    "lat": 34.0251488,
+    "lng": -118.131197
+  },
+  "4021 Teale Ave, San Jose, CA, 95117-3433": {
+    "lat": 37.3031952,
+    "lng": -121.972324
+  },
+  "3855 W Slauson Ave, Los Angeles, CA, 90043-2947": {
+    "lat": 33.9890467,
+    "lng": -118.3412957
+  },
+  "25515 Eshelman Ave, Lomita, CA, 90717-2621": {
+    "lat": 33.7921599,
+    "lng": -118.3146307
+  },
+  "5330 Eastside Cir, Yorba Linda, CA, 92887-2743": {
+    "lat": 33.8822335,
+    "lng": -117.7465456
+  },
+  "9100 Falmouth Ave, Playa Del Rey, CA, 90293-8299": {
+    "lat": 33.954481,
+    "lng": -118.4329463
+  },
+  "42 Chestnut St, Pasadena, CA, 91103-3802": {
+    "lat": 34.1501099,
+    "lng": -118.1497241
+  },
+  "215 S Eureka St, Redlands, CA, 92373-5112": {
+    "lat": 34.0518911,
+    "lng": -117.1825063
+  },
+  "17720 Ventura Blvd, Encino, CA, 91316-3716": {
+    "lat": 34.1624731,
+    "lng": -118.5190324
+  },
+  "761 Broad St, San Luis Obispo, CA, 93401-2228": {
+    "lat": 35.2819756,
+    "lng": -120.6665004
+  },
+  "1940 Cunningham Ave, San Jose, CA, 95122-1798": {
+    "lat": 37.3309704,
+    "lng": -121.8270311
+  },
+  "530 S Glassell St, Orange, CA, 92866-3099": {
+    "lat": 33.7800548,
+    "lng": -117.8534432
+  },
+  "2900 W Pico Blvd, Los Angeles, CA, 90006-3865": {
+    "lat": 34.047133,
+    "lng": -118.303253
+  },
+  "9974 19TH St, Rancho Cucamonga, CA, 91737-4234": {
+    "lat": 34.1330573,
+    "lng": -117.5874215
+  },
+  "5248 Rose St, Sacramento, CA, 95838-1699": {
+    "lat": 38.6632689,
+    "lng": -121.4471231
+  },
+  "325 E Huntington Dr, Monrovia, CA, 91016-6419": {
+    "lat": 34.1406047,
+    "lng": -117.9926587
+  },
+  "10319 Firmona Ave, Lennox, CA, 90304-1419": {
+    "lat": 33.9430269,
+    "lng": -118.3570633
+  },
+  "2730 Del Mar Ave, Rosemead, CA, 91770-3099": {
+    "lat": 34.0616669,
+    "lng": -118.0993549
+  },
+  "7900 Eloise Ave, Elverta, CA, 95626-9217": {
+    "lat": 38.7122664,
+    "lng": -121.4636981
+  },
+  "3699 Holly Ave, Baldwin Park, CA, 91706-5327": {
+    "lat": 34.081816,
+    "lng": -117.96128
+  },
+  "1401 Inglewood Ave, Redondo Beach, CA, 90278-3934": {
+    "lat": 33.865653,
+    "lng": -118.361277
+  },
+  "3710 Dorisa Ave, Oakland, CA, 94605-4941": {
+    "lat": 37.7576972,
+    "lng": -122.144371
+  },
+  "1678 School St, Moraga, CA, 94556-1119": {
+    "lat": 37.833125,
+    "lng": -122.132655
+  },
+  "1030 Astoria Dr, Sunnyvale, CA, 94087-3041": {
+    "lat": 37.3498643,
+    "lng": -122.05749
+  },
+  "13330 Riverside Dr, Sherman Oaks, CA, 91423-2521": {
+    "lat": 34.15753,
+    "lng": -118.423645
+  },
+  "1317 Sinaloa Ave, Pasadena, CA, 91104-3154": {
+    "lat": 34.1686283,
+    "lng": -118.1157228
+  },
+  "783 San Andreas Rd, La Selva Beach, CA, 95076-1911": {
+    "lat": 36.9109564,
+    "lng": -121.8293788
+  },
+  "717 S Cabrillo Ave, San Pedro, CA, 90731-3094": {
+    "lat": 33.7376327,
+    "lng": -118.2944367
+  },
+  "1701 W Valencia Dr, Fullerton, CA, 92833-3800": {
+    "lat": 33.8675692,
+    "lng": -117.9581771
+  },
+  "5353 W 3Rd St, Los Angeles, CA, 90020-4899": {
+    "lat": 34.0688352,
+    "lng": -118.3351887
+  },
+  "140 Foothill Blvd, La Canada Flintridge, CA, 91011-3792": {
+    "lat": 34.1944573,
+    "lng": -118.1787385
+  },
+  "322 N Baldwin Ave, Sierra Madre, CA, 91024-1213": {
+    "lat": 34.1672054,
+    "lng": -118.0524516
+  },
+  "1301 Deodar Rd, Escondido, CA, 92026-2210": {
+    "lat": 33.1395725,
+    "lng": -117.105894
+  },
+  "682 Palm St, San Luis Obispo, CA, 93401-3572": {
+    "lat": 35.2810959,
+    "lng": -120.6657301
+  },
+  "32650 Avenida Lestonnac, Temecula, CA, 92592-9222": {
+    "lat": 33.5174318,
+    "lng": -117.0900582
+  },
+  "455 S Compadre Rd, Palm Springs, CA, 92262-7997": {
+    "lat": 33.8154277,
+    "lng": -116.5149793
+  },
+  "1809 Bancroft Way, Berkeley, CA, 94703-1711": {
+    "lat": 37.867009,
+    "lng": -122.274366
+  },
+  "1198 Redmond Ave, San Jose, CA, 95120-2770": {
+    "lat": 37.2285868,
+    "lng": -121.8729982
+  },
+  "1501 S Atlantic Blvd, Monterey Park, CA, 91754-5299": {
+    "lat": 34.0452892,
+    "lng": -118.1411815
+  },
+  "2534 Ventura Blvd, Camarillo, CA, 93010-6649": {
+    "lat": 34.2161229,
+    "lng": -119.0360393
+  },
+  "4850 Pearl Ave, San Jose, CA, 95136-2701": {
+    "lat": 37.2619916,
+    "lng": -121.8631024
+  },
+  "912 Coeur D Alene Ave, Venice, CA, 90291-4929": {
+    "lat": 33.9913484,
+    "lng": -118.452475
+  },
+  "2400 E Lake Ave, Watsonville, CA, 95076-1494": {
+    "lat": 36.9277374,
+    "lng": -121.7452064
+  },
+  "2000 Stoner Ave, Los Angeles, CA, 90025-6109": {
+    "lat": 34.036427,
+    "lng": -118.451046
+  },
+  "15315 Stonebridge Pkwy, San Diego, CA, 92131-4336": {
+    "lat": 32.92537,
+    "lng": -117.017439
+  },
+  "4141 Beyer Blvd, San Ysidro, CA, 92173-2133": {
+    "lat": 32.5576542,
+    "lng": -117.045076
+  },
+  "5788 Thornton Ave, Newark, CA, 94560-3891": {
+    "lat": 37.5395377,
+    "lng": -122.0277061
+  },
+  "890 Toyopa Dr, Pacific Palisades, CA, 90272-3779": {
+    "lat": 34.044355,
+    "lng": -118.523577
+  },
+  "154 E Janss Rd, Thousand Oaks, CA, 91360-3397": {
+    "lat": 34.2011277,
+    "lng": -118.8689959
+  },
+  "4625 Garnet St, Torrance, CA, 90503-2299": {
+    "lat": 33.8438764,
+    "lng": -118.3627269
+  },
+  "5648 N El Dorado St, Stockton, CA, 95207-4459": {
+    "lat": 38.0032687,
+    "lng": -121.3068984
+  },
+  "33866 Calle La Primavera, Dana Point, CA, 92629-2020": {
+    "lat": 33.4713635,
+    "lng": -117.6894468
+  },
+  "940 Laguna Honda Blvd, San Francisco, CA, 94127-1239": {
+    "lat": 37.7431305,
+    "lng": -122.4558666
+  },
+  "26910 Patrick Ave, Hayward, CA, 94544-3898": {
+    "lat": 37.6383034,
+    "lng": -122.0795315
+  },
+  "620 Olive Ave, Long Beach, CA, 90802-1546": {
+    "lat": 33.7745343,
+    "lng": -118.1824859
+  },
+  "2121 Saviers Rd, Oxnard, CA, 93033-3899": {
+    "lat": 34.1790347,
+    "lng": -119.1775933
+  },
+  "254 S Santa Anita St, San Gabriel, CA, 91776-1182": {
+    "lat": 34.0980464,
+    "lng": -118.1077927
+  },
+  "2501 Maiden Ln, Altadena, CA, 91001-2060": {
+    "lat": 34.188665,
+    "lng": -118.128701
+  },
+  "13200 Red Hill Ave, Tustin, CA, 92780-3839": {
+    "lat": 33.7425572,
+    "lng": -117.8062888
+  },
+  "2046 Mar Vista Dr, Newport Beach, CA, 92660-4595": {
+    "lat": 33.6320872,
+    "lng": -117.8773011
+  },
+  "19920 Anita Ave, Castro Valley, CA, 94546-4106": {
+    "lat": 37.7002789,
+    "lng": -122.0835406
+  },
+  "611 W Bonita Ave, Claremont, CA, 91711-4597": {
+    "lat": 34.09628,
+    "lng": -117.7308985
+  },
+  "2955 Huntington Dr, San Marino, CA, 91108-2222": {
+    "lat": 34.1275086,
+    "lng": -118.0926314
+  },
+  "901 E Heim Ave, Orange, CA, 92865-2845": {
+    "lat": 33.8313086,
+    "lng": -117.8443979
+  },
+  "11111 Alemany Dr, Mission Hills, CA, 91345-1197": {
+    "lat": 34.2788779,
+    "lng": -118.4622976
+  },
+  "8740 Emerson Ave, Los Angeles, CA, 90045-3797": {
+    "lat": 33.9582757,
+    "lng": -118.4041099
+  },
+  "8631 Stanmoor Dr, Los Angeles, CA, 90045-2398": {
+    "lat": 33.9587851,
+    "lng": -118.4252332
+  },
+  "7681 Orangethorpe Ave, Buena Park, CA, 90621-3490": {
+    "lat": 33.8604057,
+    "lng": -117.99965
+  },
+  "1294 Albina Ave, Berkeley, CA, 94706-2599": {
+    "lat": 37.8823493,
+    "lng": -122.2839663
+  },
+  "9201 Grindlay St, Cypress, CA, 90630-3076": {
+    "lat": 33.8294598,
+    "lng": -118.0422856
+  },
+  "275 S Victoria Ave, San Jacinto, CA, 92583-4047": {
+    "lat": 33.7807238,
+    "lng": -116.9645844
+  },
+  "3591 Orangewood Ave, Los Alamitos, CA, 90720-3904": {
+    "lat": 33.7958594,
+    "lng": -118.072283
+  },
+  "322 W D St, Ontario, CA, 91762-3414": {
+    "lat": 34.067094,
+    "lng": -117.6539401
+  },
+  "2050 N San Fernando Rd, Los Angeles, CA, 90065-1267": {
+    "lat": 34.101316,
+    "lng": -118.2362099
+  },
+  "4471 Inglewood Blvd, Los Angeles, CA, 90066-6209": {
+    "lat": 33.9954594,
+    "lng": -118.4188466
+  },
+  "2941 W 70Th St, Los Angeles, CA, 90043-4420": {
+    "lat": 33.9764532,
+    "lng": -118.3249849
+  },
+  "10101 S Broadway, Los Angeles, CA, 90003-4534": {
+    "lat": 33.9445123,
+    "lng": -118.278053
+  },
+  "2023 S Union Ave, Los Angeles, CA, 90007-1326": {
+    "lat": 34.0369889,
+    "lng": -118.2822485
+  },
+  "5151 State University Dr, Los Angeles, CA, 90032-4226": {
+    "lat": 34.0664949,
+    "lng": -118.1671415
+  },
+  "2930 Fletcher Dr, Los Angeles, CA, 90065-1407": {
+    "lat": 34.1133773,
+    "lng": -118.247635
+  },
+  "8515 Kansas Ave, Los Angeles, CA, 90044-3496": {
+    "lat": 33.9607236,
+    "lng": -118.2940871
+  },
+  "3512 N E St, San Bernardino, CA, 92405-2110": {
+    "lat": 34.1551792,
+    "lng": -117.2941655
+  },
+  "9530 Monterey Rd, Morgan Hill, CA, 95037-9356": {
+    "lat": 37.1516632,
+    "lng": -121.6726656
+  },
+  "655 W 2Nd St, San Bernardino, CA, 92410-3210": {
+    "lat": 34.1012748,
+    "lng": -117.297301
+  },
+  "23000 Via Santa Maria, Mission Viejo, CA, 92691-1827": {
+    "lat": 33.6293366,
+    "lng": -117.6583428
+  },
+  "22882 Loumont Dr, Lake Forest, CA, 92630-3935": {
+    "lat": 33.6297069,
+    "lng": -117.7009767
+  },
+  "113 S Rowan Ave, Los Angeles, CA, 90063-2434": {
+    "lat": 34.0354701,
+    "lng": -118.1873327
+  },
+  "434 S Grevillea Ave, Inglewood, CA, 90301-2300": {
+    "lat": 33.958334,
+    "lng": -118.354804
+  },
+  "700 Kimlin Dr, Glendale, CA, 91206-1641": {
+    "lat": 34.156121,
+    "lng": -118.22637
+  },
+  "1 Estates Dr, Piedmont, CA, 94611-3398": {
+    "lat": 37.814241,
+    "lng": -122.214061
+  },
+  "1851 136Th Ave, San Leandro, CA, 94578-1699": {
+    "lat": 37.7197143,
+    "lng": -122.1368453
+  },
+  "2772 Sterling Ave, San Bernardino, CA, 92404-3499": {
+    "lat": 34.1424664,
+    "lng": -117.2454376
+  },
+  "479 Miller Ave, South San Francisco, CA, 94080-2703": {
+    "lat": 37.657277,
+    "lng": -122.4152816
+  },
+  "2390 Nautilus St, La Jolla, CA, 92037-6421": {
+    "lat": 32.8331947,
+    "lng": -117.2517762
+  },
+  "6990 65Th St, Sacramento, CA, 95823-2316": {
+    "lat": 38.5007857,
+    "lng": -121.4310363
+  },
+  "1615 N Alexandria Ave, Los Angeles, CA, 90027-5207": {
+    "lat": 34.101366,
+    "lng": -118.2984405
+  },
+  "2911 N San Fernando Rd, Los Angeles, CA, 90065-1323": {
+    "lat": 34.1114016,
+    "lng": -118.2434314
+  },
+  "5300 White Oak Ave, Encino, CA, 91316-2494": {
+    "lat": 34.166874,
+    "lng": -118.518454
+  },
+  "1202 W Edinger Ave, Santa Ana, CA, 92707-2191": {
+    "lat": 33.7260273,
+    "lng": -117.8837551
+  },
+  "14830 Van Ness Ave, Gardena, CA, 90249-3718": {
+    "lat": 33.897087,
+    "lng": -118.3177227
+  },
+  "16535 Chatsworth St, Granada Hills, CA, 91344-6799": {
+    "lat": 34.2648345,
+    "lng": -118.5113424
+  },
+  "1701 Laurel Ave, Manhattan Beach, CA, 90266-4991": {
+    "lat": 33.8909249,
+    "lng": -118.405065
+  },
+  "4660 Harbord Dr, Oakland, CA, 94618-2211": {
+    "lat": 37.8394834,
+    "lng": -122.2308287
+  },
+  "360 Campus Dr, Arcadia, CA, 91007-6932": {
+    "lat": 34.1309414,
+    "lng": -118.0444726
+  },
+  "17100 Superior St, Northridge, CA, 91325-1999": {
+    "lat": 34.2456813,
+    "lng": -118.5056871
+  },
+  "26400 Dartmouth St, Hemet, CA, 92544-6302": {
+    "lat": 33.7385588,
+    "lng": -116.9367544
+  },
+  "9401 Painter Ave, Whittier, CA, 90605-2729": {
+    "lat": 33.951959,
+    "lng": -118.0460646
+  },
+  "2755 Mckinleyville Ave, Mckinleyville, CA, 95519-3400": {
+    "lat": 40.955034,
+    "lng": -124.1102957
+  },
+  "215 N Crespi Ave, Exeter, CA, 93221-1700": {
+    "lat": 36.2996562,
+    "lng": -119.1321735
+  },
+  "1 Solano St, Brisbane, CA, 94005-1342": {
+    "lat": 37.6851683,
+    "lng": -122.4048841
+  },
+  "301 S Hay St, Lone Pine, CA, 93545": {
+    "lat": 36.6027621,
+    "lng": -118.0605964
+  },
+  "110 School Rd, Miranda, CA, 95553": {
+    "lat": 40.2356852,
+    "lng": -123.8211234
+  },
+  "8560 Aliento Rd, Lucerne Valley, CA, 92356-8133": {
+    "lat": 34.4104091,
+    "lng": -116.907748
+  },
+  "11321 Bullis Rd, Lynwood, CA, 90262-3666": {
+    "lat": 33.9268993,
+    "lng": -118.1997367
+  },
+  "7611 Huntley St, Sebastopol, CA, 95472-3668": {
+    "lat": 38.4008594,
+    "lng": -122.8309802
+  },
+  "615 W 3RD St, Dorris, CA, 96023": {
+    "lat": 41.9641916,
+    "lng": -121.9224503
+  },
+  "1825 Trousdale Dr, Burlingame, CA, 94010-4509": {
+    "lat": 37.5921131,
+    "lng": -122.3856941
+  },
+  "500 S Main St, Big Pine, CA, 93513": {
+    "lat": 37.162584,
+    "lng": -118.2895023
+  },
+  "9121 Road 240, Terra Bella, CA, 93270-9423": {
+    "lat": 35.9549775,
+    "lng": -119.0361607
+  },
+  "1102 5Th St, Wasco, CA, 93280-1338": {
+    "lat": 35.5970761,
+    "lng": -119.3383351
+  },
+  "6940 Calloway Dr, Bakersfield, CA, 93312-9005": {
+    "lat": 35.4234423,
+    "lng": -119.1098758
+  },
+  "12961 Le Grand Rd, Le Grand, CA, 95333-9737": {
+    "lat": 37.2283483,
+    "lng": -120.2536342
+  },
+  "1645 Valley Dr, Hermosa Beach, CA, 90254-2921": {
+    "lat": 33.8666597,
+    "lng": -118.3970768
+  },
+  "9401 Painter Ave, Whittier, CA, 90605-2798": {
+    "lat": 33.951959,
+    "lng": -118.0460646
+  },
+  "800 Niblick Rd, Paso Robles, CA, 93446-4858": {
+    "lat": 35.6148261,
+    "lng": -120.6722825
+  },
+  "331 N Shafter Ave, Shafter, CA, 93263-1999": {
+    "lat": 35.5030501,
+    "lng": -119.2804968
+  },
+  "4801 Lucinda Ave, Keyes, CA, 95328-9612": {
+    "lat": 37.559432,
+    "lng": -120.9051334
+  },
+  "461 Sierra Park Rd, Mammoth Lakes, CA, 93546": {
+    "lat": 37.6394486,
+    "lng": -118.9637847
+  },
+  "1435 Buttermilk Ln, Arcata, CA, 95521-6909": {
+    "lat": 40.8572664,
+    "lng": -124.0666874
+  },
+  "600 N Cherry St, Tulare, CA, 93274-2998": {
+    "lat": 36.2256007,
+    "lng": -119.3369162
+  },
+  "2275 Central Ave, Mckinleyville, CA, 95519-3611": {
+    "lat": 40.9465208,
+    "lng": -124.0988944
+  },
+  "37479 Avenue 12, Madera, CA, 93636-8726": {
+    "lat": 36.923134,
+    "lng": -119.8675661
+  },
+  "7311 Rosedale Hwy, Bakersfield, CA, 93308-5738": {
+    "lat": 35.3829799,
+    "lng": -119.0836415
+  },
+  "2041 Almond St, Dos Palos, CA, 93620-2394": {
+    "lat": 36.984722,
+    "lng": -120.6286767
+  },
+  "4400 Alma Ave, Castro Valley, CA, 94546-3104": {
+    "lat": 37.7078154,
+    "lng": -122.0721551
+  },
+  "1520 Yosemite Ave, Escalon, CA, 95320-1796": {
+    "lat": 37.7985314,
+    "lng": -120.9942984
+  },
+  "600 Elko St, Gonzales, CA, 93926": {
+    "lat": 36.5129191,
+    "lng": -121.4450705
+  },
+  "5801 Sundale Ave, Bakersfield, CA, 93309-7908": {
+    "lat": 35.3439008,
+    "lng": -119.0653696
+  },
+  "627 Sespe Ave, Fillmore, CA, 93015-1918": {
+    "lat": 34.4003296,
+    "lng": -118.9170198
+  },
+  "185 S Main St, Angels Camp, CA, 95222": {
+    "lat": 38.0805137,
+    "lng": -120.5559793
+  },
+  "50 Church St, Quincy, CA, 95971-9451": {
+    "lat": 39.9371215,
+    "lng": -120.94407
+  },
+  "14581 Lyons Valley Rd, Jamul, CA, 91935-3324": {
+    "lat": 32.728379,
+    "lng": -116.854512
+  },
+  "97 School St, Cloverdale, CA, 95425-3244": {
+    "lat": 38.809661,
+    "lng": -123.023452
+  },
+  "545 Chaney St, Lake Elsinore, CA, 92530-2712": {
+    "lat": 33.6803242,
+    "lng": -117.338763
+  },
+  "926 Scott Rd, Merced, CA, 95341-9746": {
+    "lat": 37.3008599,
+    "lng": -120.567397
+  },
+  "4402 Oakdale Rd, Winton, CA, 95388-9755": {
+    "lat": 37.4389372,
+    "lng": -120.5652369
+  },
+  "398 B St, South San Francisco, CA, 94080-4423": {
+    "lat": 37.6498157,
+    "lng": -122.42825
+  },
+  "1401 Broadway Ave, Atwater, CA, 95301-3546": {
+    "lat": 37.348306,
+    "lng": -120.611099
+  },
+  "29780 Lakeview Ave, Nuevo, CA, 92567-9261": {
+    "lat": 33.8114478,
+    "lng": -117.1412343
+  },
+  "19811 Orange Belt Dr, Strathmore, CA, 93267-9798": {
+    "lat": 36.1493413,
+    "lng": -119.0625022
+  },
+  "800 Hoover Ln, Nevada City, CA, 95959-2952": {
+    "lat": 39.2554763,
+    "lng": -121.0312301
+  },
+  "1028 Prince Ave, Healdsburg, CA, 95448-3596": {
+    "lat": 38.6210278,
+    "lng": -122.8679934
+  },
+  "2975 Mission Dr, Solvang, CA, 93463-9417": {
+    "lat": 34.6001003,
+    "lng": -120.161931
+  },
+  "4545 Moran Rd, Avery, CA, 95224": {
+    "lat": 38.2034732,
+    "lng": -120.364849
+  },
+  "601 Elm Ave, Imperial Beach, CA, 91932-2098": {
+    "lat": 32.5800355,
+    "lng": -117.1201551
+  },
+  "922 B St, Livingston, CA, 95334-1198": {
+    "lat": 37.3858804,
+    "lng": -120.7287946
+  },
+  "1624 Fairview Rd, Bakersfield, CA, 93307-5599": {
+    "lat": 35.3031497,
+    "lng": -119.0075227
+  },
+  "1200 Industrial Rd, San Carlos, CA, 94070-4123": {
+    "lat": 37.5025122,
+    "lng": -122.247386
+  },
+  "1976 Morris Kyle Dr, Firebaugh, CA, 93622-9711": {
+    "lat": 36.8468585,
+    "lng": -120.4493476
+  },
+  "311 S Villa Ave, Willows, CA, 95988-2959": {
+    "lat": 39.5170884,
+    "lng": -122.2089015
+  },
+  "4490 Cornishon Ave, La Canada Flintridge, CA, 91011-3243": {
+    "lat": 34.205016,
+    "lng": -118.2031824
+  },
+  "20240 E Cienega Ave, Covina, CA, 91724-1227": {
+    "lat": 34.103121,
+    "lng": -117.8576447
+  },
+  "4711 Campbell Ave, San Jose, CA, 95130-1790": {
+    "lat": 37.288001,
+    "lng": -121.9866242
+  },
+  "3235 Union Ave, San Jose, CA, 95124-2096": {
+    "lat": 37.2650079,
+    "lng": -121.9332775
+  },
+  "325 Marion Ave, Ben Lomond, CA, 95005-9403": {
+    "lat": 37.0820771,
+    "lng": -122.0732893
+  },
+  "379 12Th St, Fortuna, CA, 95540-2398": {
+    "lat": 40.5945885,
+    "lng": -124.1521067
+  },
+  "115 Mccabe Ave, Mendota, CA, 93640-2000": {
+    "lat": 36.7609822,
+    "lng": -120.3870463
+  },
+  "31505 Old River Rd, Bonsall, CA, 92003-5112": {
+    "lat": 33.2835519,
+    "lng": -117.2186767
+  },
+  "2705 W Orange Ave, Anaheim, CA, 92804-3298": {
+    "lat": 33.825263,
+    "lng": -117.9801194
+  },
+  "8025 Lincoln St, Lemon Grove, CA, 91945-2515": {
+    "lat": 32.7383744,
+    "lng": -117.0261544
+  },
+  "23958 Ave 324, Lemon Cove, CA, 93244": {
+    "lat": 36.3766951,
+    "lng": -119.0374117
+  },
+  "17010 Roberts Rd, Los Gatos, CA, 95032-4510": {
+    "lat": 37.2343117,
+    "lng": -121.9663527
+  },
+  "333 South Beaudry Avenue, Los Angeles, CA, 90017-5141": {
+    "lat": 34.0562412,
+    "lng": -118.2569801
+  },
+  "3531 22Nd St, San Francisco, CA, 94114-3405": {
+    "lat": 37.7544096,
+    "lng": -122.4260712
+  },
+  "1216 Solano Ave, Albany, CA, 94706-1725": {
+    "lat": 37.8902905,
+    "lng": -122.2956121
+  },
+  "1 Civic Center Cir, Brea, CA, 92821-5792": {
+    "lat": 33.9171393,
+    "lng": -117.889004
+  },
+  "5816 Corporate Ave, Cypress, CA, 90630-4731": {
+    "lat": 33.807908,
+    "lng": -118.0306598
+  },
+  "231 Kingsley St, Bridgeport, CA, 93517": {
+    "lat": 38.2545877,
+    "lng": -119.229099
+  },
+  "1201 Felta Rd, Healdsburg, CA, 95448-9399": {
+    "lat": 38.5800561,
+    "lng": -122.8832825
+  },
+  "408 Junipero Serra Dr, San Gabriel, CA, 91776-1235": {
+    "lat": 34.0968476,
+    "lng": -118.1056691
+  },
+  "401 S Inglewood Ave, Inglewood, CA, 90301-2599": {
+    "lat": 33.958653,
+    "lng": -118.361757
+  },
+  "511 S Orchard Ave, Ukiah, CA, 95482-3470": {
+    "lat": 39.1477402,
+    "lng": -123.1987049
+  },
+  "302 N Midway Dr, Escondido, CA, 92027-2708": {
+    "lat": 33.1360694,
+    "lng": -117.0507775
+  },
+  "7211 Whittier Ave, Whittier, CA, 90602-1189": {
+    "lat": 33.9781833,
+    "lng": -118.0431921
+  },
+  "21380 Centre Pointe Pkwy, Santa Clarita, CA, 91350-3050": {
+    "lat": 34.4126374,
+    "lng": -118.5030697
+  },
+  "5832 Bolsa Ave, Huntington Beach, CA, 92649-1115": {
+    "lat": 33.74391,
+    "lng": -118.0271795
+  },
+  "8324 Westman Ave, Whittier, CA, 90606-3398": {
+    "lat": 33.9735789,
+    "lng": -118.0645169
+  },
+  "3540 Lexington Ave, El Monte, CA, 91731-2608": {
+    "lat": 34.0736202,
+    "lng": -118.0392466
+  },
+  "10055 Slater Ave, Fountain Valley, CA, 92708-4749": {
+    "lat": 33.7096411,
+    "lng": -117.9533425
+  },
+  "1515 W Mission Rd, Alhambra, CA, 91803-1618": {
+    "lat": 34.0825725,
+    "lng": -118.1398091
+  },
+  "50200 Road 427, Oakhurst, CA, 93644-9563": {
+    "lat": 37.329671,
+    "lng": -119.638016
+  },
+  "2100 7Th St, Wasco, CA, 93280-1563": {
+    "lat": 35.594382,
+    "lng": -119.349422
+  },
+  "880 S Lemon Ave, Walnut, CA, 91789-2931": {
+    "lat": 34.0166521,
+    "lng": -117.8644874
+  },
+  "1431 Central Ave, South El Monte, CA, 91733-3301": {
+    "lat": 34.0444178,
+    "lng": -118.0474094
+  },
+  "11200 Telechron Ave, Whittier, CA, 90605-3729": {
+    "lat": 33.9292711,
+    "lng": -118.0387307
+  },
+  "4075 Nielson Rd, Phelan, CA, 92371-8896": {
+    "lat": 34.4185849,
+    "lng": -117.5737018
+  },
+  "1665 West Dr, San Marino, CA, 91108-2594": {
+    "lat": 34.1182569,
+    "lng": -118.1120026
+  },
+  "15250 Avenue Of Science, San Diego, CA, 92128-3406": {
+    "lat": 32.992891,
+    "lng": -117.082203
+  },
+  "800 S Garey Ave, Pomona, CA, 91766-3325": {
+    "lat": 34.0523804,
+    "lng": -117.7498464
+  },
+  "1301 E Orangethorpe Ave, Placentia, CA, 92870-5396": {
+    "lat": 33.8684691,
+    "lng": -117.8480861
+  },
+  "900 S Newmark Ave, Parlier, CA, 93648-2000": {
+    "lat": 36.6047348,
+    "lng": -119.5299403
+  },
+  "15110 California Ave, Paramount, CA, 90723-4378": {
+    "lat": 33.8960654,
+    "lng": -118.158325
+  },
+  "375 Via Almar, Palos Verdes Estates, CA, 90274-1277": {
+    "lat": 33.8007339,
+    "lng": -118.3951423
+  },
+  "700 Pacific St, Monterey, CA, 93940-2864": {
+    "lat": 36.594055,
+    "lng": -121.8980747
+  },
+  "123 S Montebello Blvd, Montebello, CA, 90640-4729": {
+    "lat": 34.0089693,
+    "lng": -118.1091208
+  },
+  "602 Orchard Ave, Arroyo Grande, CA, 93420-4099": {
+    "lat": 35.1152587,
+    "lng": -120.5762392
+  },
+  "3290 Humphrey Road, Loomis, CA, 95650-9043": {
+    "lat": 38.8306942,
+    "lng": -121.2011607
   }
 }
