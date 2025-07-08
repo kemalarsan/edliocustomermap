@@ -206,6 +206,20 @@
         .type-private { color: #9b59b6; }
         .type-cmo { color: #f39c12; }
         .type-esc { color: #27ae60; }
+        
+        /* Custom marker styles */
+        .custom-school-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        .custom-school-marker div {
+            transition: transform 0.2s ease;
+        }
+        
+        .custom-school-marker:hover div {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -213,7 +227,9 @@
         <div id="map"></div>
         
         <div class="controls">
-            <h3>🎯 School Filters</h3>
+            <h3><span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #0066cc, #004499); border-radius: 3px; margin-right: 8px; position: relative; vertical-align: middle;">
+                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">≡</span>
+            </span>School Filters</h3>
             
             <div class="filter-group">
                 <label>School Type:</label>
@@ -273,7 +289,9 @@
             </div>
             
             <div class="filter-group">
-                <label>📍 Zip Code Search:</label>
+                <label><span style="display: inline-block; width: 16px; height: 16px; background: #28a745; border-radius: 50%; margin-right: 6px; position: relative; vertical-align: middle;">
+                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 10px; font-weight: bold;">📍</span>
+                </span>Zip Code Search:</label>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="zip-search" placeholder="Enter zip code" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
@@ -360,20 +378,37 @@
         // Geocode zip code
         async function geocodeZipCode(zipCode) {
             try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${zipCode}&format=json&countrycodes=us&limit=1`, {
-                    headers: {
-                        'User-Agent': 'EdlioCustomerMap/1.0 (educational-mapping)'
-                    }
-                });
-                const data = await response.json();
+                // Try multiple search strategies for better coverage
+                const searches = [
+                    `${zipCode}, USA`,
+                    `${zipCode}`,
+                    `${zipCode}, United States`
+                ];
                 
-                if (data && data.length > 0) {
-                    return {
-                        lat: parseFloat(data[0].lat),
-                        lng: parseFloat(data[0].lon),
-                        display_name: data[0].display_name
-                    };
+                for (const searchTerm of searches) {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchTerm)}&format=json&countrycodes=us&limit=1&addressdetails=1`, {
+                        headers: {
+                            'User-Agent': 'EdlioCustomerMap/1.0 (educational-mapping)'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        console.warn(`Geocoding request failed: ${response.status}`);
+                        continue;
+                    }
+                    
+                    const data = await response.json();
+                    console.log(`Geocoding "${searchTerm}":`, data);
+                    
+                    if (data && data.length > 0) {
+                        return {
+                            lat: parseFloat(data[0].lat),
+                            lng: parseFloat(data[0].lon),
+                            display_name: data[0].display_name
+                        };
+                    }
                 }
+                
                 return null;
             } catch (error) {
                 console.error('Geocoding error:', error);
@@ -406,16 +441,69 @@
             }
         }
         
-        // Create custom colored marker
-        function createColoredMarker(lat, lng, color) {
-            return L.circleMarker([lat, lng], {
-                radius: 6,
-                fillColor: color,
-                color: '#fff',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
+        // Create custom school marker
+        function createSchoolMarker(lat, lng, color) {
+            // Create custom icon HTML
+            const iconHtml = `
+                <div style="
+                    width: 24px; 
+                    height: 24px; 
+                    background: ${color}; 
+                    border: 3px solid white; 
+                    border-radius: 50%; 
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                ">
+                    <div style="
+                        width: 12px; 
+                        height: 12px; 
+                        background: white; 
+                        border-radius: 2px;
+                        position: relative;
+                    ">
+                        <div style="
+                            position: absolute;
+                            top: 2px;
+                            left: 2px;
+                            right: 2px;
+                            height: 2px;
+                            background: ${color};
+                            border-radius: 1px;
+                        "></div>
+                        <div style="
+                            position: absolute;
+                            top: 5px;
+                            left: 2px;
+                            right: 2px;
+                            height: 2px;
+                            background: ${color};
+                            border-radius: 1px;
+                        "></div>
+                        <div style="
+                            position: absolute;
+                            top: 8px;
+                            left: 2px;
+                            right: 2px;
+                            height: 2px;
+                            background: ${color};
+                            border-radius: 1px;
+                        "></div>
+                    </div>
+                </div>
+            `;
+            
+            const customIcon = L.divIcon({
+                html: iconHtml,
+                className: 'custom-school-marker',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
+                popupAnchor: [0, -12]
             });
+            
+            return L.marker([lat, lng], { icon: customIcon });
         }
         
         // Update type counts
@@ -479,15 +567,22 @@
                 return;
             }
             
-            statusEl.textContent = 'Searching...';
+            statusEl.textContent = 'Geocoding zip code...';
             statusEl.style.color = '#0066cc';
+            
+            console.log(`Searching for zip code: ${zipCode}`);
+            console.log(`Total customers in dataset: ${allCustomers.length}`);
             
             const location = await geocodeZipCode(zipCode);
             if (!location) {
-                statusEl.textContent = 'Zip code not found';
+                statusEl.textContent = 'Zip code not found. Try a different zip code.';
                 statusEl.style.color = '#dc3545';
                 return;
             }
+            
+            console.log(`Geocoded location:`, location);
+            
+            statusEl.textContent = 'Calculating distances...';
             
             // Store search parameters
             searchCenter = location;
@@ -510,12 +605,15 @@
             // Center map on search location
             map.setView([location.lat, location.lng], Math.max(map.getZoom(), 10));
             
-            // Update status
+            // Update status - check all customers in radius
             const customersInRadius = allCustomers.filter(customer => {
                 if (!customer.lat || !customer.lng) return false;
                 const distance = calculateDistance(location.lat, location.lng, customer.lat, customer.lng);
                 return distance <= radius;
             });
+            
+            console.log(`Found ${customersInRadius.length} customers within ${radius} miles of ${zipCode}`);
+            console.log('Sample customers in radius:', customersInRadius.slice(0, 3));
             
             statusEl.textContent = `Found ${customersInRadius.length} customers within ${radius} miles`;
             statusEl.style.color = '#28a745';
@@ -618,7 +716,7 @@
             filteredCustomers.forEach(customer => {
                 if (customer.lat && customer.lng) {
                     const color = getMarkerColor(customer.type);
-                    const marker = createColoredMarker(customer.lat, customer.lng, color)
+                    const marker = createSchoolMarker(customer.lat, customer.lng, color)
                         .bindPopup(`
                             <div style="min-width: 250px;">
                                 <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
