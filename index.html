@@ -836,10 +836,6 @@
         <div class="map-edge-left" onclick="toggleControls()" title="Click to show filters"></div>
         <div class="map-edge-right" onclick="toggleSidebar()" title="Click to show customer list"></div>
         
-        <!-- Controls Toggle Button -->
-        <button class="panel-toggle-btn controls-toggle" id="controlsToggle" onclick="toggleControls()">
-            <span id="controlsToggleIcon">‹</span>
-        </button>
         
         <div class="controls" id="controls">
             <div class="controls-content">
@@ -954,10 +950,6 @@
             </div>
         </div>
         
-        <!-- Sidebar Toggle Button -->
-        <button class="panel-toggle-btn sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
-            <span id="sidebarToggleIcon">›</span>
-        </button>
         
         <div class="sidebar" id="sidebar">
             <div class="sidebar-content">
@@ -1888,21 +1880,17 @@
         // Toggle sidebar visibility
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const toggleIcon = document.getElementById('sidebarToggleIcon');
             
             // If currently hidden, show it
             if (sidebar.classList.contains('hidden')) {
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
-                toggleIcon.textContent = '›';  // Panel expanded, arrow points right (collapse direction)
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
-                    toggleIcon.textContent = '›';  // Panel expanded, arrow points right (to collapse)
                 } else {
                     sidebar.classList.add('collapsed');
-                    toggleIcon.textContent = '‹';  // Panel collapsed, arrow points left (to expand)
                 }
             }
         }
@@ -1910,7 +1898,6 @@
         // Toggle controls visibility
         function toggleControls() {
             const controls = document.getElementById('controls');
-            const toggleIcon = document.getElementById('controlsToggleIcon');
             
             // For mobile, use the show/hide functionality
             if (window.innerWidth <= 768) {
@@ -1921,10 +1908,8 @@
             // For desktop, use collapsed functionality
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
-                toggleIcon.textContent = '‹';  // Panel expanded, arrow points left (to collapse)
             } else {
                 controls.classList.add('collapsed');
-                toggleIcon.textContent = '›';  // Panel collapsed, arrow points right (to expand)
             }
         }
         
