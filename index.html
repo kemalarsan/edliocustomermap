@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <!-- Montserrat Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Google Sign-In -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * {
@@ -644,7 +642,30 @@
                 <strong>⚠️ Restricted Access</strong><br>
                 This map contains confidential customer information and is restricted to @edlio.com email addresses only.
             </div>
-            <div id="googleSignIn"></div>
+            <form id="passwordForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <input 
+                    type="email" 
+                    id="emailInput" 
+                    placeholder="Enter your @edlio.com email" 
+                    required
+                    style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
+                />
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    placeholder="Enter access password" 
+                    required
+                    style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
+                />
+                <button 
+                    type="submit" 
+                    style="background: #E53E3E; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: background 0.2s;"
+                    onmouseover="this.style.background='#d32f2f'"
+                    onmouseout="this.style.background='#E53E3E'"
+                >
+                    Access Customer Map
+                </button>
+            </form>
             <div id="authStatus" style="margin-top: 20px; color: #dc3545; font-size: 14px;"></div>
         </div>
     </div>
@@ -801,58 +822,77 @@
     
     <script src="data.js"></script>
     <script>
-        // Google OAuth Configuration
-        const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // This needs to be set up in Google Cloud Console
-        const ALLOWED_DOMAIN = 'edlio.com';
+        // Simple Password Authentication Configuration
+        const EDLIO_ACCESS_PASSWORD = 'EdlioMap2025!'; // Change this to your preferred password
+        const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
         
         let isAuthenticated = false;
         let currentUser = null;
         
-        // Initialize Google Sign-In
-        function initializeGoogleSignIn() {
-            if (typeof google !== 'undefined' && google.accounts) {
-                google.accounts.id.initialize({
-                    client_id: GOOGLE_CLIENT_ID,
-                    callback: handleCredentialResponse,
-                    auto_select: false,
-                    cancel_on_tap_outside: false
-                });
-                
-                google.accounts.id.renderButton(
-                    document.getElementById('googleSignIn'),
-                    {
-                        theme: 'outline',
-                        size: 'large',
-                        width: 300,
-                        text: 'signin_with',
-                        shape: 'rectangular'
+        // Check if user is already authenticated
+        function checkExistingAuth() {
+            const authData = localStorage.getItem('edlioMapAuth');
+            if (authData) {
+                try {
+                    const parsed = JSON.parse(authData);
+                    const now = new Date().getTime();
+                    
+                    // Check if session is still valid
+                    if (now - parsed.timestamp < SESSION_DURATION) {
+                        isAuthenticated = true;
+                        currentUser = parsed.user;
+                        return true;
+                    } else {
+                        // Session expired, remove old auth
+                        localStorage.removeItem('edlioMapAuth');
                     }
-                );
-            } else {
-                // Retry if Google Sign-In hasn't loaded yet
-                setTimeout(initializeGoogleSignIn, 100);
+                } catch (error) {
+                    console.error('Error parsing auth data:', error);
+                    localStorage.removeItem('edlioMapAuth');
+                }
             }
+            return false;
         }
         
-        // Handle Google Sign-In response
-        function handleCredentialResponse(response) {
-            try {
-                const payload = JSON.parse(atob(response.credential.split('.')[1]));
-                console.log('User signed in:', payload);
-                
-                // Check if email domain is allowed
-                if (!payload.email.endsWith('@' + ALLOWED_DOMAIN)) {
-                    showAuthError(`Access denied. This application is restricted to @${ALLOWED_DOMAIN} email addresses only.`);
-                    return;
-                }
-                
-                // Store user info
+        // Store authentication session
+        function storeAuthSession(user) {
+            const authData = {
+                user: user,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('edlioMapAuth', JSON.stringify(authData));
+        }
+        
+        // Handle password form submission
+        function handlePasswordSubmit(event) {
+            event.preventDefault();
+            
+            const password = document.getElementById('passwordInput').value;
+            const email = document.getElementById('emailInput').value;
+            
+            if (!email || !password) {
+                showAuthError('Please enter both email and password.');
+                return;
+            }
+            
+            // Check if email is from edlio.com domain
+            if (!email.toLowerCase().endsWith('@edlio.com')) {
+                showAuthError('Access denied. This application is restricted to @edlio.com email addresses only.');
+                return;
+            }
+            
+            // Check password
+            if (password === EDLIO_ACCESS_PASSWORD) {
+                // Create user object
                 currentUser = {
-                    email: payload.email,
-                    name: payload.name,
-                    picture: payload.picture,
-                    credential: response.credential
+                    email: email,
+                    name: email.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                    picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=E53E3E&color=fff&size=128`,
+                    loginTime: new Date().toISOString()
                 };
+                
+                // Store session
+                storeAuthSession(currentUser);
                 
                 // Mark as authenticated
                 isAuthenticated = true;
@@ -860,9 +900,8 @@
                 // Show main content
                 showMainContent();
                 
-            } catch (error) {
-                console.error('Error parsing credential:', error);
-                showAuthError('Authentication failed. Please try again.');
+            } else {
+                showAuthError('Invalid password. Please contact your administrator for access.');
             }
         }
         
@@ -894,9 +933,8 @@
         
         // Sign out function
         function signOut() {
-            if (typeof google !== 'undefined' && google.accounts) {
-                google.accounts.id.disableAutoSelect();
-            }
+            // Clear stored authentication
+            localStorage.removeItem('edlioMapAuth');
             
             isAuthenticated = false;
             currentUser = null;
@@ -910,6 +948,10 @@
             
             // Clear any error messages
             document.getElementById('authStatus').textContent = '';
+            
+            // Clear form fields
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('emailInput').value = '';
         }
         
         // Initialize the main application
@@ -920,16 +962,18 @@
         
         // Check authentication status on page load
         function checkAuthStatus() {
-            // For demo purposes, we'll require fresh authentication each time
-            // In production, you might want to store auth state in sessionStorage
-            
-            // Always show login screen initially
-            document.getElementById('authOverlay').classList.remove('hidden');
-            document.getElementById('mainContent').classList.add('hidden');
-            document.getElementById('userInfo').classList.add('hidden');
-            
-            // Initialize Google Sign-In
-            initializeGoogleSignIn();
+            // Check if user is already authenticated
+            if (checkExistingAuth()) {
+                showMainContent();
+            } else {
+                // Show login screen
+                document.getElementById('authOverlay').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+                document.getElementById('userInfo').classList.add('hidden');
+                
+                // Set up form submission
+                document.getElementById('passwordForm').addEventListener('submit', handlePasswordSubmit);
+            }
         }
         
     </script>
