@@ -62,7 +62,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #4d65ff;
+            border-bottom: 2px solid #E53E3E;
             padding-bottom: 10px;
         }
         
@@ -77,7 +77,7 @@
         
         .hamburger {
             display: none;
-            background: #4d65ff;
+            background: #E53E3E;
             color: white;
             border: none;
             padding: 12px;
@@ -111,7 +111,7 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
-            border-left: 4px solid #4d65ff;
+            border-left: 4px solid #E53E3E;
         }
         
         .filter-group.products {
@@ -152,7 +152,7 @@
         .checkbox-item input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #4d65ff;
+            accent-color: #E53E3E;
         }
         
         .checkbox-item span {
@@ -193,7 +193,7 @@
         .search-row input:focus,
         .search-row select:focus {
             outline: none;
-            border-color: #4d65ff;
+            border-color: #E53E3E;
         }
         
         .search-row input {
@@ -217,12 +217,12 @@
         }
         
         .search-button {
-            background: #4d65ff;
+            background: #E53E3E;
             color: white;
         }
         
         .search-button:hover {
-            background: #3b4ecc;
+            background: #d32f2f;
         }
         
         .clear-button {
@@ -243,7 +243,7 @@
         
         .total-showing {
             padding: 15px;
-            background: linear-gradient(135deg, #4d65ff, #3b4ecc);
+            background: linear-gradient(135deg, #E53E3E, #d32f2f);
             color: white;
             border-radius: 8px;
             text-align: center;
@@ -267,7 +267,7 @@
             font-size: 20px;
             margin-bottom: 10px;
             color: #333;
-            border-bottom: 2px solid #4d65ff;
+            border-bottom: 2px solid #E53E3E;
             padding-bottom: 10px;
         }
         
@@ -359,7 +359,7 @@
             top: 20px;
             right: 20px;
             z-index: 1000;
-            background: #4d65ff;
+            background: #E53E3E;
             color: white;
             border: none;
             padding: 12px 16px;
@@ -372,7 +372,7 @@
         }
         
         .toggle-sidebar:hover {
-            background: #3b4ecc;
+            background: #d32f2f;
             transform: translateY(-1px);
         }
         
@@ -523,10 +523,10 @@
     <button class="hamburger" onclick="toggleControls()">☰</button>
     
     <!-- Edlio Header -->
-    <div class="edlio-header" style="background: linear-gradient(135deg, #4d65ff, #3b4ecc); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
+    <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-            <div style="background: white; border-radius: 8px; padding: 8px 12px; font-weight: 700; color: #4d65ff; font-size: 18px;">
-                E
+            <div style="background: white; border-radius: 8px; padding: 8px 12px; font-weight: 700; color: #E53E3E; font-size: 18px;">
+                e
             </div>
             <div>
                 <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px;">Edlio Customer Map</div>
@@ -545,8 +545,8 @@
         <div class="controls" id="controls">
             <div class="controls-header">
                 <h3>
-                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #4d65ff, #3b4ecc); border-radius: 3px; position: relative;">
-                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">E</span>
+                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #E53E3E, #d32f2f); border-radius: 3px; position: relative;">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">e</span>
                     </span>
                     Filters
                 </h3>
@@ -761,12 +761,12 @@
         
         // Create custom Edlio E-shaped school marker
         function createSchoolMarker(lat, lng, color) {
-            // Create custom E-shaped icon HTML
+            // Create custom E-shaped icon HTML with Edlio red base
             const iconHtml = `
                 <div style="
                     width: 28px; 
                     height: 28px; 
-                    background: ${color}; 
+                    background: #E53E3E; 
                     border: 3px solid white; 
                     border-radius: 6px; 
                     box-shadow: 0 3px 8px rgba(0,0,0,0.3);
@@ -783,7 +783,18 @@
                         color: white;
                         text-shadow: 0 1px 2px rgba(0,0,0,0.3);
                         transform: rotate(5deg);
-                    ">E</div>
+                    ">e</div>
+                    <div style="
+                        position: absolute;
+                        top: -2px;
+                        right: -2px;
+                        width: 8px;
+                        height: 8px;
+                        background: ${color};
+                        border-radius: 50%;
+                        border: 1px solid white;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+                    "></div>
                 </div>
             `;
             
@@ -1144,8 +1155,8 @@
             }).join('');
             
             container.innerHTML = `
-                <div style="margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #e6ebff, #d1dcff); border-radius: 8px; border-left: 4px solid #4d65ff;">
-                    <strong style="color: #4d65ff; font-size: 16px;">${customersInView.length}</strong> customers in current view
+                <div style="margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #ffebee, #ffcdd2); border-radius: 8px; border-left: 4px solid #E53E3E;">
+                    <strong style="color: #E53E3E; font-size: 16px;">${customersInView.length}</strong> customers in current view
                 </div>
                 <div>
                     ${customerListHTML}
