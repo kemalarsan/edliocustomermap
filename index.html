@@ -835,9 +835,9 @@
     <div class="container">
         <div id="map"></div>
         
-        <!-- Edge click areas to restore panels -->
-        <div class="map-edge-left" onclick="toggleControls()" title="Click to show filters" style="display: none;"></div>
-        <div class="map-edge-right" onclick="toggleSidebar()" title="Click to show customer list" style="display: none;"></div>
+        <!-- Simple toggle buttons -->
+        <button onclick="toggleControls()" style="position: fixed; left: 10px; top: 50%; transform: translateY(-50%); background: #E53E3E; color: white; border: none; width: 40px; height: 60px; border-radius: 8px; cursor: pointer; font-size: 18px; z-index: 1001;">‹</button>
+        <button onclick="toggleSidebar()" style="position: fixed; right: 10px; top: 50%; transform: translateY(-50%); background: #E53E3E; color: white; border: none; width: 40px; height: 60px; border-radius: 8px; cursor: pointer; font-size: 18px; z-index: 1001;">›</button>
         
         
         <div class="controls" id="controls">
@@ -1874,44 +1874,13 @@
         // Toggle sidebar visibility
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const rightEdge = document.querySelector('.map-edge-right');
-            
-            // If currently hidden, show it
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('hidden');
-                sidebar.classList.remove('collapsed');
-                if (rightEdge) rightEdge.style.display = 'none';
-            } else {
-                // If currently visible, check if collapsed
-                if (sidebar.classList.contains('collapsed')) {
-                    sidebar.classList.remove('collapsed');
-                    if (rightEdge) rightEdge.style.display = 'none';
-                } else {
-                    sidebar.classList.add('collapsed');
-                    if (rightEdge) rightEdge.style.display = 'block';
-                }
-            }
+            sidebar.classList.toggle('collapsed');
         }
         
         // Toggle controls visibility
         function toggleControls() {
             const controls = document.getElementById('controls');
-            const leftEdge = document.querySelector('.map-edge-left');
-            
-            // For mobile, use the show/hide functionality
-            if (window.innerWidth <= 768) {
-                controls.classList.toggle('show');
-                return;
-            }
-            
-            // For desktop, use collapsed functionality
-            if (controls.classList.contains('collapsed')) {
-                controls.classList.remove('collapsed');
-                if (leftEdge) leftEdge.style.display = 'none';
-            } else {
-                controls.classList.add('collapsed');
-                if (leftEdge) leftEdge.style.display = 'block';
-            }
+            controls.classList.toggle('collapsed');
         }
         
         // No floating buttons needed
