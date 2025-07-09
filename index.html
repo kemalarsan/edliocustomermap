@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <!-- Montserrat Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * {
@@ -671,30 +673,48 @@
                 <strong>⚠️ Restricted Access</strong><br>
                 This map contains confidential customer information and is restricted to @edlio.com email addresses only.
             </div>
-            <form id="passwordForm" style="display: flex; flex-direction: column; gap: 15px;">
-                <input 
-                    type="email" 
-                    id="emailInput" 
-                    placeholder="Enter your @edlio.com email" 
-                    required
-                    style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
-                />
-                <input 
-                    type="password" 
-                    id="passwordInput" 
-                    placeholder="Enter access password" 
-                    required
-                    style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
-                />
-                <button 
-                    type="submit" 
-                    style="background: #E53E3E; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: background 0.2s;"
-                    onmouseover="this.style.background='#d32f2f'"
-                    onmouseout="this.style.background='#E53E3E'"
-                >
-                    Access Customer Map
-                </button>
-            </form>
+            
+            <!-- Google Sign-In Button -->
+            <div style="margin: 20px 0;">
+                <div id="googleSignIn"></div>
+            </div>
+            
+            <!-- Divider -->
+            <div style="display: flex; align-items: center; margin: 20px 0;">
+                <div style="flex: 1; height: 1px; background: #dee2e6;"></div>
+                <div style="padding: 0 15px; color: #6c757d; font-size: 14px;">OR</div>
+                <div style="flex: 1; height: 1px; background: #dee2e6;"></div>
+            </div>
+            
+            <!-- Password Form -->
+            <div id="passwordLoginSection">
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Use password authentication</p>
+                <form id="passwordForm" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input 
+                        type="email" 
+                        id="emailInput" 
+                        placeholder="Enter your @edlio.com email" 
+                        required
+                        style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
+                    />
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        placeholder="Enter access password" 
+                        required
+                        style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: 'Montserrat', sans-serif;"
+                    />
+                    <button 
+                        type="submit" 
+                        style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: background 0.2s;"
+                        onmouseover="this.style.background='#5a6268'"
+                        onmouseout="this.style.background='#6c757d'"
+                    >
+                        Sign In with Password
+                    </button>
+                </form>
+            </div>
+            
             <div id="authStatus" style="margin-top: 20px; color: #dc3545; font-size: 14px;"></div>
         </div>
     </div>
@@ -862,9 +882,11 @@
     
     <script src="data.js"></script>
     <script>
-        // Simple Password Authentication Configuration
+        // Hybrid Authentication Configuration
+        const GOOGLE_CLIENT_ID = '432979306912-ubkrgddtvv7e885af6d4f8rtr1dnt640.apps.googleusercontent.com';
         const EDLIO_ACCESS_PASSWORD = 'austinpizza2025!'; // Change this to your preferred password
         const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        const ALLOWED_DOMAIN = 'edlio.com';
         
         let isAuthenticated = false;
         let currentUser = null;
@@ -1190,6 +1212,11 @@
             // Clear stored authentication
             localStorage.removeItem('edlioMapAuth');
             
+            // Sign out from Google if signed in with Google
+            if (currentUser?.authMethod === 'google' && typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.disableAutoSelect();
+            }
+            
             isAuthenticated = false;
             currentUser = null;
             
@@ -1214,6 +1241,78 @@
             setTimeout(initCustomers, 100);
         }
         
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleSignIn,
+                    auto_select: false,
+                    cancel_on_tap_outside: false
+                });
+                
+                google.accounts.id.renderButton(
+                    document.getElementById('googleSignIn'),
+                    {
+                        theme: 'filled_blue',
+                        size: 'large',
+                        width: 300,
+                        text: 'signin_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'left'
+                    }
+                );
+            } else {
+                // Retry if Google Sign-In hasn't loaded yet
+                setTimeout(initializeGoogleSignIn, 100);
+            }
+        }
+        
+        // Handle Google Sign-In response
+        async function handleGoogleSignIn(response) {
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                console.log('Google sign-in:', payload);
+                
+                // Get user IP
+                userIPAddress = await getUserIP();
+                
+                // Check if email domain is allowed (Google Workspace should handle this)
+                if (!payload.email.endsWith('@' + ALLOWED_DOMAIN)) {
+                    const errorMsg = `Access denied. This application is restricted to @${ALLOWED_DOMAIN} email addresses only.`;
+                    logUserLogin(payload.email, false, errorMsg);
+                    showAuthError(errorMsg);
+                    return;
+                }
+                
+                // Log successful Google login
+                logUserLogin(payload.email, true, 'Google SSO');
+                
+                // Create user object
+                currentUser = {
+                    email: payload.email,
+                    name: payload.name,
+                    picture: payload.picture,
+                    loginTime: new Date().toISOString(),
+                    ipAddress: userIPAddress,
+                    authMethod: 'google'
+                };
+                
+                // Store session
+                storeAuthSession(currentUser);
+                
+                // Mark as authenticated
+                isAuthenticated = true;
+                
+                // Show main content
+                showMainContent();
+                
+            } catch (error) {
+                console.error('Error parsing Google credential:', error);
+                showAuthError('Authentication failed. Please try again.');
+            }
+        }
+        
         // Check authentication status on page load
         function checkAuthStatus() {
             // Check if user is already authenticated
@@ -1224,6 +1323,9 @@
                 document.getElementById('authOverlay').classList.remove('hidden');
                 document.getElementById('mainContent').classList.add('hidden');
                 document.getElementById('userInfo').classList.add('hidden');
+                
+                // Initialize Google Sign-In
+                initializeGoogleSignIn();
                 
                 // Set up form submission
                 document.getElementById('passwordForm').addEventListener('submit', handlePasswordSubmit);
