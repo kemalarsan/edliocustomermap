@@ -953,7 +953,10 @@
         
         <div class="sidebar" id="sidebar">
             <div class="sidebar-content">
-                <h2>Customers in View</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #E53E3E; padding-bottom: 10px;">
+                    <h2 style="margin: 0;">Customers in View</h2>
+                    <button class="close-controls" onclick="toggleSidebar()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                </div>
                 <div class="sidebar-info">
                     Pan and zoom the map to see customers in different areas. Use filters to show specific school types and products.
                 </div>
@@ -1479,36 +1482,24 @@
             }
         }
         
-        // Create Edlio logo school marker
+        // Create simple school marker with 'e'
         function createSchoolMarker(lat, lng, color) {
-            // Try Edlio logo marker, fallback to simple circle if too complex
             const iconHtml = `
                 <div style="
                     width: 24px; 
                     height: 24px; 
-                    background: white; 
-                    border: 2px solid ${color}; 
+                    background: ${color}; 
+                    border: 2px solid white; 
                     border-radius: 6px; 
                     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 2px;
-                ">
-                    <svg width="16" height="16" viewBox="0 0 100 100" style="fill: ${color};">
-                        <path d="M15 50 C15 22, 30 8, 55 8 C70 8, 80 12, 85 20 L82 18 C80 14, 72 12, 62 12 C40 12, 25 25, 25 45 L65 45 C70 45, 75 48, 75 52 C75 56, 70 59, 65 59 L25 59 C25 70, 40 80, 62 80 C72 80, 80 77, 85 73 L82 75 C80 79, 70 82, 55 82 C30 82, 15 68, 15 50 Z"/>
-                        <path d="M40 8 L44 0 L48 8 Z"/>
-                        <path d="M52 9 L56 1 L60 9 Z"/>
-                        <path d="M64 11 L68 3 L72 11 Z"/>
-                        <path d="M76 14 L80 6 L84 14 Z"/>
-                        <path d="M15 35 L7 31 L15 27 Z"/>
-                        <path d="M13 50 L5 46 L13 42 Z"/>
-                        <path d="M15 65 L7 61 L15 57 Z"/>
-                        <path d="M85 25 L93 21 L85 17 Z"/>
-                        <path d="M87 40 L95 36 L87 32 Z"/>
-                        <path d="M85 75 L93 71 L85 67 Z"/>
-                    </svg>
-                </div>
+                    color: white;
+                    font-weight: 700;
+                    font-size: 14px;
+                    font-family: 'Montserrat', sans-serif;
+                ">e</div>
             `;
             
             const customIcon = L.divIcon({
