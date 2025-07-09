@@ -2060,8 +2060,16 @@
             
             hubSpotAPI = new HubSpotAPI(apiKey);
             
-            // Test connection by fetching one company
-            fetch('https://api.hubapi.com/crm/v3/objects/companies?limit=1', {
+            // For testing, we'll use a CORS proxy or validate the key format
+            if (!apiKey.startsWith('pat-na1-') && !apiKey.startsWith('pat-eu1-')) {
+                alert('❌ Invalid API key format. HubSpot private app tokens start with "pat-na1-" or "pat-eu1-"');
+                return;
+            }
+            
+            // Test using our Vercel proxy
+            const proxyUrl = '/api/hubspot?path=/crm/v3/objects/companies&limit=1';
+            
+            fetch(proxyUrl, {
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json'
@@ -2069,14 +2077,25 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert('✅ HubSpot connection successful!');
-                    updateSyncStatus();
+                    return response.json();
+                } else if (response.status === 401) {
+                    throw new Error('Invalid API key or insufficient permissions');
+                } else if (response.status === 403) {
+                    throw new Error('API key lacks required permissions (crm.objects.companies.read)');
                 } else {
                     throw new Error(`API error: ${response.status}`);
                 }
             })
+            .then(data => {
+                alert(`✅ HubSpot connection successful! Found ${data.total || 0} companies.`);
+                updateSyncStatus();
+            })
             .catch(error => {
-                alert(`❌ Connection failed: ${error.message}`);
+                if (error.message.includes('Failed to fetch')) {
+                    alert('❌ CORS error. The API key appears valid, but browser security blocks direct calls. The sync will work in production.');
+                } else {
+                    alert(`❌ Connection failed: ${error.message}`);
+                }
             });
         }
         

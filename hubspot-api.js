@@ -16,7 +16,8 @@ class HubSpotAPI {
      */
     async fetchCompanies() {
         try {
-            const response = await fetch(`${this.baseURL}/crm/v3/objects/companies?limit=100&properties=name,address,city,state,zip,country,website,phone,hs_object_id`, {
+            // Use Vercel proxy to avoid CORS issues
+            const response = await fetch(`/api/hubspot?path=/crm/v3/objects/companies&limit=100&properties=name,address,city,state,zip,country,website,phone,hs_object_id`, {
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`,
                     'Content-Type': 'application/json'
@@ -28,7 +29,7 @@ class HubSpotAPI {
             }
 
             const data = await response.json();
-            return data.results;
+            return data.results || [];
         } catch (error) {
             console.error('Error fetching HubSpot companies:', error);
             throw error;
