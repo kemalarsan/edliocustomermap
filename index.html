@@ -713,8 +713,54 @@
         }
         
         .controls.collapsed .controls-toggle {
-            transform: translateX(-340px);
-            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        /* Show floating buttons when panels collapsed */
+        .show-left-float {
+            position: fixed;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            background: #E53E3E;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .show-right-float {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #E53E3E;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .show-left-float:hover, .show-right-float:hover {
+            background: #d32f2f;
         }
         
         .sidebar-toggle {
@@ -722,13 +768,11 @@
         }
         
         .sidebar.collapsed .sidebar-toggle {
-            transform: translateX(420px);
-            border-radius: 8px 0 0 8px;
+            display: none;
         }
         
         .sidebar.hidden .sidebar-toggle {
-            transform: translateX(420px);
-            border-radius: 8px 0 0 8px;
+            display: none;
         }
         
         @media (max-width: 768px) {
@@ -1954,14 +1998,17 @@
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
                 toggleIcon.textContent = '›';  // Panel expanded, arrow points right (collapse direction)
+                removeFloatingButton('right');
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
                     toggleIcon.textContent = '›';  // Panel expanded, arrow points right (to collapse)
+                    removeFloatingButton('right');
                 } else {
                     sidebar.classList.add('collapsed');
                     toggleIcon.textContent = '‹';  // Panel collapsed, arrow points left (to expand)
+                    addFloatingButton('right');
                 }
             }
         }
@@ -1981,9 +2028,31 @@
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
                 toggleIcon.textContent = '‹';  // Panel expanded, arrow points left (to collapse)
+                removeFloatingButton('left');
             } else {
                 controls.classList.add('collapsed');
                 toggleIcon.textContent = '›';  // Panel collapsed, arrow points right (to expand)
+                addFloatingButton('left');
+            }
+        }
+        
+        // Floating button management
+        function addFloatingButton(side) {
+            removeFloatingButton(side); // Remove any existing
+            
+            const button = document.createElement('button');
+            button.className = side === 'left' ? 'show-left-float' : 'show-right-float';
+            button.id = side === 'left' ? 'floatingLeft' : 'floatingRight';
+            button.innerHTML = side === 'left' ? '›' : '‹';
+            button.onclick = side === 'left' ? toggleControls : toggleSidebar;
+            
+            document.body.appendChild(button);
+        }
+        
+        function removeFloatingButton(side) {
+            const existing = document.getElementById(side === 'left' ? 'floatingLeft' : 'floatingRight');
+            if (existing) {
+                existing.remove();
             }
         }
         
