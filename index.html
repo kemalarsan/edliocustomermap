@@ -44,19 +44,29 @@
             top: 20px;
             left: 20px;
             background: white;
-            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1000;
             max-width: 320px;
             max-height: calc(100vh - 40px);
-            overflow-y: auto;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
         
         .controls.collapsed {
-            transform: translateX(-100%);
-            left: -300px;
+            transform: translateX(-280px);
+        }
+        
+        .controls-content {
+            padding: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .controls.collapsed .controls-content {
+            opacity: 0;
+            pointer-events: none;
         }
         
         .controls-header {
@@ -256,13 +266,34 @@
             width: 400px;
             background-color: white;
             box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            overflow-y: auto;
+            overflow: hidden;
             transition: transform 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            max-height: calc(100vh - 40px);
+            border-radius: 12px;
+            z-index: 1000;
         }
         
         .sidebar.hidden {
             transform: translateX(100%);
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(360px);
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar.collapsed .sidebar-content {
+            opacity: 0;
+            pointer-events: none;
         }
         
         .sidebar h2 {
@@ -650,6 +681,56 @@
             border: 1px solid #dee2e6;
         }
         
+        /* Toggle buttons for collapsible panels */
+        .panel-toggle-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #E53E3E;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 60px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+        }
+        
+        .panel-toggle-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .controls-toggle {
+            left: 300px;
+        }
+        
+        .controls.collapsed .controls-toggle {
+            left: 20px;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .sidebar-toggle {
+            right: 380px;
+        }
+        
+        .sidebar.collapsed .sidebar-toggle {
+            right: 20px;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .sidebar.hidden .sidebar-toggle {
+            right: 20px;
+            border-radius: 8px 0 0 8px;
+        }
+        
         @media (max-width: 768px) {
             .export-controls {
                 flex-direction: column;
@@ -658,6 +739,10 @@
             .export-btn {
                 width: 100%;
                 margin-bottom: 5px;
+            }
+            
+            .panel-toggle-btn {
+                display: none;
             }
         }
     </style>
@@ -736,33 +821,42 @@
         <!-- Edlio Header -->
     <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-            <div style="background: white; border-radius: 8px; padding: 8px 12px; font-weight: 700; color: #E53E3E; font-size: 18px;">
-                e
+            <!-- Official Edlio Spiky Logo -->
+            <div style="background: white; border-radius: 8px; padding: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <svg width="28" height="28" viewBox="0 0 100 100" style="fill: #E53E3E;">
+                    <path d="M50 10 L85 30 L75 50 L85 70 L50 90 L15 70 L25 50 L15 30 Z M50 25 L35 35 L35 45 L65 45 L65 35 Z M35 55 L65 55 L65 65 L50 75 L35 65 Z"/>
+                </svg>
             </div>
             <div>
-                <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px;">Edlio Customer Map</div>
-                <div class="tagline" style="font-size: 14px; opacity: 0.9;">Reach Every Family</div>
+                <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px; letter-spacing: -0.5px;">Edlio Customer Map</div>
+                <div class="tagline" style="font-size: 14px; opacity: 0.9; font-weight: 500;">Reach Every Family</div>
             </div>
         </div>
         <div class="header-right" style="text-align: right; font-size: 14px; opacity: 0.9;">
-            <div>Interactive School District Map</div>
-            <div>Powered by Edlio Technology</div>
+            <div style="font-weight: 600; margin-bottom: 2px;">Interactive School District Map</div>
+            <div style="font-weight: 400;">Powered by Edlio Technology</div>
         </div>
     </div>
     
     <div class="container">
         <div id="map"></div>
         
+        <!-- Controls Toggle Button -->
+        <button class="panel-toggle-btn controls-toggle" id="controlsToggle" onclick="toggleControls()">
+            <span id="controlsToggleIcon">‹</span>
+        </button>
+        
         <div class="controls" id="controls">
-            <div class="controls-header">
-                <h3>
-                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #E53E3E, #d32f2f); border-radius: 3px; position: relative;">
-                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">e</span>
-                    </span>
-                    Filters
-                </h3>
-                <button class="close-controls" onclick="toggleControls()">×</button>
-            </div>
+            <div class="controls-content">
+                <div class="controls-header">
+                    <h3>
+                        <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #E53E3E, #d32f2f); border-radius: 3px; position: relative;">
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">e</span>
+                        </span>
+                        Filters
+                    </h3>
+                    <button class="close-controls" onclick="toggleControls()">×</button>
+                </div>
             
             <div class="filter-group">
                 <label>🏫 School Type:</label>
@@ -848,28 +942,34 @@
                 <div style="font-size: 14px; opacity: 0.9;">Total Showing</div>
                 <div style="font-size: 24px; font-weight: bold;" id="total-showing">-</div>
             </div>
+            </div>
         </div>
         
-        <button class="toggle-sidebar" onclick="toggleSidebar()">📋 List</button>
+        <!-- Sidebar Toggle Button -->
+        <button class="panel-toggle-btn sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+            <span id="sidebarToggleIcon">›</span>
+        </button>
         
         <div class="sidebar" id="sidebar">
-            <h2>Customers in View</h2>
-            <div class="sidebar-info">
-                Pan and zoom the map to see customers in different areas. Use filters to show specific school types and products.
-            </div>
-            <div class="export-controls" style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="exportCustomersCSV()" class="export-btn" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
-                    📊 Export Current View
-                </button>
-                <button onclick="exportAllFilteredCSV()" class="export-btn" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
-                    📋 Export All Filtered
-                </button>
-                <button onclick="exportLoginActivity()" class="export-btn" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
-                    🔐 Login Activity
-                </button>
-            </div>
-            <div id="customerListContainer">
-                <div class="loading">Loading customer data...</div>
+            <div class="sidebar-content">
+                <h2>Customers in View</h2>
+                <div class="sidebar-info">
+                    Pan and zoom the map to see customers in different areas. Use filters to show specific school types and products.
+                </div>
+                <div class="export-controls" style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="exportCustomersCSV()" class="export-btn" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                        📊 Export Current View
+                    </button>
+                    <button onclick="exportAllFilteredCSV()" class="export-btn" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                        📋 Export All Filtered
+                    </button>
+                    <button onclick="exportLoginActivity()" class="export-btn" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                        🔐 Login Activity
+                    </button>
+                </div>
+                <div id="customerListContainer">
+                    <div class="loading">Loading customer data...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1842,13 +1942,44 @@
         // Toggle sidebar visibility
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
+            const toggleIcon = document.getElementById('sidebarToggleIcon');
+            
+            // If currently hidden, show it
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.remove('collapsed');
+                toggleIcon.textContent = '›';
+            } else {
+                // If currently visible, check if collapsed
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                    toggleIcon.textContent = '›';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    toggleIcon.textContent = '‹';
+                }
+            }
         }
         
-        // Toggle controls visibility (mobile)
+        // Toggle controls visibility
         function toggleControls() {
             const controls = document.getElementById('controls');
-            controls.classList.toggle('show');
+            const toggleIcon = document.getElementById('controlsToggleIcon');
+            
+            // For mobile, use the show/hide functionality
+            if (window.innerWidth <= 768) {
+                controls.classList.toggle('show');
+                return;
+            }
+            
+            // For desktop, use collapsed functionality
+            if (controls.classList.contains('collapsed')) {
+                controls.classList.remove('collapsed');
+                toggleIcon.textContent = '‹';
+            } else {
+                controls.classList.add('collapsed');
+                toggleIcon.textContent = '›';
+            }
         }
         
         // Initialize everything when page loads
