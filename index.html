@@ -912,11 +912,11 @@
     </div>
     
     <!-- Admin Panel -->
-    <div id="adminPanel" class="admin-panel hidden">
-        <div class="admin-content">
+    <div id="adminPanel" class="admin-panel hidden" onclick="closeAdminIfClickedOutside(event)">
+        <div class="admin-content" onclick="event.stopPropagation()">
             <div class="admin-header">
                 <h2>🔧 Admin Settings</h2>
-                <button onclick="toggleAdminPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                <button onclick="toggleAdminPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 5px; z-index: 2001; position: relative;">×</button>
             </div>
             
             <div class="admin-section">
@@ -2035,6 +2035,13 @@
         function toggleAdminPanel() {
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('hidden');
+        }
+        
+        function closeAdminIfClickedOutside(event) {
+            // Close panel if clicking on the background overlay
+            if (event.target.id === 'adminPanel') {
+                toggleAdminPanel();
+            }
         }
         
         function switchDataSource(source) {
