@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <!-- Montserrat Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * {
@@ -517,12 +519,151 @@
                 width: 350px;
             }
         }
+        
+        /* Authentication styles */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #E53E3E, #d32f2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .auth-logo {
+            background: #E53E3E;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0 auto 20px auto;
+        }
+        
+        .auth-title {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .auth-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .auth-restriction {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1002;
+        }
+        
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        
+        .user-info .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .user-info .user-email {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .logout-btn {
+            background: #E53E3E;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <button class="hamburger" onclick="toggleControls()">☰</button>
+    <!-- Authentication Overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-logo">e</div>
+            <h1 class="auth-title">Edlio Customer Map</h1>
+            <p class="auth-subtitle">Secure access for Edlio team members</p>
+            <div class="auth-restriction">
+                <strong>⚠️ Restricted Access</strong><br>
+                This map contains confidential customer information and is restricted to @edlio.com email addresses only.
+            </div>
+            <div id="googleSignIn"></div>
+            <div id="authStatus" style="margin-top: 20px; color: #dc3545; font-size: 14px;"></div>
+        </div>
+    </div>
     
-    <!-- Edlio Header -->
+    <!-- User Info (shown when authenticated) -->
+    <div id="userInfo" class="user-info hidden">
+        <img id="userAvatar" src="" alt="User Avatar">
+        <div>
+            <div id="userName" class="user-name"></div>
+            <div id="userEmail" class="user-email"></div>
+        </div>
+        <button class="logout-btn" onclick="signOut()">Sign Out</button>
+    </div>
+    
+    <!-- Main App Content (hidden until authenticated) -->
+    <div id="mainContent" class="hidden">
+        <button class="hamburger" onclick="toggleControls()">☰</button>
+        
+        <!-- Edlio Header -->
     <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
             <div style="background: white; border-radius: 8px; padding: 8px 12px; font-weight: 700; color: #E53E3E; font-size: 18px;">
@@ -651,6 +792,7 @@
             </div>
         </div>
     </div>
+    </div>
     
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -658,6 +800,139 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     
     <script src="data.js"></script>
+    <script>
+        // Google OAuth Configuration
+        const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // This needs to be set up in Google Cloud Console
+        const ALLOWED_DOMAIN = 'edlio.com';
+        
+        let isAuthenticated = false;
+        let currentUser = null;
+        
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: false
+                });
+                
+                google.accounts.id.renderButton(
+                    document.getElementById('googleSignIn'),
+                    {
+                        theme: 'outline',
+                        size: 'large',
+                        width: 300,
+                        text: 'signin_with',
+                        shape: 'rectangular'
+                    }
+                );
+            } else {
+                // Retry if Google Sign-In hasn't loaded yet
+                setTimeout(initializeGoogleSignIn, 100);
+            }
+        }
+        
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                console.log('User signed in:', payload);
+                
+                // Check if email domain is allowed
+                if (!payload.email.endsWith('@' + ALLOWED_DOMAIN)) {
+                    showAuthError(`Access denied. This application is restricted to @${ALLOWED_DOMAIN} email addresses only.`);
+                    return;
+                }
+                
+                // Store user info
+                currentUser = {
+                    email: payload.email,
+                    name: payload.name,
+                    picture: payload.picture,
+                    credential: response.credential
+                };
+                
+                // Mark as authenticated
+                isAuthenticated = true;
+                
+                // Show main content
+                showMainContent();
+                
+            } catch (error) {
+                console.error('Error parsing credential:', error);
+                showAuthError('Authentication failed. Please try again.');
+            }
+        }
+        
+        // Show authentication error
+        function showAuthError(message) {
+            const authStatus = document.getElementById('authStatus');
+            authStatus.textContent = message;
+            authStatus.style.color = '#dc3545';
+        }
+        
+        // Show main content after successful authentication
+        function showMainContent() {
+            // Hide auth overlay
+            document.getElementById('authOverlay').classList.add('hidden');
+            
+            // Show main content
+            document.getElementById('mainContent').classList.remove('hidden');
+            
+            // Show user info
+            const userInfo = document.getElementById('userInfo');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userAvatar').src = currentUser.picture;
+            userInfo.classList.remove('hidden');
+            
+            // Initialize the map application
+            initializeApp();
+        }
+        
+        // Sign out function
+        function signOut() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.disableAutoSelect();
+            }
+            
+            isAuthenticated = false;
+            currentUser = null;
+            
+            // Hide main content
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+            
+            // Show auth overlay
+            document.getElementById('authOverlay').classList.remove('hidden');
+            
+            // Clear any error messages
+            document.getElementById('authStatus').textContent = '';
+        }
+        
+        // Initialize the main application
+        function initializeApp() {
+            initMap();
+            setTimeout(initCustomers, 100);
+        }
+        
+        // Check authentication status on page load
+        function checkAuthStatus() {
+            // For demo purposes, we'll require fresh authentication each time
+            // In production, you might want to store auth state in sessionStorage
+            
+            // Always show login screen initially
+            document.getElementById('authOverlay').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+            
+            // Initialize Google Sign-In
+            initializeGoogleSignIn();
+        }
+        
+    </script>
     <script>
         let map;
         let markers;
@@ -1178,8 +1453,8 @@
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            initMap();
-            setTimeout(initCustomers, 100);
+            // Check authentication first
+            checkAuthStatus();
             
             // Close controls when clicking outside on mobile
             document.addEventListener('click', function(e) {
