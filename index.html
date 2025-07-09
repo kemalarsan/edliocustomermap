@@ -21,6 +21,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #f5f5f5;
+            overflow: hidden;
         }
         
         .container {
@@ -40,58 +41,211 @@
             left: 20px;
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1000;
-            max-width: 300px;
+            max-width: 320px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .controls.collapsed {
+            transform: translateX(-100%);
+            left: -300px;
+        }
+        
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
         }
         
         .controls h3 {
-            margin: 0 0 15px 0;
+            margin: 0;
             color: #333;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .hamburger {
+            display: none;
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
             font-size: 16px;
-            border-bottom: 2px solid #0066cc;
-            padding-bottom: 8px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .close-controls {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .close-controls:hover {
+            background: #f0f0f0;
         }
         
         .filter-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .filter-group.products {
+            border-left-color: #28a745;
+        }
+        
+        .filter-group.search {
+            border-left-color: #ffc107;
         }
         
         .filter-group label {
             font-weight: 600;
-            color: #555;
+            color: #333;
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-size: 15px;
         }
         
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .checkbox-item:hover {
+            background-color: white;
         }
         
         .checkbox-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            accent-color: #0066cc;
         }
         
         .checkbox-item span {
             font-size: 14px;
             color: #333;
+            flex: 1;
         }
         
         .count {
             color: #666;
             font-size: 12px;
-            margin-left: auto;
+            font-weight: 600;
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .search-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .search-row input,
+        .search-row select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-row input:focus,
+        .search-row select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        
+        .search-row input {
+            flex: 1;
+        }
+        
+        .search-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .search-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .search-button {
+            background: #0066cc;
+            color: white;
+        }
+        
+        .search-button:hover {
+            background: #0052a3;
+        }
+        
+        .clear-button {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .clear-button:hover {
+            background: #545b62;
+        }
+        
+        .search-status {
+            font-size: 12px;
+            color: #666;
+            min-height: 20px;
+            padding: 5px 0;
+        }
+        
+        .total-showing {
+            padding: 15px;
+            background: linear-gradient(135deg, #0066cc, #004499);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
         }
         
         .sidebar {
@@ -119,27 +273,38 @@
             font-size: 14px;
             color: #666;
             margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
         
         .customer-item {
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
             background-color: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #dee2e6;
             transition: all 0.2s ease;
         }
         
         .customer-item:hover {
             background-color: #e9ecef;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
         }
         
         .customer-name {
             font-weight: 600;
             color: #333;
             font-size: 16px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .customer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
         
         .customer-state {
@@ -147,15 +312,33 @@
             font-size: 12px;
             text-transform: uppercase;
             font-weight: 500;
-            margin-bottom: 8px;
         }
+        
+        .customer-products {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        
+        .product-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .product-cms { background: #e3f2fd; color: #1976d2; }
+        .product-mobile { background: #e8f5e8; color: #388e3c; }
+        .product-masscomm { background: #fff3e0; color: #f57c00; }
+        .product-payments { background: #fce4ec; color: #c2185b; }
         
         .customer-url {
             color: #0066cc;
             text-decoration: none;
             font-size: 14px;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             word-break: break-all;
         }
         
@@ -178,14 +361,17 @@
             color: white;
             border: none;
             padding: 12px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
         }
         
         .toggle-sidebar:hover {
             background: #0052a3;
+            transform: translateY(-1px);
         }
         
         .loading {
@@ -220,19 +406,127 @@
         .custom-school-marker:hover div {
             transform: scale(1.1);
         }
+        
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                max-width: none;
+                max-height: none;
+                transform: translateX(-100%);
+                z-index: 2000;
+                border-radius: 0;
+                overflow-y: auto;
+            }
+            
+            .controls.show {
+                transform: translateX(0);
+            }
+            
+            .close-controls {
+                display: block;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-height: 40vh;
+                order: 2;
+            }
+            
+            .sidebar.hidden {
+                transform: translateY(100%);
+            }
+            
+            .toggle-sidebar {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .filter-group {
+                margin-bottom: 15px;
+                padding: 12px;
+            }
+            
+            .checkbox-item {
+                padding: 12px 8px;
+            }
+            
+            .checkbox-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .search-row {
+                flex-direction: column;
+            }
+            
+            .search-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                padding: 15px;
+            }
+            
+            .controls h3 {
+                font-size: 16px;
+            }
+            
+            .customer-item {
+                padding: 15px;
+            }
+            
+            .customer-name {
+                font-size: 15px;
+            }
+        }
+        
+        /* Tablet adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .controls {
+                max-width: 280px;
+            }
+            
+            .sidebar {
+                width: 350px;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="toggleControls()">☰</button>
+    
     <div class="container">
         <div id="map"></div>
         
-        <div class="controls">
-            <h3><span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #0066cc, #004499); border-radius: 3px; margin-right: 8px; position: relative; vertical-align: middle;">
-                <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">≡</span>
-            </span>School Filters</h3>
+        <div class="controls" id="controls">
+            <div class="controls-header">
+                <h3>
+                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #0066cc, #004499); border-radius: 3px; position: relative;">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">≡</span>
+                    </span>
+                    Filters
+                </h3>
+                <button class="close-controls" onclick="toggleControls()">×</button>
+            </div>
             
             <div class="filter-group">
-                <label>School Type:</label>
+                <label>🏫 School Type:</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" id="filter-charter" checked>
@@ -262,8 +556,8 @@
                 </div>
             </div>
             
-            <div class="filter-group">
-                <label>Edlio Products:</label>
+            <div class="filter-group products">
+                <label>📱 Edlio Products:</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" id="filter-cms" checked>
@@ -288,14 +582,12 @@
                 </div>
             </div>
             
-            <div class="filter-group">
-                <label><span style="display: inline-block; width: 16px; height: 16px; background: #28a745; border-radius: 50%; margin-right: 6px; position: relative; vertical-align: middle;">
-                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 10px; font-weight: bold;">📍</span>
-                </span>Zip Code Search:</label>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="zip-search" placeholder="Enter zip code" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
-                        <select id="radius-select" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+            <div class="filter-group search">
+                <label>📍 Zip Code Search:</label>
+                <div class="search-input-group">
+                    <div class="search-row">
+                        <input type="text" id="zip-search" placeholder="Enter zip code">
+                        <select id="radius-select">
                             <option value="1">1 mi</option>
                             <option value="3" selected>3 mi</option>
                             <option value="5">5 mi</option>
@@ -305,28 +597,26 @@
                             <option value="100">100 mi</option>
                         </select>
                     </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button id="search-button" style="flex: 1; padding: 10px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;">Search</button>
-                        <button id="clear-search" style="padding: 10px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Clear</button>
+                    <div class="search-buttons">
+                        <button id="search-button" class="search-button">Search</button>
+                        <button id="clear-search" class="clear-button">Clear</button>
                     </div>
-                    <div id="search-status" style="font-size: 12px; color: #666; min-height: 18px;"></div>
+                    <div id="search-status" class="search-status"></div>
                 </div>
             </div>
             
-            <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
-                <div style="font-size: 14px; color: #666;">
-                    <strong>Total Showing:</strong> <span id="total-showing">-</span>
-                </div>
+            <div class="total-showing">
+                <div style="font-size: 14px; opacity: 0.9;">Total Showing</div>
+                <div style="font-size: 24px; font-weight: bold;" id="total-showing">-</div>
             </div>
         </div>
         
-        <button class="toggle-sidebar" onclick="toggleSidebar()">Toggle List</button>
+        <button class="toggle-sidebar" onclick="toggleSidebar()">📋 List</button>
         
         <div class="sidebar" id="sidebar">
             <h2>Customers in View</h2>
             <div class="sidebar-info">
-                Pan and zoom the map to see customers in different areas.
-                <br>Use filters to show specific school types.
+                Pan and zoom the map to see customers in different areas. Use filters to show specific school types and products.
             </div>
             <div id="customerListContainer">
                 <div class="loading">Loading customer data...</div>
@@ -530,15 +820,12 @@
                     typeCounts[normalizedType]++;
                 }
                 
-                // Count products (when product data is available)
+                // Count products
                 if (customer.products) {
                     if (customer.products.cms) productCounts.cms++;
                     if (customer.products.mobile) productCounts.mobile++;
                     if (customer.products.masscomm) productCounts.masscomm++;
                     if (customer.products.payments) productCounts.payments++;
-                } else {
-                    // Temporary: assume all have CMS until product data is provided
-                    productCounts.cms++;
                 }
             });
             
@@ -662,21 +949,20 @@
                 }
             });
             
+            console.log('Active product filters:', activeProductFilters);
+            
             filteredCustomers = allCustomers.filter(customer => {
                 // Check school type filter
                 const normalizedType = normalizeType(customer.type);
                 const passesTypeFilter = activeTypeFilters.includes(normalizedType);
                 
-                // Check product filter
-                let passesProductFilter = true;
-                if (customer.products) {
+                // Check product filter - if no products are selected, show all
+                let passesProductFilter = activeProductFilters.length === 0;
+                if (activeProductFilters.length > 0 && customer.products) {
                     // If product data exists, check if customer has any of the selected products
                     passesProductFilter = activeProductFilters.some(product => 
                         customer.products[product] === true
                     );
-                } else {
-                    // If no product data, assume all have CMS (temporary)
-                    passesProductFilter = activeProductFilters.includes('cms');
                 }
                 
                 // Check zip code search filter
@@ -693,6 +979,8 @@
                 // All filters must pass (AND logic between filter groups)
                 return passesTypeFilter && passesProductFilter && passesZipFilter;
             });
+            
+            console.log(`Filtered customers: ${filteredCustomers.length}/${allCustomers.length}`);
             
             updateMap();
             updateSidebar();
@@ -716,12 +1004,23 @@
             filteredCustomers.forEach(customer => {
                 if (customer.lat && customer.lng) {
                     const color = getMarkerColor(customer.type);
+                    
+                    // Create product badges
+                    let productBadges = '';
+                    if (customer.products) {
+                        if (customer.products.cms) productBadges += '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">CMS</span>';
+                        if (customer.products.mobile) productBadges += '<span style="background: #e8f5e8; color: #388e3c; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mobile</span>';
+                        if (customer.products.masscomm) productBadges += '<span style="background: #fff3e0; color: #f57c00; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mass Comm</span>';
+                        if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
+                    }
+                    
                     const marker = createSchoolMarker(customer.lat, customer.lng, color)
                         .bindPopup(`
-                            <div style="min-width: 250px;">
+                            <div style="min-width: 280px;">
                                 <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizeType(customer.type)}">${customer.type}</span></p>
+                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizedType(customer.type)}">${customer.type}</span></p>
+                                ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
                                 <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
                             </div>
@@ -742,6 +1041,9 @@
             
             allCustomers = customers;
             filteredCustomers = customers;
+            
+            console.log(`Loaded ${allCustomers.length} customers`);
+            console.log('Sample customer with products:', allCustomers.find(c => c.products));
             
             updateTypeCounts();
             updateMap();
@@ -816,10 +1118,22 @@
                     distanceInfo = `<div style="font-size: 12px; color: #0066cc; font-weight: 600; margin-bottom: 5px;">${distance.toFixed(1)} miles from search</div>`;
                 }
                 
+                // Create product badges
+                let productBadges = '';
+                if (customer.products) {
+                    if (customer.products.cms) productBadges += '<span class="product-badge product-cms">CMS</span>';
+                    if (customer.products.mobile) productBadges += '<span class="product-badge product-mobile">Mobile</span>';
+                    if (customer.products.masscomm) productBadges += '<span class="product-badge product-masscomm">Mass Comm</span>';
+                    if (customer.products.payments) productBadges += '<span class="product-badge product-payments">Payments</span>';
+                }
+                
                 return `
                     <div class="customer-item">
                         <div class="customer-name">${customer.name}</div>
-                        <div class="customer-state">${customer.state} - <span class="type-${normalizeType(customer.type)}">${customer.type}</span></div>
+                        <div class="customer-meta">
+                            <div class="customer-state">${customer.state} - <span class="type-${normalizeType(customer.type)}">${customer.type}</span></div>
+                            <div class="customer-products">${productBadges}</div>
+                        </div>
                         ${distanceInfo}
                         <a href="${customer.url}" target="_blank" class="customer-url">${customer.url}</a>
                         <div class="customer-location">${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</div>
@@ -828,8 +1142,8 @@
             }).join('');
             
             container.innerHTML = `
-                <div style="margin-bottom: 15px; padding: 10px; background-color: #e3f2fd; border-radius: 5px;">
-                    <strong style="color: #0066cc;">${customersInView.length}</strong> customers in current view
+                <div style="margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 8px; border-left: 4px solid #0066cc;">
+                    <strong style="color: #0066cc; font-size: 16px;">${customersInView.length}</strong> customers in current view
                 </div>
                 <div>
                     ${customerListHTML}
@@ -843,10 +1157,29 @@
             sidebar.classList.toggle('hidden');
         }
         
+        // Toggle controls visibility (mobile)
+        function toggleControls() {
+            const controls = document.getElementById('controls');
+            controls.classList.toggle('show');
+        }
+        
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             setTimeout(initCustomers, 100);
+            
+            // Close controls when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                const controls = document.getElementById('controls');
+                const hamburger = document.querySelector('.hamburger');
+                
+                if (window.innerWidth <= 768 && 
+                    !controls.contains(e.target) && 
+                    !hamburger.contains(e.target) && 
+                    controls.classList.contains('show')) {
+                    controls.classList.remove('show');
+                }
+            });
         });
     </script>
 </body>
