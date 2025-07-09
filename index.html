@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edlio Customer Map</title>
+    <title>Edlio Customer Map - Reach Every Family</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Leaflet MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <!-- Montserrat Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -19,14 +21,14 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #f5f5f5;
             overflow: hidden;
         }
         
         .container {
             display: flex;
-            height: 100vh;
+            height: calc(100vh - 80px);
             position: relative;
         }
         
@@ -60,7 +62,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #0066cc;
+            border-bottom: 2px solid #4d65ff;
             padding-bottom: 10px;
         }
         
@@ -75,7 +77,7 @@
         
         .hamburger {
             display: none;
-            background: #0066cc;
+            background: #4d65ff;
             color: white;
             border: none;
             padding: 12px;
@@ -109,7 +111,7 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
-            border-left: 4px solid #0066cc;
+            border-left: 4px solid #4d65ff;
         }
         
         .filter-group.products {
@@ -150,7 +152,7 @@
         .checkbox-item input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #0066cc;
+            accent-color: #4d65ff;
         }
         
         .checkbox-item span {
@@ -191,7 +193,7 @@
         .search-row input:focus,
         .search-row select:focus {
             outline: none;
-            border-color: #0066cc;
+            border-color: #4d65ff;
         }
         
         .search-row input {
@@ -215,12 +217,12 @@
         }
         
         .search-button {
-            background: #0066cc;
+            background: #4d65ff;
             color: white;
         }
         
         .search-button:hover {
-            background: #0052a3;
+            background: #3b4ecc;
         }
         
         .clear-button {
@@ -241,7 +243,7 @@
         
         .total-showing {
             padding: 15px;
-            background: linear-gradient(135deg, #0066cc, #004499);
+            background: linear-gradient(135deg, #4d65ff, #3b4ecc);
             color: white;
             border-radius: 8px;
             text-align: center;
@@ -265,7 +267,7 @@
             font-size: 20px;
             margin-bottom: 10px;
             color: #333;
-            border-bottom: 2px solid #0066cc;
+            border-bottom: 2px solid #4d65ff;
             padding-bottom: 10px;
         }
         
@@ -357,7 +359,7 @@
             top: 20px;
             right: 20px;
             z-index: 1000;
-            background: #0066cc;
+            background: #4d65ff;
             color: white;
             border: none;
             padding: 12px 16px;
@@ -370,7 +372,7 @@
         }
         
         .toggle-sidebar:hover {
-            background: #0052a3;
+            background: #3b4ecc;
             transform: translateY(-1px);
         }
         
@@ -411,6 +413,15 @@
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
+            }
+            
+            /* Hide header text on mobile */
+            .edlio-header .header-right {
+                display: none;
+            }
+            
+            .edlio-header .header-left .tagline {
+                display: none;
             }
             
             .hamburger {
@@ -511,14 +522,31 @@
 <body>
     <button class="hamburger" onclick="toggleControls()">☰</button>
     
+    <!-- Edlio Header -->
+    <div class="edlio-header" style="background: linear-gradient(135deg, #4d65ff, #3b4ecc); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
+        <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+            <div style="background: white; border-radius: 8px; padding: 8px 12px; font-weight: 700; color: #4d65ff; font-size: 18px;">
+                E
+            </div>
+            <div>
+                <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px;">Edlio Customer Map</div>
+                <div class="tagline" style="font-size: 14px; opacity: 0.9;">Reach Every Family</div>
+            </div>
+        </div>
+        <div class="header-right" style="text-align: right; font-size: 14px; opacity: 0.9;">
+            <div>Interactive School District Map</div>
+            <div>Powered by Edlio Technology</div>
+        </div>
+    </div>
+    
     <div class="container">
         <div id="map"></div>
         
         <div class="controls" id="controls">
             <div class="controls-header">
                 <h3>
-                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #0066cc, #004499); border-radius: 3px; position: relative;">
-                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">≡</span>
+                    <span style="display: inline-block; width: 20px; height: 20px; background: linear-gradient(45deg, #4d65ff, #3b4ecc); border-radius: 3px; position: relative;">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold;">E</span>
                     </span>
                     Filters
                 </h3>
@@ -731,66 +759,40 @@
             }
         }
         
-        // Create custom school marker
+        // Create custom Edlio E-shaped school marker
         function createSchoolMarker(lat, lng, color) {
-            // Create custom icon HTML
+            // Create custom E-shaped icon HTML
             const iconHtml = `
                 <div style="
-                    width: 24px; 
-                    height: 24px; 
+                    width: 28px; 
+                    height: 28px; 
                     background: ${color}; 
                     border: 3px solid white; 
-                    border-radius: 50%; 
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                    border-radius: 6px; 
+                    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     position: relative;
+                    transform: rotate(-5deg);
                 ">
                     <div style="
-                        width: 12px; 
-                        height: 12px; 
-                        background: white; 
-                        border-radius: 2px;
-                        position: relative;
-                    ">
-                        <div style="
-                            position: absolute;
-                            top: 2px;
-                            left: 2px;
-                            right: 2px;
-                            height: 2px;
-                            background: ${color};
-                            border-radius: 1px;
-                        "></div>
-                        <div style="
-                            position: absolute;
-                            top: 5px;
-                            left: 2px;
-                            right: 2px;
-                            height: 2px;
-                            background: ${color};
-                            border-radius: 1px;
-                        "></div>
-                        <div style="
-                            position: absolute;
-                            top: 8px;
-                            left: 2px;
-                            right: 2px;
-                            height: 2px;
-                            background: ${color};
-                            border-radius: 1px;
-                        "></div>
-                    </div>
+                        font-family: 'Montserrat', sans-serif;
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: white;
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+                        transform: rotate(5deg);
+                    ">E</div>
                 </div>
             `;
             
             const customIcon = L.divIcon({
                 html: iconHtml,
                 className: 'custom-school-marker',
-                iconSize: [24, 24],
-                iconAnchor: [12, 12],
-                popupAnchor: [0, -12]
+                iconSize: [28, 28],
+                iconAnchor: [14, 14],
+                popupAnchor: [0, -14]
             });
             
             return L.marker([lat, lng], { icon: customIcon });
@@ -1142,8 +1144,8 @@
             }).join('');
             
             container.innerHTML = `
-                <div style="margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 8px; border-left: 4px solid #0066cc;">
-                    <strong style="color: #0066cc; font-size: 16px;">${customersInView.length}</strong> customers in current view
+                <div style="margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #e6ebff, #d1dcff); border-radius: 8px; border-left: 4px solid #4d65ff;">
+                    <strong style="color: #4d65ff; font-size: 16px;">${customersInView.length}</strong> customers in current view
                 </div>
                 <div>
                     ${customerListHTML}
