@@ -60,13 +60,16 @@
             background: linear-gradient(to left, rgba(229, 62, 62, 0.1), transparent);
         }
         
+        .controls.collapsed + .map-edge-left,
         .controls.collapsed ~ .map-edge-left {
-            display: block;
+            display: block !important;
         }
         
+        .sidebar.collapsed + .map-edge-right,
         .sidebar.collapsed ~ .map-edge-right,
+        .sidebar.hidden + .map-edge-right,
         .sidebar.hidden ~ .map-edge-right {
-            display: block;
+            display: block !important;
         }
         
         .controls {
@@ -955,7 +958,7 @@
             <div class="sidebar-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #E53E3E; padding-bottom: 10px;">
                     <h2 style="margin: 0;">Customers in View</h2>
-                    <button class="close-controls" onclick="toggleSidebar()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                    <button onclick="toggleSidebar()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 5px;">×</button>
                 </div>
                 <div class="sidebar-info">
                     Pan and zoom the map to see customers in different areas. Use filters to show specific school types and products.
@@ -1871,17 +1874,21 @@
         // Toggle sidebar visibility
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const rightEdge = document.querySelector('.map-edge-right');
             
             // If currently hidden, show it
             if (sidebar.classList.contains('hidden')) {
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
+                rightEdge.style.display = 'none';
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
+                    rightEdge.style.display = 'none';
                 } else {
                     sidebar.classList.add('collapsed');
+                    rightEdge.style.display = 'block';
                 }
             }
         }
@@ -1889,6 +1896,7 @@
         // Toggle controls visibility
         function toggleControls() {
             const controls = document.getElementById('controls');
+            const leftEdge = document.querySelector('.map-edge-left');
             
             // For mobile, use the show/hide functionality
             if (window.innerWidth <= 768) {
@@ -1899,8 +1907,10 @@
             // For desktop, use collapsed functionality
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
+                leftEdge.style.display = 'none';
             } else {
                 controls.classList.add('collapsed');
+                leftEdge.style.display = 'block';
             }
         }
         
