@@ -1032,7 +1032,7 @@
                             <div style="min-width: 280px;">
                                 <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizedType(customer.type)}">${customer.type}</span></p>
+                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizeType(customer.type)}">${customer.type}</span></p>
                                 ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
                                 <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
