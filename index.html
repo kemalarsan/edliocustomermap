@@ -713,7 +713,7 @@
         }
         
         .controls.collapsed .controls-toggle {
-            left: 0px;
+            left: -40px;
             border-radius: 0 8px 8px 0;
         }
         
@@ -722,12 +722,12 @@
         }
         
         .sidebar.collapsed .sidebar-toggle {
-            right: 0px;
+            right: -40px;
             border-radius: 8px 0 0 8px;
         }
         
         .sidebar.hidden .sidebar-toggle {
-            right: 0px;
+            right: -40px;
             border-radius: 8px 0 0 8px;
         }
         
@@ -822,19 +822,8 @@
     <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
             <!-- Official Edlio Spiky Logo -->
-            <div style="background: white; border-radius: 8px; padding: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; position: relative;">
-                <svg width="28" height="28" viewBox="0 0 100 100" style="fill: #E53E3E;">
-                    <!-- Official Edlio spiky 'e' logo based on brand image -->
-                    <path d="M20 50 C20 25, 35 10, 60 10 C75 10, 85 15, 90 25 L85 20 C85 15, 75 12, 65 12 C45 12, 30 25, 30 45 L70 45 C75 45, 80 50, 80 55 C80 60, 75 65, 70 65 L30 65 C30 75, 45 85, 65 85 C75 85, 85 80, 90 75 L85 80 C85 85, 75 90, 60 90 C35 90, 20 75, 20 50 Z"/>
-                    <!-- Top spikes -->
-                    <path d="M45 10 L50 2 L55 10 Z"/>
-                    <path d="M60 12 L65 4 L70 12 Z"/>
-                    <path d="M75 15 L80 7 L85 15 Z"/>
-                    <!-- Left spikes -->
-                    <path d="M20 35 L12 30 L20 25 Z"/>
-                    <path d="M18 50 L10 45 L18 40 Z"/>
-                    <path d="M20 65 L12 60 L20 55 Z"/>
-                </svg>
+            <div style="background: white; border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #E53E3E; font-weight: 700; font-size: 24px;">
+                e
             </div>
             <div>
                 <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px; letter-spacing: -0.5px;">Edlio Customer Map</div>
@@ -859,19 +848,8 @@
             <div class="controls-content">
                 <div class="controls-header">
                     <h3>
-                        <span style="display: inline-block; width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center;">
-                            <svg width="16" height="16" viewBox="0 0 100 100" style="fill: white;">
-                                <!-- Official Edlio spiky 'e' logo based on brand image -->
-                                <path d="M20 50 C20 25, 35 10, 60 10 C75 10, 85 15, 90 25 L85 20 C85 15, 75 12, 65 12 C45 12, 30 25, 30 45 L70 45 C75 45, 80 50, 80 55 C80 60, 75 65, 70 65 L30 65 C30 75, 45 85, 65 85 C75 85, 85 80, 90 75 L85 80 C85 85, 75 90, 60 90 C35 90, 20 75, 20 50 Z"/>
-                                <!-- Top spikes -->
-                                <path d="M45 10 L50 2 L55 10 Z"/>
-                                <path d="M60 12 L65 4 L70 12 Z"/>
-                                <path d="M75 15 L80 7 L85 15 Z"/>
-                                <!-- Left spikes -->
-                                <path d="M20 35 L12 30 L20 25 Z"/>
-                                <path d="M18 50 L10 45 L18 40 Z"/>
-                                <path d="M20 65 L12 60 L20 55 Z"/>
-                            </svg>
+                        <span style="display: inline-block; width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">
+                            e
                         </span>
                         Filters
                     </h3>
@@ -1568,51 +1546,44 @@
             }
         }
         
-        // Create custom Edlio E-shaped school marker
+        // Create Edlio logo school marker
         function createSchoolMarker(lat, lng, color) {
-            // Create custom E-shaped icon HTML with Edlio red base
+            // Try Edlio logo marker, fallback to simple circle if too complex
             const iconHtml = `
                 <div style="
-                    width: 28px; 
-                    height: 28px; 
-                    background: #E53E3E; 
-                    border: 3px solid white; 
+                    width: 24px; 
+                    height: 24px; 
+                    background: white; 
+                    border: 2px solid ${color}; 
                     border-radius: 6px; 
-                    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    position: relative;
-                    transform: rotate(-5deg);
+                    padding: 2px;
                 ">
-                    <div style="
-                        font-family: 'Montserrat', sans-serif;
-                        font-size: 16px;
-                        font-weight: 700;
-                        color: white;
-                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                        transform: rotate(5deg);
-                    ">e</div>
-                    <div style="
-                        position: absolute;
-                        top: -2px;
-                        right: -2px;
-                        width: 8px;
-                        height: 8px;
-                        background: ${color};
-                        border-radius: 50%;
-                        border: 1px solid white;
-                        box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                    "></div>
+                    <svg width="16" height="16" viewBox="0 0 100 100" style="fill: ${color};">
+                        <path d="M15 50 C15 22, 30 8, 55 8 C70 8, 80 12, 85 20 L82 18 C80 14, 72 12, 62 12 C40 12, 25 25, 25 45 L65 45 C70 45, 75 48, 75 52 C75 56, 70 59, 65 59 L25 59 C25 70, 40 80, 62 80 C72 80, 80 77, 85 73 L82 75 C80 79, 70 82, 55 82 C30 82, 15 68, 15 50 Z"/>
+                        <path d="M40 8 L44 0 L48 8 Z"/>
+                        <path d="M52 9 L56 1 L60 9 Z"/>
+                        <path d="M64 11 L68 3 L72 11 Z"/>
+                        <path d="M76 14 L80 6 L84 14 Z"/>
+                        <path d="M15 35 L7 31 L15 27 Z"/>
+                        <path d="M13 50 L5 46 L13 42 Z"/>
+                        <path d="M15 65 L7 61 L15 57 Z"/>
+                        <path d="M85 25 L93 21 L85 17 Z"/>
+                        <path d="M87 40 L95 36 L87 32 Z"/>
+                        <path d="M85 75 L93 71 L85 67 Z"/>
+                    </svg>
                 </div>
             `;
             
             const customIcon = L.divIcon({
                 html: iconHtml,
                 className: 'custom-school-marker',
-                iconSize: [28, 28],
-                iconAnchor: [14, 14],
-                popupAnchor: [0, -14]
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
+                popupAnchor: [0, -12]
             });
             
             return L.marker([lat, lng], { icon: customIcon });
@@ -1982,15 +1953,15 @@
             if (sidebar.classList.contains('hidden')) {
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
-                toggleIcon.textContent = '›';
+                toggleIcon.textContent = '›';  // Panel expanded, arrow points right (collapse direction)
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
-                    toggleIcon.textContent = '›';
+                    toggleIcon.textContent = '›';  // Panel expanded, arrow points right (to collapse)
                 } else {
                     sidebar.classList.add('collapsed');
-                    toggleIcon.textContent = '‹';
+                    toggleIcon.textContent = '‹';  // Panel collapsed, arrow points left (to expand)
                 }
             }
         }
@@ -2009,10 +1980,10 @@
             // For desktop, use collapsed functionality
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
-                toggleIcon.textContent = '‹';
+                toggleIcon.textContent = '‹';  // Panel expanded, arrow points left (to collapse)
             } else {
                 controls.classList.add('collapsed');
-                toggleIcon.textContent = '›';
+                toggleIcon.textContent = '›';  // Panel collapsed, arrow points right (to expand)
             }
         }
         
