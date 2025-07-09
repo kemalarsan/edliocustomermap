@@ -2066,6 +2066,9 @@
                 return;
             }
             
+            // First test if proxy is available
+            console.log('Testing proxy availability...');
+            
             // Test using our Vercel proxy
             const proxyUrl = '/api/hubspot?path=/crm/v3/objects/companies&limit=1';
             
@@ -2091,8 +2094,9 @@
                 updateSyncStatus();
             })
             .catch(error => {
+                console.error('Full error details:', error);
                 if (error.message.includes('Failed to fetch')) {
-                    alert('❌ CORS error. The API key appears valid, but browser security blocks direct calls. The sync will work in production.');
+                    alert('❌ Proxy function not available. This might be because:\n1. Vercel is still deploying the function\n2. You\'re testing on localhost\n\nTry again in 2-3 minutes or test on the live site.');
                 } else {
                     alert(`❌ Connection failed: ${error.message}`);
                 }
