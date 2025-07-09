@@ -39,6 +39,36 @@
             height: 100%;
         }
         
+        /* Edge click areas to restore panels */
+        .map-edge-left, .map-edge-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50px;
+            z-index: 999;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .map-edge-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(229, 62, 62, 0.1), transparent);
+        }
+        
+        .map-edge-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(229, 62, 62, 0.1), transparent);
+        }
+        
+        .controls.collapsed ~ .map-edge-left {
+            display: block;
+        }
+        
+        .sidebar.collapsed ~ .map-edge-right,
+        .sidebar.hidden ~ .map-edge-right {
+            display: block;
+        }
+        
         .controls {
             position: absolute;
             top: 20px;
@@ -716,52 +746,6 @@
             display: none;
         }
         
-        /* Show floating buttons when panels collapsed */
-        .show-left-float {
-            position: fixed;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            background: #E53E3E;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 60px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            z-index: 1002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
-        .show-right-float {
-            position: fixed;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            background: #E53E3E;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 60px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            z-index: 1002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
-        .show-left-float:hover, .show-right-float:hover {
-            background: #d32f2f;
-        }
         
         .sidebar-toggle {
             right: 420px;
@@ -847,6 +831,10 @@
     
     <div class="container">
         <div id="map"></div>
+        
+        <!-- Edge click areas to restore panels -->
+        <div class="map-edge-left" onclick="toggleControls()" title="Click to show filters"></div>
+        <div class="map-edge-right" onclick="toggleSidebar()" title="Click to show customer list"></div>
         
         <!-- Controls Toggle Button -->
         <button class="panel-toggle-btn controls-toggle" id="controlsToggle" onclick="toggleControls()">
@@ -1907,17 +1895,14 @@
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
                 toggleIcon.textContent = '›';  // Panel expanded, arrow points right (collapse direction)
-                removeFloatingButton('right');
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
                     toggleIcon.textContent = '›';  // Panel expanded, arrow points right (to collapse)
-                    removeFloatingButton('right');
                 } else {
                     sidebar.classList.add('collapsed');
                     toggleIcon.textContent = '‹';  // Panel collapsed, arrow points left (to expand)
-                    addFloatingButton('right');
                 }
             }
         }
@@ -1937,33 +1922,13 @@
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
                 toggleIcon.textContent = '‹';  // Panel expanded, arrow points left (to collapse)
-                removeFloatingButton('left');
             } else {
                 controls.classList.add('collapsed');
                 toggleIcon.textContent = '›';  // Panel collapsed, arrow points right (to expand)
-                addFloatingButton('left');
             }
         }
         
-        // Floating button management
-        function addFloatingButton(side) {
-            removeFloatingButton(side); // Remove any existing
-            
-            const button = document.createElement('button');
-            button.className = side === 'left' ? 'show-left-float' : 'show-right-float';
-            button.id = side === 'left' ? 'floatingLeft' : 'floatingRight';
-            button.innerHTML = side === 'left' ? '›' : '‹';
-            button.onclick = side === 'left' ? toggleControls : toggleSidebar;
-            
-            document.body.appendChild(button);
-        }
-        
-        function removeFloatingButton(side) {
-            const existing = document.getElementById(side === 'left' ? 'floatingLeft' : 'floatingRight');
-            if (existing) {
-                existing.remove();
-            }
-        }
+        // No floating buttons needed
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
