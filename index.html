@@ -836,8 +836,8 @@
         <div id="map"></div>
         
         <!-- Edge click areas to restore panels -->
-        <div class="map-edge-left" onclick="toggleControls()" title="Click to show filters"></div>
-        <div class="map-edge-right" onclick="toggleSidebar()" title="Click to show customer list"></div>
+        <div class="map-edge-left" onclick="toggleControls()" title="Click to show filters" style="display: none;"></div>
+        <div class="map-edge-right" onclick="toggleSidebar()" title="Click to show customer list" style="display: none;"></div>
         
         
         <div class="controls" id="controls">
@@ -1880,15 +1880,15 @@
             if (sidebar.classList.contains('hidden')) {
                 sidebar.classList.remove('hidden');
                 sidebar.classList.remove('collapsed');
-                rightEdge.style.display = 'none';
+                if (rightEdge) rightEdge.style.display = 'none';
             } else {
                 // If currently visible, check if collapsed
                 if (sidebar.classList.contains('collapsed')) {
                     sidebar.classList.remove('collapsed');
-                    rightEdge.style.display = 'none';
+                    if (rightEdge) rightEdge.style.display = 'none';
                 } else {
                     sidebar.classList.add('collapsed');
-                    rightEdge.style.display = 'block';
+                    if (rightEdge) rightEdge.style.display = 'block';
                 }
             }
         }
@@ -1907,10 +1907,10 @@
             // For desktop, use collapsed functionality
             if (controls.classList.contains('collapsed')) {
                 controls.classList.remove('collapsed');
-                leftEdge.style.display = 'none';
+                if (leftEdge) leftEdge.style.display = 'none';
             } else {
                 controls.classList.add('collapsed');
-                leftEdge.style.display = 'block';
+                if (leftEdge) leftEdge.style.display = 'block';
             }
         }
         
