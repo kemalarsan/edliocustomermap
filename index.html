@@ -994,6 +994,9 @@
                         <button onclick="toggleCompetitorFilters()" class="export-btn" style="background: #ff5722; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             🏢 Competitor Filters
                         </button>
+                        <button onclick="toggleMarketShare()" class="export-btn" style="background: #2196f3; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            📊 Market Share
+                        </button>
                     </div>
                     
                     <!-- CSV Upload Section -->
@@ -1018,6 +1021,45 @@
                             <label><input type="checkbox" id="filter-weebly"> Weebly</label>
                             <label><input type="checkbox" id="filter-schoolmessenger"> SchoolMessenger</label>
                             <label><input type="checkbox" id="filter-other"> Other</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Market Share Analysis -->
+                    <div id="marketShareSection" class="hidden" style="padding: 10px; background: #f0f8ff; border-radius: 6px; border: 1px solid #2196f3;">
+                        <h5 style="margin: 0 0 10px 0; font-size: 13px; color: #1976d2;">📊 Market Share Analysis</h5>
+                        
+                        <!-- Overall Market Share -->
+                        <div style="margin-bottom: 15px; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">Overall Market Position</div>
+                            <div id="overallMarketShare" style="font-size: 10px; color: #666;">
+                                <div>Edlio: <span style="color: #E53E3E; font-weight: 600;">2,348 schools</span></div>
+                                <div>Market Share: <span style="color: #E53E3E; font-weight: 600;">Calculating...</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- State Breakdown -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">Top States by Market Share</div>
+                            <div id="stateMarketShare" style="font-size: 10px; max-height: 120px; overflow-y: auto;">
+                                Loading state analysis...
+                            </div>
+                        </div>
+                        
+                        <!-- Competitive Threat Analysis -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">Competitive Threats</div>
+                            <div id="competitiveThreat" style="font-size: 10px; color: #666;">
+                                Upload competitor data to see threat analysis
+                            </div>
+                        </div>
+                        
+                        <!-- Market Opportunity -->
+                        <div>
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">Market Opportunities</div>
+                            <div id="marketOpportunity" style="font-size: 10px; color: #666;">
+                                <div>🎯 Underserved states identified</div>
+                                <div>💡 Growth potential analysis available</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2131,6 +2173,16 @@
             filtersSection.classList.toggle('hidden');
         }
         
+        function toggleMarketShare() {
+            const marketShareSection = document.getElementById('marketShareSection');
+            marketShareSection.classList.toggle('hidden');
+            
+            // Calculate market share when opened
+            if (!marketShareSection.classList.contains('hidden')) {
+                calculateMarketShare();
+            }
+        }
+        
         function processCompetitorCSV() {
             const fileInput = document.getElementById('competitorCSV');
             const file = fileInput.files[0];
@@ -2217,6 +2269,192 @@
                 'Other': '#95a5a6'
             };
             return colors[competitor] || colors['Other'];
+        }
+        
+        // Market Share Analysis Functions
+        function calculateMarketShare() {
+            console.log('Calculating market share...');
+            
+            // Analyze Edlio customer distribution by state
+            const edlioByState = analyzeEdlioByState();
+            const competitorByState = analyzeCompetitorsByState();
+            
+            // Update overall market share
+            updateOverallMarketShare(edlioByState, competitorByState);
+            
+            // Update state-by-state breakdown
+            updateStateMarketShare(edlioByState, competitorByState);
+            
+            // Update competitive threat analysis
+            updateCompetitiveThreat(competitorByState);
+            
+            // Update market opportunities
+            updateMarketOpportunities(edlioByState, competitorByState);
+        }
+        
+        function analyzeEdlioByState() {
+            const stateData = {};
+            
+            if (customers && customers.length > 0) {
+                customers.forEach(customer => {
+                    const state = customer.state || 'Unknown';
+                    if (!stateData[state]) {
+                        stateData[state] = {
+                            total: 0,
+                            types: { district: 0, charter: 0, private: 0, cmo: 0, esc: 0 }
+                        };
+                    }
+                    stateData[state].total++;
+                    stateData[state].types[customer.type] = (stateData[state].types[customer.type] || 0) + 1;
+                });
+            }
+            
+            return stateData;
+        }
+        
+        function analyzeCompetitorsByState() {
+            const stateData = {};
+            
+            competitorData.forEach(competitor => {
+                const state = competitor.state || 'Unknown';
+                if (!stateData[state]) {
+                    stateData[state] = {
+                        total: 0,
+                        competitors: {}
+                    };
+                }
+                stateData[state].total++;
+                
+                const comp = competitor.competitor || 'Other';
+                stateData[state].competitors[comp] = (stateData[state].competitors[comp] || 0) + 1;
+            });
+            
+            return stateData;
+        }
+        
+        function updateOverallMarketShare(edlioByState, competitorByState) {
+            const totalEdlio = Object.values(edlioByState).reduce((sum, state) => sum + state.total, 0);
+            const totalCompetitors = Object.values(competitorByState).reduce((sum, state) => sum + state.total, 0);
+            const totalMarket = totalEdlio + totalCompetitors;
+            
+            const marketSharePercent = totalMarket > 0 ? ((totalEdlio / totalMarket) * 100).toFixed(1) : 'N/A';
+            
+            document.getElementById('overallMarketShare').innerHTML = `
+                <div>Edlio: <span style="color: #E53E3E; font-weight: 600;">${totalEdlio.toLocaleString()} schools</span></div>
+                <div>Competitors: <span style="color: #ff5722; font-weight: 600;">${totalCompetitors.toLocaleString()} schools</span></div>
+                <div>Market Share: <span style="color: #E53E3E; font-weight: 600;">${marketSharePercent}%</span></div>
+                <div style="margin-top: 5px; background: #e0e0e0; height: 6px; border-radius: 3px;">
+                    <div style="background: #E53E3E; height: 100%; width: ${marketSharePercent}%; border-radius: 3px;"></div>
+                </div>
+            `;
+        }
+        
+        function updateStateMarketShare(edlioByState, competitorByState) {
+            const stateAnalysis = [];
+            
+            // Combine and analyze all states
+            const allStates = new Set([...Object.keys(edlioByState), ...Object.keys(competitorByState)]);
+            
+            allStates.forEach(state => {
+                const edlioCount = edlioByState[state]?.total || 0;
+                const competitorCount = competitorByState[state]?.total || 0;
+                const total = edlioCount + competitorCount;
+                
+                if (total > 0) {
+                    const marketShare = ((edlioCount / total) * 100).toFixed(1);
+                    stateAnalysis.push({
+                        state,
+                        edlioCount,
+                        competitorCount,
+                        total,
+                        marketShare: parseFloat(marketShare)
+                    });
+                }
+            });
+            
+            // Sort by market share (highest first)
+            stateAnalysis.sort((a, b) => b.marketShare - a.marketShare);
+            
+            // Display top 10 states
+            const html = stateAnalysis.slice(0, 10).map(state => {
+                const barColor = state.marketShare >= 50 ? '#4caf50' : state.marketShare >= 25 ? '#ff9800' : '#f44336';
+                return `
+                    <div style="margin-bottom: 8px; padding: 6px; background: white; border-radius: 3px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                            <span style="font-weight: 600;">${state.state}</span>
+                            <span style="color: ${barColor}; font-weight: 600;">${state.marketShare}%</span>
+                        </div>
+                        <div style="font-size: 9px; color: #666; margin-bottom: 2px;">
+                            Edlio: ${state.edlioCount} | Competitors: ${state.competitorCount}
+                        </div>
+                        <div style="background: #e0e0e0; height: 4px; border-radius: 2px;">
+                            <div style="background: ${barColor}; height: 100%; width: ${state.marketShare}%; border-radius: 2px;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('stateMarketShare').innerHTML = html || '<div style="color: #666;">No competitor data available</div>';
+        }
+        
+        function updateCompetitiveThreat(competitorByState) {
+            if (Object.keys(competitorByState).length === 0) {
+                document.getElementById('competitiveThreat').innerHTML = 'Upload competitor data to see threat analysis';
+                return;
+            }
+            
+            // Identify biggest competitive threats
+            const competitorTotals = {};
+            Object.values(competitorByState).forEach(state => {
+                Object.entries(state.competitors).forEach(([comp, count]) => {
+                    competitorTotals[comp] = (competitorTotals[comp] || 0) + count;
+                });
+            });
+            
+            const sortedCompetitors = Object.entries(competitorTotals)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            const html = sortedCompetitors.map(([comp, count]) => 
+                `<div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                    <span>${comp}</span>
+                    <span style="color: #f44336; font-weight: 600;">${count}</span>
+                </div>`
+            ).join('');
+            
+            document.getElementById('competitiveThreat').innerHTML = html;
+        }
+        
+        function updateMarketOpportunities(edlioByState, competitorByState) {
+            const opportunities = [];
+            
+            // Find states with low Edlio presence but high competitor presence
+            Object.entries(competitorByState).forEach(([state, data]) => {
+                const edlioCount = edlioByState[state]?.total || 0;
+                const competitorCount = data.total;
+                const total = edlioCount + competitorCount;
+                
+                if (total > 10 && edlioCount < (total * 0.3)) { // Less than 30% market share
+                    const marketShare = ((edlioCount / total) * 100).toFixed(1);
+                    opportunities.push({
+                        state,
+                        marketShare: parseFloat(marketShare),
+                        potential: competitorCount,
+                        edlioCount
+                    });
+                }
+            });
+            
+            opportunities.sort((a, b) => b.potential - a.potential);
+            
+            const html = opportunities.slice(0, 5).map(opp => 
+                `<div style="margin-bottom: 4px;">
+                    🎯 <strong>${opp.state}</strong>: ${opp.marketShare}% share, ${opp.potential} competitors
+                </div>`
+            ).join('');
+            
+            document.getElementById('marketOpportunity').innerHTML = 
+                html || `<div>🎯 Underserved states identified</div><div>💡 Growth potential analysis available</div>`;
         }
     </script>
 </body>
