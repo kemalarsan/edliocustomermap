@@ -845,11 +845,8 @@
         <!-- Edlio Header -->
     <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-            <!-- Enhanced Edlio Logo -->
-            <div style="background: white; border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                <span style="color: #E53E3E; font-weight: 900; font-size: 28px; font-family: Arial, sans-serif; letter-spacing: -3px; transform: skewX(-10deg);">e</span>
-                <div style="position: absolute; right: -1px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 10px solid #E53E3E; border-top: 8px solid transparent; border-bottom: 8px solid transparent;"></div>
-            </div>
+            <!-- Official Edlio Logo -->
+            <img src="Square Spikey White - RBG - High Res-logo.png" alt="Edlio" style="width: 44px; height: 44px; border-radius: 8px; background: white; padding: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <div>
                 <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px; letter-spacing: -0.5px;">Edlio Customer Map</div>
                 <div class="tagline" style="font-size: 14px; opacity: 0.9; font-weight: 500;">Reach Every Family</div>
@@ -873,11 +870,8 @@
         <div class="controls" id="controls">
             <div class="controls-content">
                 <div class="controls-header">
-                    <h3>
-                        <span style="display: inline-block; width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 16px; position: relative; overflow: hidden; font-family: Arial, sans-serif; letter-spacing: -2px;">
-                            <span style="transform: skewX(-10deg);">e</span>
-                            <div style="position: absolute; right: -1px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 6px solid white; border-top: 4px solid transparent; border-bottom: 4px solid transparent;"></div>
-                        </span>
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <img src="Square Spikey White - RBG - High Res-logo.png" alt="Edlio" style="width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; padding: 2px;">
                         Filters
                     </h3>
                     <button onclick="toggleControls()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 5px;">×</button>
@@ -1799,12 +1793,12 @@
             }
         }
         
-        // Create enhanced Edlio school marker with angular 'e'
+        // Create Edlio school marker with clean design
         function createSchoolMarker(lat, lng, color) {
             const iconHtml = `
                 <div style="
-                    width: 24px; 
-                    height: 24px; 
+                    width: 26px; 
+                    height: 26px; 
                     background: ${color}; 
                     border: 2px solid white; 
                     border-radius: 6px; 
@@ -1812,24 +1806,17 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: white;
-                    font-weight: 900;
-                    font-size: 16px;
-                    font-family: Arial, sans-serif;
                     position: relative;
                     overflow: hidden;
                 ">
-                    <span style="transform: skewX(-10deg); letter-spacing: -2px;">e</span>
                     <div style="
-                        position: absolute; 
-                        right: -1px; 
-                        top: 50%; 
-                        transform: translateY(-50%); 
-                        width: 0; 
-                        height: 0; 
-                        border-left: 5px solid white; 
-                        border-top: 3px solid transparent; 
-                        border-bottom: 3px solid transparent;
+                        width: 100%;
+                        height: 100%;
+                        background-image: url('Square Spikey White - RBG - High Res-logo.png');
+                        background-size: 18px 18px;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        opacity: 0.9;
                     "></div>
                 </div>
             `;
@@ -1837,9 +1824,9 @@
             const customIcon = L.divIcon({
                 html: iconHtml,
                 className: 'custom-school-marker',
-                iconSize: [24, 24],
-                iconAnchor: [12, 12],
-                popupAnchor: [0, -12]
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
             });
             
             return L.marker([lat, lng], { icon: customIcon });
