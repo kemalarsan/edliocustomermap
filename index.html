@@ -2107,7 +2107,7 @@
         
         function updateSyncStatus() {
             const syncStatus = document.getElementById('syncStatus');
-            const count = customersData ? customersData.length : 2348;
+            const count = customers ? customers.length : 2348;
             const source = currentDataSource === 'hubspot' ? 'HubSpot' : 'Static';
             const lastSync = hubSpotAPI ? hubSpotAPI.lastSync : null;
             
