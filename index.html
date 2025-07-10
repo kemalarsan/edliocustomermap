@@ -1967,6 +1967,8 @@
         // Check for competitive mode
         const urlParams = new URLSearchParams(window.location.search);
         const isCompetitiveMode = urlParams.get('mode') === 'competitive';
+        console.log('URL params:', window.location.search);
+        console.log('Competitive mode:', isCompetitiveMode);
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -1990,11 +1992,18 @@
             updateSyncStatus();
             
             // Show competitive features if mode=competitive
+            console.log('Checking competitive mode inside DOMContentLoaded:', isCompetitiveMode);
             if (isCompetitiveMode) {
                 const competitiveFeatures = document.getElementById('competitiveFeatures');
+                console.log('Found competitive features element:', competitiveFeatures);
                 if (competitiveFeatures) {
                     competitiveFeatures.classList.remove('hidden');
+                    console.log('Competitive features should now be visible');
+                } else {
+                    console.log('ERROR: competitiveFeatures element not found');
                 }
+            } else {
+                console.log('Not in competitive mode');
             }
         });
         
