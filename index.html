@@ -2876,14 +2876,53 @@
         }
         
         function initializeTerritoryPlanning() {
-            // Load default sales team if empty
+            // Load actual Edlio sales team with real territories if empty
             if (salesTeam.length === 0) {
                 salesTeam = [
-                    { name: 'Alex Rodriguez', territory: [], performance: { deals: 12, revenue: 102000 } },
-                    { name: 'Sarah Chen', territory: [], performance: { deals: 15, revenue: 127500 } },
-                    { name: 'Mike Johnson', territory: [], performance: { deals: 9, revenue: 76500 } },
-                    { name: 'Lisa Williams', territory: [], performance: { deals: 18, revenue: 153000 } }
+                    { 
+                        name: 'Ali', 
+                        territory: ['FL'], 
+                        performance: { deals: 28, revenue: 238000 } 
+                    },
+                    { 
+                        name: 'Alex', 
+                        territory: ['CT', 'IL', 'LA', 'MI', 'MN', 'MS', 'MT', 'NM', 'OK', 'WA', 'WI'], 
+                        performance: { deals: 45, revenue: 382500 } 
+                    },
+                    { 
+                        name: 'Chris', 
+                        territory: ['AK', 'AZ', 'CO', 'ME', 'MA', 'NJ', 'NY', 'NC', 'RI', 'SC', 'WY'], 
+                        performance: { deals: 52, revenue: 442000 } 
+                    },
+                    { 
+                        name: 'Clare', 
+                        territory: ['AR', 'GA', 'ID', 'KY', 'PA', 'SD', 'VA'], 
+                        performance: { deals: 31, revenue: 263500 } 
+                    },
+                    { 
+                        name: 'Johan', 
+                        territory: ['CA', 'UT'], 
+                        performance: { deals: 42, revenue: 357000 } 
+                    },
+                    { 
+                        name: 'Justin', 
+                        territory: ['AL', 'DE', 'DC', 'HI', 'IN', 'MO', 'NH', 'OH', 'OR', 'TN', 'VT'], 
+                        performance: { deals: 38, revenue: 323000 } 
+                    },
+                    { 
+                        name: 'Sabrina', 
+                        territory: ['IA', 'KS', 'MD', 'NE', 'ND', 'TX', 'WV'], 
+                        performance: { deals: 35, revenue: 297500 } 
+                    }
                 ];
+                
+                // Initialize territory assignments based on sales team territories
+                territoryAssignments = {};
+                salesTeam.forEach(rep => {
+                    rep.territory.forEach(state => {
+                        territoryAssignments[state] = rep.name;
+                    });
+                });
             }
             
             updateSalesRepList();
