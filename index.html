@@ -765,6 +765,31 @@
         }
         
         
+        /* Enhanced Edlio Logo Styles */
+        .edlio-logo-e {
+            font-weight: 900;
+            font-family: Arial, sans-serif;
+            letter-spacing: -3px;
+            transform: skewX(-10deg);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .edlio-logo-arrow {
+            position: absolute;
+            right: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        /* Fix marker display */
+        .custom-school-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+        
         @media (max-width: 768px) {
             .export-controls {
                 flex-direction: column;
@@ -820,9 +845,10 @@
         <!-- Edlio Header -->
     <div class="edlio-header" style="background: linear-gradient(135deg, #E53E3E, #d32f2f); color: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; z-index: 500;">
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-            <!-- Official Edlio Spiky Logo -->
-            <div style="background: white; border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #E53E3E; font-weight: 700; font-size: 24px;">
-                e
+            <!-- Enhanced Edlio Logo -->
+            <div style="background: white; border-radius: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                <span style="color: #E53E3E; font-weight: 900; font-size: 28px; font-family: Arial, sans-serif; letter-spacing: -3px; transform: skewX(-10deg);">e</span>
+                <div style="position: absolute; right: -1px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 10px solid #E53E3E; border-top: 8px solid transparent; border-bottom: 8px solid transparent;"></div>
             </div>
             <div>
                 <div style="font-size: 24px; font-weight: 700; margin-bottom: 2px; letter-spacing: -0.5px;">Edlio Customer Map</div>
@@ -848,8 +874,9 @@
             <div class="controls-content">
                 <div class="controls-header">
                     <h3>
-                        <span style="display: inline-block; width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">
-                            e
+                        <span style="display: inline-block; width: 24px; height: 24px; background: #E53E3E; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 16px; position: relative; overflow: hidden; font-family: Arial, sans-serif; letter-spacing: -2px;">
+                            <span style="transform: skewX(-10deg);">e</span>
+                            <div style="position: absolute; right: -1px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 6px solid white; border-top: 4px solid transparent; border-bottom: 4px solid transparent;"></div>
                         </span>
                         Filters
                     </h3>
@@ -1772,7 +1799,7 @@
             }
         }
         
-        // Create simple school marker with 'e'
+        // Create enhanced Edlio school marker with angular 'e'
         function createSchoolMarker(lat, lng, color) {
             const iconHtml = `
                 <div style="
@@ -1786,10 +1813,25 @@
                     align-items: center;
                     justify-content: center;
                     color: white;
-                    font-weight: 700;
-                    font-size: 14px;
-                    font-family: 'Montserrat', sans-serif;
-                ">e</div>
+                    font-weight: 900;
+                    font-size: 16px;
+                    font-family: Arial, sans-serif;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <span style="transform: skewX(-10deg); letter-spacing: -2px;">e</span>
+                    <div style="
+                        position: absolute; 
+                        right: -1px; 
+                        top: 50%; 
+                        transform: translateY(-50%); 
+                        width: 0; 
+                        height: 0; 
+                        border-left: 5px solid white; 
+                        border-top: 3px solid transparent; 
+                        border-bottom: 3px solid transparent;
+                    "></div>
+                </div>
             `;
             
             const customIcon = L.divIcon({
