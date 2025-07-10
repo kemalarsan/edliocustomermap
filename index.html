@@ -1000,6 +1000,9 @@
                         <button onclick="toggleOpportunityScoring()" class="export-btn" style="background: #4caf50; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             🎯 Opportunity Scoring
                         </button>
+                        <button onclick="toggleTerritoryPlanning()" class="export-btn" style="background: #673ab7; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            🗺️ Territory Planning
+                        </button>
                     </div>
                     
                     <!-- CSV Upload Section -->
@@ -1137,6 +1140,91 @@
                                     <div>Close Rate: <span style="color: #4caf50; font-weight: 600;">23%</span></div>
                                 </div>
                                 <div id="expectedRevenue">Expected revenue calculation will appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Territory Planning & Sales Assignment -->
+                    <div id="territoryPlanningSection" class="hidden" style="padding: 10px; background: #f3e5f5; border-radius: 6px; border: 1px solid #673ab7;">
+                        <h5 style="margin: 0 0 10px 0; font-size: 13px; color: #4a148c;">🗺️ Territory Planning & Sales Assignment</h5>
+                        
+                        <!-- Sales Team Management -->
+                        <div style="margin-bottom: 15px; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">👥 Sales Team Management</div>
+                            <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                                <input type="text" id="newSalesRep" placeholder="Add sales rep..." style="flex: 1; font-size: 9px; padding: 4px; border: 1px solid #ddd; border-radius: 3px;">
+                                <button onclick="addSalesRep()" style="background: #673ab7; color: white; border: none; padding: 4px 8px; border-radius: 3px; font-size: 9px; cursor: pointer;">Add</button>
+                            </div>
+                            <div id="salesRepList" style="font-size: 10px; max-height: 80px; overflow-y: auto;">
+                                Loading sales team...
+                            </div>
+                        </div>
+                        
+                        <!-- Territory Assignment -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">🎯 Territory Assignments</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; font-size: 10px;">
+                                <select id="assignmentState" style="font-size: 9px; padding: 3px;">
+                                    <option value="">Select State...</option>
+                                </select>
+                                <select id="assignmentRep" style="font-size: 9px; padding: 3px;">
+                                    <option value="">Select Rep...</option>
+                                </select>
+                            </div>
+                            <button onclick="assignTerritory()" style="background: #673ab7; color: white; border: none; padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%;">
+                                📍 Assign Territory
+                            </button>
+                            <div id="territoryAssignments" style="font-size: 10px; margin-top: 8px; max-height: 100px; overflow-y: auto;">
+                                No territories assigned yet
+                            </div>
+                        </div>
+                        
+                        <!-- Territory Analytics -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">📊 Territory Performance</div>
+                            <div id="territoryAnalytics" style="font-size: 10px; background: white; padding: 6px; border-radius: 3px;">
+                                Calculating territory metrics...
+                            </div>
+                        </div>
+                        
+                        <!-- Lead Assignment Rules -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">🤖 Auto-Assignment Rules</div>
+                            <div style="background: white; padding: 6px; border-radius: 3px;">
+                                <div style="font-size: 10px; margin-bottom: 6px;">
+                                    <label style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" id="autoAssignByState" checked>
+                                        <span>Auto-assign by state</span>
+                                    </label>
+                                </div>
+                                <div style="font-size: 10px; margin-bottom: 6px;">
+                                    <label style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" id="autoAssignByScore">
+                                        <span>Prioritize high-scoring leads</span>
+                                    </label>
+                                </div>
+                                <div style="font-size: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="checkbox" id="balanceWorkload">
+                                        <span>Balance workload across team</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Territory Optimization -->
+                        <div>
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">⚡ Territory Optimization</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                                <button onclick="optimizeTerritories()" style="background: #ff9800; color: white; border: none; padding: 6px; border-radius: 3px; font-size: 9px; cursor: pointer;">
+                                    🔄 Auto-Optimize
+                                </button>
+                                <button onclick="balanceTerritories()" style="background: #795548; color: white; border: none; padding: 6px; border-radius: 3px; font-size: 9px; cursor: pointer;">
+                                    ⚖️ Balance Load
+                                </button>
+                            </div>
+                            <div id="optimizationResults" style="font-size: 10px; margin-top: 6px; color: #666;">
+                                Click optimization buttons for recommendations
                             </div>
                         </div>
                     </div>
@@ -2770,6 +2858,331 @@
                     <div style="font-size: 11px; color: #d32f2f;">Hot Focus: $${(hotProspectRevenue/1000000).toFixed(1)}M</div>
                 </div>
             `;
+        }
+        
+        // Territory Planning & Sales Assignment Functions
+        let salesTeam = [];
+        let territoryAssignments = {};
+        let territoryAnalytics = {};
+        
+        function toggleTerritoryPlanning() {
+            const territorySection = document.getElementById('territoryPlanningSection');
+            territorySection.classList.toggle('hidden');
+            
+            // Initialize territory planning when opened
+            if (!territorySection.classList.contains('hidden')) {
+                initializeTerritoryPlanning();
+            }
+        }
+        
+        function initializeTerritoryPlanning() {
+            // Load default sales team if empty
+            if (salesTeam.length === 0) {
+                salesTeam = [
+                    { name: 'Alex Rodriguez', territory: [], performance: { deals: 12, revenue: 102000 } },
+                    { name: 'Sarah Chen', territory: [], performance: { deals: 15, revenue: 127500 } },
+                    { name: 'Mike Johnson', territory: [], performance: { deals: 9, revenue: 76500 } },
+                    { name: 'Lisa Williams', territory: [], performance: { deals: 18, revenue: 153000 } }
+                ];
+            }
+            
+            updateSalesRepList();
+            populateStateDropdown();
+            populateRepDropdown();
+            updateTerritoryAnalytics();
+        }
+        
+        function addSalesRep() {
+            const input = document.getElementById('newSalesRep');
+            const name = input.value.trim();
+            
+            if (name && !salesTeam.find(rep => rep.name === name)) {
+                salesTeam.push({
+                    name: name,
+                    territory: [],
+                    performance: { deals: 0, revenue: 0 }
+                });
+                
+                input.value = '';
+                updateSalesRepList();
+                populateRepDropdown();
+                updateTerritoryAnalytics();
+            }
+        }
+        
+        function updateSalesRepList() {
+            const html = salesTeam.map((rep, index) => {
+                const territoryCount = rep.territory.length;
+                const avgDeal = rep.performance.deals > 0 ? (rep.performance.revenue / rep.performance.deals) : 0;
+                
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding: 4px; background: #f9f9f9; border-radius: 3px;">
+                        <div>
+                            <div style="font-weight: 600; color: #4a148c;">${rep.name}</div>
+                            <div style="font-size: 8px; color: #666;">
+                                ${territoryCount} territories | ${rep.performance.deals} deals | $${(avgDeal/1000).toFixed(1)}k avg
+                            </div>
+                        </div>
+                        <button onclick="removeSalesRep(${index})" style="background: #f44336; color: white; border: none; padding: 2px 4px; border-radius: 2px; font-size: 8px; cursor: pointer;">×</button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('salesRepList').innerHTML = html || '<div style="color: #666;">No sales reps added yet</div>';
+        }
+        
+        function removeSalesRep(index) {
+            const rep = salesTeam[index];
+            
+            // Reassign territories
+            rep.territory.forEach(state => {
+                delete territoryAssignments[state];
+            });
+            
+            salesTeam.splice(index, 1);
+            updateSalesRepList();
+            populateRepDropdown();
+            updateTerritoryAssignments();
+            updateTerritoryAnalytics();
+        }
+        
+        function populateStateDropdown() {
+            const states = new Set();
+            
+            if (customers && customers.length > 0) {
+                customers.forEach(customer => {
+                    if (customer.state) states.add(customer.state);
+                });
+            }
+            
+            competitorData.forEach(competitor => {
+                if (competitor.state) states.add(competitor.state);
+            });
+            
+            const dropdown = document.getElementById('assignmentState');
+            dropdown.innerHTML = '<option value="">Select State...</option>' +
+                Array.from(states).sort().map(state => 
+                    `<option value="${state}">${state}</option>`
+                ).join('');
+        }
+        
+        function populateRepDropdown() {
+            const dropdown = document.getElementById('assignmentRep');
+            dropdown.innerHTML = '<option value="">Select Rep...</option>' +
+                salesTeam.map((rep, index) => 
+                    `<option value="${index}">${rep.name}</option>`
+                ).join('');
+        }
+        
+        function assignTerritory() {
+            const state = document.getElementById('assignmentState').value;
+            const repIndex = document.getElementById('assignmentRep').value;
+            
+            if (state && repIndex !== '') {
+                const rep = salesTeam[repIndex];
+                
+                // Remove state from any existing assignment
+                Object.keys(territoryAssignments).forEach(assignedState => {
+                    if (assignedState === state) {
+                        const oldRep = salesTeam.find(r => r.name === territoryAssignments[assignedState]);
+                        if (oldRep) {
+                            oldRep.territory = oldRep.territory.filter(t => t !== state);
+                        }
+                    }
+                });
+                
+                // Assign to new rep
+                territoryAssignments[state] = rep.name;
+                if (!rep.territory.includes(state)) {
+                    rep.territory.push(state);
+                }
+                
+                // Reset dropdowns
+                document.getElementById('assignmentState').value = '';
+                document.getElementById('assignmentRep').value = '';
+                
+                updateTerritoryAssignments();
+                updateTerritoryAnalytics();
+            }
+        }
+        
+        function updateTerritoryAssignments() {
+            const assignments = Object.entries(territoryAssignments);
+            
+            if (assignments.length === 0) {
+                document.getElementById('territoryAssignments').innerHTML = 'No territories assigned yet';
+                return;
+            }
+            
+            const html = assignments.map(([state, repName]) => {
+                const stateData = getStateData(state);
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; padding: 3px; background: #f0f0f0; border-radius: 2px;">
+                        <div>
+                            <span style="font-weight: 600; color: #4a148c;">${state}</span>
+                            <span style="font-size: 8px; color: #666;"> → ${repName}</span>
+                            <div style="font-size: 8px; color: #666;">${stateData.totalSchools} schools</div>
+                        </div>
+                        <button onclick="unassignTerritory('${state}')" style="background: #f44336; color: white; border: none; padding: 1px 3px; border-radius: 2px; font-size: 8px; cursor: pointer;">×</button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('territoryAssignments').innerHTML = html;
+        }
+        
+        function unassignTerritory(state) {
+            const repName = territoryAssignments[state];
+            const rep = salesTeam.find(r => r.name === repName);
+            
+            if (rep) {
+                rep.territory = rep.territory.filter(t => t !== state);
+            }
+            
+            delete territoryAssignments[state];
+            updateTerritoryAssignments();
+            updateTerritoryAnalytics();
+        }
+        
+        function getStateData(state) {
+            const edlioCount = customers ? customers.filter(c => c.state === state).length : 0;
+            const competitorCount = competitorData.filter(c => c.state === state).length;
+            
+            return {
+                edlioSchools: edlioCount,
+                competitorSchools: competitorCount,
+                totalSchools: edlioCount + competitorCount,
+                opportunityScore: opportunityScores.find(opp => opp.state === state)?.score || 0
+            };
+        }
+        
+        function updateTerritoryAnalytics() {
+            const analytics = salesTeam.map(rep => {
+                const territoryData = rep.territory.map(state => getStateData(state));
+                const totalSchools = territoryData.reduce((sum, data) => sum + data.totalSchools, 0);
+                const avgScore = territoryData.length > 0 ? 
+                    territoryData.reduce((sum, data) => sum + data.opportunityScore, 0) / territoryData.length : 0;
+                
+                return {
+                    name: rep.name,
+                    territories: rep.territory.length,
+                    totalSchools,
+                    avgScore: avgScore.toFixed(1),
+                    performance: rep.performance
+                };
+            });
+            
+            const html = analytics.map(data => {
+                const scoreColor = data.avgScore >= 70 ? '#4caf50' : data.avgScore >= 50 ? '#ff9800' : '#f44336';
+                return `
+                    <div style="margin-bottom: 6px; padding: 4px; background: #f5f5f5; border-radius: 3px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span style="font-weight: 600; color: #4a148c;">${data.name}</span>
+                            <span style="color: ${scoreColor}; font-weight: 600;">${data.avgScore}</span>
+                        </div>
+                        <div style="font-size: 9px; color: #666;">
+                            ${data.territories} territories | ${data.totalSchools} schools | ${data.performance.deals} deals | $${(data.performance.revenue/1000).toFixed(0)}k
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('territoryAnalytics').innerHTML = html || '<div style="color: #666;">No territory data available</div>';
+        }
+        
+        function optimizeTerritories() {
+            // Auto-optimize based on opportunity scores and workload balance
+            const unassignedStates = [];
+            const allStates = new Set();
+            
+            if (customers) customers.forEach(c => { if (c.state) allStates.add(c.state); });
+            competitorData.forEach(c => { if (c.state) allStates.add(c.state); });
+            
+            Array.from(allStates).forEach(state => {
+                if (!territoryAssignments[state]) {
+                    unassignedStates.push(state);
+                }
+            });
+            
+            // Sort unassigned states by opportunity score
+            unassignedStates.sort((a, b) => {
+                const scoreA = opportunityScores.find(opp => opp.state === a)?.score || 0;
+                const scoreB = opportunityScores.find(opp => opp.state === b)?.score || 0;
+                return scoreB - scoreA;
+            });
+            
+            // Assign to reps with lowest current workload
+            unassignedStates.forEach(state => {
+                const repWorkloads = salesTeam.map((rep, index) => ({
+                    index,
+                    workload: rep.territory.reduce((sum, territory) => {
+                        const data = getStateData(territory);
+                        return sum + data.totalSchools;
+                    }, 0)
+                }));
+                
+                repWorkloads.sort((a, b) => a.workload - b.workload);
+                
+                const selectedRep = salesTeam[repWorkloads[0].index];
+                territoryAssignments[state] = selectedRep.name;
+                selectedRep.territory.push(state);
+            });
+            
+            updateTerritoryAssignments();
+            updateTerritoryAnalytics();
+            
+            document.getElementById('optimizationResults').innerHTML = 
+                `✅ Optimized ${unassignedStates.length} territories based on opportunity scores and workload balance`;
+        }
+        
+        function balanceTerritories() {
+            // Calculate current workload distribution
+            const workloads = salesTeam.map((rep, index) => ({
+                index,
+                name: rep.name,
+                territories: [...rep.territory],
+                workload: rep.territory.reduce((sum, territory) => {
+                    const data = getStateData(territory);
+                    return sum + data.totalSchools;
+                }, 0)
+            }));
+            
+            workloads.sort((a, b) => b.workload - a.workload);
+            
+            let redistributed = 0;
+            
+            // Move territories from overloaded reps to underloaded ones
+            for (let i = 0; i < workloads.length - 1; i++) {
+                const overloaded = workloads[i];
+                const underloaded = workloads[workloads.length - 1 - i];
+                
+                if (overloaded.workload > underloaded.workload + 50 && overloaded.territories.length > 1) {
+                    // Find the smallest territory to move
+                    const territoryData = overloaded.territories.map(state => ({
+                        state,
+                        schools: getStateData(state).totalSchools
+                    }));
+                    
+                    territoryData.sort((a, b) => a.schools - b.schools);
+                    const territoryToMove = territoryData[0].state;
+                    
+                    // Move territory
+                    const overloadedRep = salesTeam[overloaded.index];
+                    const underloadedRep = salesTeam[underloaded.index];
+                    
+                    overloadedRep.territory = overloadedRep.territory.filter(t => t !== territoryToMove);
+                    underloadedRep.territory.push(territoryToMove);
+                    territoryAssignments[territoryToMove] = underloadedRep.name;
+                    
+                    redistributed++;
+                }
+            }
+            
+            updateTerritoryAssignments();
+            updateTerritoryAnalytics();
+            
+            document.getElementById('optimizationResults').innerHTML = 
+                `⚖️ Redistributed ${redistributed} territories to balance workload across the team`;
         }
     </script>
 </body>
