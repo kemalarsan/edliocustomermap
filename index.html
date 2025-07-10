@@ -1998,7 +1998,10 @@
                 console.log('Found competitive features element:', competitiveFeatures);
                 if (competitiveFeatures) {
                     competitiveFeatures.classList.remove('hidden');
+                    competitiveFeatures.style.display = 'block'; // Force show with inline style
                     console.log('Competitive features should now be visible');
+                    console.log('Element classes after removal:', competitiveFeatures.className);
+                    console.log('Element style display:', competitiveFeatures.style.display);
                 } else {
                     console.log('ERROR: competitiveFeatures element not found');
                 }
