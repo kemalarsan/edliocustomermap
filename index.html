@@ -997,6 +997,9 @@
                         <button onclick="toggleMarketShare()" class="export-btn" style="background: #2196f3; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             📊 Market Share
                         </button>
+                        <button onclick="toggleOpportunityScoring()" class="export-btn" style="background: #4caf50; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            🎯 Opportunity Scoring
+                        </button>
                     </div>
                     
                     <!-- CSV Upload Section -->
@@ -1059,6 +1062,81 @@
                             <div id="marketOpportunity" style="font-size: 10px; color: #666;">
                                 <div>🎯 Underserved states identified</div>
                                 <div>💡 Growth potential analysis available</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Opportunity Scoring System -->
+                    <div id="opportunityScoringSection" class="hidden" style="padding: 10px; background: #f0f8f0; border-radius: 6px; border: 1px solid #4caf50;">
+                        <h5 style="margin: 0 0 10px 0; font-size: 13px; color: #2e7d32;">🎯 Opportunity Scoring System</h5>
+                        
+                        <!-- Scoring Configuration -->
+                        <div style="margin-bottom: 15px; padding: 8px; background: white; border-radius: 4px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">Scoring Criteria</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px;">
+                                <div>
+                                    <label>School Size Weight:</label>
+                                    <select id="sizeWeight" style="width: 100%; font-size: 9px; padding: 2px;">
+                                        <option value="1">Low (1x)</option>
+                                        <option value="2" selected>Medium (2x)</option>
+                                        <option value="3">High (3x)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Market Density:</label>
+                                    <select id="densityWeight" style="width: 100%; font-size: 9px; padding: 2px;">
+                                        <option value="1">Low (1x)</option>
+                                        <option value="2" selected>Medium (2x)</option>
+                                        <option value="3">High (3x)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Competitor Presence:</label>
+                                    <select id="competitorWeight" style="width: 100%; font-size: 9px; padding: 2px;">
+                                        <option value="1">Low Impact</option>
+                                        <option value="2" selected>Medium Impact</option>
+                                        <option value="3">High Impact</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Product Fit:</label>
+                                    <select id="productWeight" style="width: 100%; font-size: 9px; padding: 2px;">
+                                        <option value="1">Basic</option>
+                                        <option value="2" selected>Standard</option>
+                                        <option value="3">Premium</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="calculateOpportunityScores()" style="margin-top: 8px; background: #4caf50; color: white; border: none; padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer;">
+                                🔄 Recalculate Scores
+                            </button>
+                        </div>
+                        
+                        <!-- Hot Prospects -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">🔥 Hot Prospects (Score 80+)</div>
+                            <div id="hotProspects" style="font-size: 10px; max-height: 100px; overflow-y: auto; background: white; padding: 6px; border-radius: 3px;">
+                                Calculating hot prospects...
+                            </div>
+                        </div>
+                        
+                        <!-- Territory Recommendations -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">🗺️ Territory Focus Areas</div>
+                            <div id="territoryRecommendations" style="font-size: 10px; background: white; padding: 6px; border-radius: 3px;">
+                                Analyzing territory opportunities...
+                            </div>
+                        </div>
+                        
+                        <!-- ROI Calculator -->
+                        <div>
+                            <div style="font-size: 11px; font-weight: 600; margin-bottom: 8px;">💰 ROI Potential</div>
+                            <div id="roiCalculator" style="font-size: 10px; background: white; padding: 6px; border-radius: 3px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+                                    <div>Avg Deal Size: <span style="color: #4caf50; font-weight: 600;">$8,500</span></div>
+                                    <div>Close Rate: <span style="color: #4caf50; font-weight: 600;">23%</span></div>
+                                </div>
+                                <div id="expectedRevenue">Expected revenue calculation will appear here</div>
                             </div>
                         </div>
                     </div>
@@ -2183,6 +2261,16 @@
             }
         }
         
+        function toggleOpportunityScoring() {
+            const opportunitySection = document.getElementById('opportunityScoringSection');
+            opportunitySection.classList.toggle('hidden');
+            
+            // Calculate opportunity scores when opened
+            if (!opportunitySection.classList.contains('hidden')) {
+                calculateOpportunityScores();
+            }
+        }
+        
         function processCompetitorCSV() {
             const fileInput = document.getElementById('competitorCSV');
             const file = fileInput.files[0];
@@ -2455,6 +2543,233 @@
             
             document.getElementById('marketOpportunity').innerHTML = 
                 html || `<div>🎯 Underserved states identified</div><div>💡 Growth potential analysis available</div>`;
+        }
+        
+        // Opportunity Scoring System Functions
+        let opportunityScores = [];
+        
+        function calculateOpportunityScores() {
+            console.log('Calculating opportunity scores...');
+            
+            // Get scoring weights from user settings
+            const sizeWeight = parseFloat(document.getElementById('sizeWeight').value);
+            const densityWeight = parseFloat(document.getElementById('densityWeight').value);
+            const competitorWeight = parseFloat(document.getElementById('competitorWeight').value);
+            const productWeight = parseFloat(document.getElementById('productWeight').value);
+            
+            opportunityScores = [];
+            
+            // Analyze each state/region for opportunity scoring
+            const stateData = analyzeStateOpportunities();
+            
+            Object.entries(stateData).forEach(([state, data]) => {
+                if (data.totalSchools > 5) { // Only consider states with significant school count
+                    const score = calculateStateScore(state, data, {
+                        sizeWeight,
+                        densityWeight,
+                        competitorWeight,
+                        productWeight
+                    });
+                    
+                    opportunityScores.push({
+                        state,
+                        score,
+                        ...data
+                    });
+                }
+            });
+            
+            // Sort by score (highest first)
+            opportunityScores.sort((a, b) => b.score - a.score);
+            
+            // Update displays
+            updateHotProspects();
+            updateTerritoryRecommendations();
+            updateROICalculator();
+        }
+        
+        function analyzeStateOpportunities() {
+            const stateData = {};
+            
+            // Analyze current Edlio presence
+            if (customers && customers.length > 0) {
+                customers.forEach(customer => {
+                    const state = customer.state || 'Unknown';
+                    if (!stateData[state]) {
+                        stateData[state] = {
+                            edlioSchools: 0,
+                            competitorSchools: 0,
+                            totalSchools: 0,
+                            schoolTypes: { district: 0, charter: 0, private: 0 },
+                            avgDealSize: 8500,
+                            marketDensity: 'medium'
+                        };
+                    }
+                    stateData[state].edlioSchools++;
+                    stateData[state].totalSchools++;
+                    stateData[state].schoolTypes[customer.type] = (stateData[state].schoolTypes[customer.type] || 0) + 1;
+                });
+            }
+            
+            // Add competitor data
+            competitorData.forEach(competitor => {
+                const state = competitor.state || 'Unknown';
+                if (!stateData[state]) {
+                    stateData[state] = {
+                        edlioSchools: 0,
+                        competitorSchools: 0,
+                        totalSchools: 0,
+                        schoolTypes: { district: 0, charter: 0, private: 0 },
+                        avgDealSize: 8500,
+                        marketDensity: 'medium'
+                    };
+                }
+                stateData[state].competitorSchools++;
+                stateData[state].totalSchools++;
+            });
+            
+            // Calculate market density and other metrics
+            Object.values(stateData).forEach(data => {
+                data.marketPenetration = data.totalSchools > 0 ? 
+                    (data.edlioSchools / data.totalSchools) * 100 : 0;
+                data.competitorThreat = data.totalSchools > 0 ? 
+                    (data.competitorSchools / data.totalSchools) * 100 : 0;
+                
+                // Estimate market density based on total schools
+                if (data.totalSchools > 100) data.marketDensity = 'high';
+                else if (data.totalSchools > 30) data.marketDensity = 'medium';
+                else data.marketDensity = 'low';
+            });
+            
+            return stateData;
+        }
+        
+        function calculateStateScore(state, data, weights) {
+            let score = 0;
+            
+            // Base score from market size (0-25 points)
+            const marketSizeScore = Math.min(25, (data.totalSchools / 200) * 25);
+            score += marketSizeScore * weights.sizeWeight;
+            
+            // Market density bonus (0-20 points)
+            const densityScore = data.marketDensity === 'high' ? 20 : 
+                                data.marketDensity === 'medium' ? 15 : 10;
+            score += densityScore * weights.densityWeight;
+            
+            // Low competition bonus (0-25 points)
+            const competitionScore = data.marketPenetration < 30 ? 25 :
+                                   data.marketPenetration < 50 ? 15 :
+                                   data.marketPenetration < 70 ? 8 : 0;
+            score += competitionScore * weights.competitorWeight;
+            
+            // Growth potential (0-20 points)
+            const growthScore = data.competitorSchools > 10 ? 20 :
+                              data.competitorSchools > 5 ? 15 :
+                              data.competitorSchools > 2 ? 10 : 5;
+            score += growthScore * weights.productWeight;
+            
+            // Strategic importance (0-10 points)
+            const strategicScore = ['CA', 'TX', 'FL', 'NY', 'IL'].includes(state) ? 10 : 
+                                 ['WA', 'CO', 'NC', 'GA', 'OH'].includes(state) ? 8 : 5;
+            score += strategicScore;
+            
+            return Math.round(score);
+        }
+        
+        function updateHotProspects() {
+            const hotProspects = opportunityScores.filter(opp => opp.score >= 80).slice(0, 8);
+            
+            if (hotProspects.length === 0) {
+                document.getElementById('hotProspects').innerHTML = 
+                    '<div style="color: #666;">No high-scoring opportunities found. Try adjusting scoring criteria.</div>';
+                return;
+            }
+            
+            const html = hotProspects.map(prospect => {
+                const scoreColor = prospect.score >= 90 ? '#d32f2f' : '#e64a19';
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding: 4px; background: #fff3e0; border-radius: 3px; border-left: 3px solid ${scoreColor};">
+                        <div>
+                            <div style="font-weight: 600; color: #d84315;">${prospect.state}</div>
+                            <div style="font-size: 9px; color: #666;">
+                                ${prospect.totalSchools} schools | ${prospect.marketPenetration.toFixed(1)}% penetration
+                            </div>
+                        </div>
+                        <div style="font-weight: 600; color: ${scoreColor}; font-size: 12px;">
+                            ${prospect.score}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('hotProspects').innerHTML = html;
+        }
+        
+        function updateTerritoryRecommendations() {
+            const topOpportunities = opportunityScores.slice(0, 5);
+            
+            const recommendations = [];
+            
+            topOpportunities.forEach(opp => {
+                if (opp.marketPenetration < 30 && opp.totalSchools > 20) {
+                    recommendations.push({
+                        type: '🎯 High Priority',
+                        state: opp.state,
+                        reason: `Low penetration (${opp.marketPenetration.toFixed(1)}%) in large market`,
+                        action: 'Assign dedicated territory rep'
+                    });
+                } else if (opp.competitorThreat > 50) {
+                    recommendations.push({
+                        type: '⚡ Urgent',
+                        state: opp.state,
+                        reason: `High competitor presence (${opp.competitorThreat.toFixed(1)}%)`,
+                        action: 'Defensive strategy needed'
+                    });
+                } else if (opp.score > 70) {
+                    recommendations.push({
+                        type: '💡 Opportunity',
+                        state: opp.state,
+                        reason: `Strong growth potential (Score: ${opp.score})`,
+                        action: 'Market development initiative'
+                    });
+                }
+            });
+            
+            const html = recommendations.slice(0, 4).map(rec => 
+                `<div style="margin-bottom: 6px; padding: 4px; background: #f5f5f5; border-radius: 3px;">
+                    <div style="font-weight: 600; color: #2e7d32;">${rec.type}: ${rec.state}</div>
+                    <div style="font-size: 9px; color: #666; margin: 2px 0;">${rec.reason}</div>
+                    <div style="font-size: 9px; color: #1976d2; font-style: italic;">→ ${rec.action}</div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('territoryRecommendations').innerHTML = 
+                html || '<div style="color: #666;">No specific territory recommendations available</div>';
+        }
+        
+        function updateROICalculator() {
+            const totalOpportunitySchools = opportunityScores.reduce((sum, opp) => 
+                sum + (opp.totalSchools - opp.edlioSchools), 0
+            );
+            
+            const avgDealSize = 8500;
+            const closeRate = 0.23;
+            const hotProspectCount = opportunityScores.filter(opp => opp.score >= 80).length;
+            
+            const expectedRevenue = totalOpportunitySchools * avgDealSize * closeRate;
+            const hotProspectRevenue = hotProspectCount * 50 * avgDealSize * (closeRate * 1.5); // Hot prospects have higher close rate
+            
+            document.getElementById('expectedRevenue').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+                    <div>Total Prospects: <span style="color: #4caf50; font-weight: 600;">${totalOpportunitySchools.toLocaleString()}</span></div>
+                    <div>Hot Prospects: <span style="color: #d32f2f; font-weight: 600;">${hotProspectCount} states</span></div>
+                </div>
+                <div style="padding: 4px; background: #e8f5e8; border-radius: 3px; border: 1px solid #4caf50;">
+                    <div style="font-weight: 600; color: #2e7d32;">Expected Annual Revenue</div>
+                    <div style="font-size: 11px; color: #2e7d32;">Market: $${(expectedRevenue/1000000).toFixed(1)}M</div>
+                    <div style="font-size: 11px; color: #d32f2f;">Hot Focus: $${(hotProspectRevenue/1000000).toFixed(1)}M</div>
+                </div>
+            `;
         }
     </script>
 </body>
