@@ -699,7 +699,12 @@
         }
         
         .hidden {
-            display: none;
+            display: none !important;
+        }
+        
+        /* Force show metrics dashboard when in advanced mode */
+        .metrics-dashboard:not(.hidden) {
+            display: block !important;
         }
         
         /* Export button styles */
@@ -863,7 +868,7 @@
     </div>
     
     <!-- Advanced Metrics Dashboard (Hidden by default) -->
-    <div id="advancedMetricsDashboard" class="metrics-dashboard hidden" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <div id="advancedMetricsDashboard" class="metrics-dashboard hidden" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; z-index: 400;">
         <div class="metrics-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
             
             <!-- Total Active Customers -->
