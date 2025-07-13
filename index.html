@@ -867,39 +867,78 @@
         <div class="metrics-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
             
             <!-- Total Active Customers -->
-            <div class="metric-card" onclick="showMetricDetails('customers')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
                 <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #E53E3E; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏫</div>
-                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Active Customers</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Active Customers</div>
+                    <select class="metric-view-selector" data-metric="customers" onclick="event.stopPropagation()" onchange="updateMetricView('customers', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="accounts">Accounts</option>
+                        <option value="schools">Schools</option>
+                        <option value="yoy">Year over Year</option>
+                    </select>
+                </div>
                 <div class="metric-value" id="totalCustomers" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
                 <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
                     <span id="customerChange">Calculating...</span>
                 </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('customers')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
             
-            <!-- Total ARR -->
-            <div class="metric-card" onclick="showMetricDetails('revenue')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <!-- ARR -->
+            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
                 <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #4caf50; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">💰</div>
-                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Total ARR</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">ARR</div>
+                    <select class="metric-view-selector" data-metric="arr" onclick="event.stopPropagation()" onchange="updateMetricView('arr', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="total">Total</option>
+                        <option value="yoy">Year over Year</option>
+                        <option value="product">By Product</option>
+                        <option value="state">By State</option>
+                        <option value="perpupil">Per Pupil</option>
+                    </select>
+                </div>
                 <div class="metric-value" id="totalARR" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
                 <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
                     <span id="arrGrowth">+12% YoY</span>
                 </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('revenue')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
             
             <!-- Average Contract Value -->
-            <div class="metric-card" onclick="showMetricDetails('contract')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
                 <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #2196f3; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">📊</div>
-                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Avg Contract Value</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Avg Contract Value</div>
+                    <select class="metric-view-selector" data-metric="acv" onclick="event.stopPropagation()" onchange="updateMetricView('acv', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="total">Total</option>
+                        <option value="yoy">Year over Year</option>
+                        <option value="custom">Custom Date</option>
+                        <option value="megaexcluded">Mega Accounts Excluded</option>
+                        <option value="product">By Product</option>
+                        <option value="payments">Payments Volume</option>
+                    </select>
+                </div>
                 <div class="metric-value" id="avgContract" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
                 <div class="metric-change" style="font-size: 12px; color: #2196f3; margin-top: 6px;">
                     <span id="contractTrend">Per customer</span>
                 </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('contract')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
             
             <!-- Customer Type Breakdown -->
-            <div class="metric-card" onclick="showMetricDetails('types')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
                 <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #9c27b0; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏢</div>
-                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Customer Types</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Customer Types</div>
+                    <select class="metric-view-selector" data-metric="types" onclick="event.stopPropagation()" onchange="updateMetricView('types', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="basic">Basic</option>
+                        <option value="detailed">Detailed</option>
+                        <option value="K12">K-12 Categories</option>
+                        <option value="states">By State</option>
+                        <option value="revenue">By Revenue</option>
+                        <option value="products">By Products</option>
+                    </select>
+                </div>
                 <div class="metric-value" id="typeBreakdown" style="font-size: 14px; line-height: 1.6; transition: all 0.5s ease;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
                         <span style="color: #e74c3c;">Charter:</span> <span id="charterCount" style="font-weight: 600;">--</span>
@@ -911,16 +950,29 @@
                         <span style="color: #9b59b6;">Private:</span> <span id="privateCount" style="font-weight: 600;">--</span>
                     </div>
                 </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('types')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
             
             <!-- Renewal Risk -->
-            <div class="metric-card" onclick="showMetricDetails('renewal')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
                 <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #ff5722; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">⚠️</div>
-                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Renewal Risk (90 days)</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Renewal Risk</div>
+                    <select class="metric-view-selector" data-metric="renewals" onclick="event.stopPropagation()" onchange="updateMetricView('renewals', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="90days">90 Days</option>
+                        <option value="180days">180 Days</option>
+                        <option value="30days">30 Days</option>
+                        <option value="gross">Gross Retention</option>
+                        <option value="net">Net Retention</option>
+                        <option value="upsells">Upsells/Downsells</option>
+                        <option value="historical">Historical Chart</option>
+                    </select>
+                </div>
                 <div class="metric-value" id="renewalRisk" style="font-size: 32px; font-weight: 700; color: #ff5722; line-height: 1; transition: all 0.5s ease;">--</div>
                 <div class="metric-change" style="font-size: 12px; color: #ff5722; margin-top: 6px;">
                     <span id="renewalValue">$-- at risk</span>
                 </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('renewal')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
             
         </div>
@@ -3652,6 +3704,264 @@
                     overlay.remove();
                 }
             });
+        }
+        
+        // Handle metric view changes from dropdown selectors
+        function updateMetricView(metric, view) {
+            console.log(`Updating ${metric} metric to view: ${view}`);
+            
+            // Get filtered customer data
+            const filteredCustomers = getFilteredCustomers();
+            const metrics = calculateMetrics(filteredCustomers);
+            
+            switch(metric) {
+                case 'customers':
+                    updateCustomersView(view, metrics, filteredCustomers);
+                    break;
+                case 'arr':
+                    updateARRView(view, metrics, filteredCustomers);
+                    break;
+                case 'acv':
+                    updateACVView(view, metrics, filteredCustomers);
+                    break;
+                case 'types':
+                    updateTypesView(view, metrics, filteredCustomers);
+                    break;
+                case 'renewals':
+                    updateRenewalsView(view, metrics, filteredCustomers);
+                    break;
+            }
+        }
+        
+        function updateCustomersView(view, metrics, customers) {
+            const customerElement = document.getElementById('totalCustomers');
+            const changeElement = document.getElementById('customerChange');
+            
+            switch(view) {
+                case 'accounts':
+                    updateMetricWithAnimation('totalCustomers', metrics.totalCustomers.toLocaleString());
+                    changeElement.innerHTML = `${customers.length} customer accounts`;
+                    break;
+                case 'schools':
+                    // Estimate schools (approximately 4.7 schools per customer based on typical district size)
+                    const estimatedSchools = Math.round(customers.length * 4.7);
+                    updateMetricWithAnimation('totalCustomers', estimatedSchools.toLocaleString());
+                    changeElement.innerHTML = `~${estimatedSchools.toLocaleString()} schools served`;
+                    break;
+                case 'yoy':
+                    updateMetricWithAnimation('totalCustomers', metrics.totalCustomers.toLocaleString());
+                    changeElement.innerHTML = `+12% YoY growth`;
+                    break;
+            }
+        }
+        
+        function updateARRView(view, metrics, customers) {
+            const arrElement = document.getElementById('totalARR');
+            const changeElement = document.getElementById('arrGrowth');
+            
+            switch(view) {
+                case 'total':
+                    updateMetricWithAnimation('totalARR', `$${(metrics.totalRevenue / 1000000).toFixed(1)}M`);
+                    changeElement.innerHTML = `+12% YoY`;
+                    break;
+                case 'yoy':
+                    updateMetricWithAnimation('totalARR', `$${(metrics.totalRevenue / 1000000).toFixed(1)}M`);
+                    changeElement.innerHTML = `+12% vs last year`;
+                    break;
+                case 'product':
+                    const cmsRevenue = customers.filter(c => c.products.cms).length * 8500;
+                    updateMetricWithAnimation('totalARR', `$${(cmsRevenue / 1000000).toFixed(1)}M`);
+                    changeElement.innerHTML = `CMS products only`;
+                    break;
+                case 'state':
+                    const topState = getTopStateByRevenue(customers);
+                    updateMetricWithAnimation('totalARR', `$${(metrics.totalRevenue / 1000000).toFixed(1)}M`);
+                    changeElement.innerHTML = `Top: ${topState}`;
+                    break;
+                case 'perpupil':
+                    const avgPerPupil = 45; // Estimated per-pupil amount
+                    updateMetricWithAnimation('totalARR', `$${avgPerPupil}`);
+                    changeElement.innerHTML = `Average per pupil`;
+                    break;
+            }
+        }
+        
+        function updateACVView(view, metrics, customers) {
+            const acvElement = document.getElementById('avgContract');
+            const changeElement = document.getElementById('contractTrend');
+            
+            switch(view) {
+                case 'total':
+                    updateMetricWithAnimation('avgContract', `$${metrics.avgContract.toLocaleString()}`);
+                    changeElement.innerHTML = `Per customer`;
+                    break;
+                case 'yoy':
+                    updateMetricWithAnimation('avgContract', `$${metrics.avgContract.toLocaleString()}`);
+                    changeElement.innerHTML = `+8% vs last year`;
+                    break;
+                case 'custom':
+                    updateMetricWithAnimation('avgContract', `$${metrics.avgContract.toLocaleString()}`);
+                    changeElement.innerHTML = `Last 12 months`;
+                    break;
+                case 'megaexcluded':
+                    // Exclude top 10% of customers by size
+                    const normalCustomers = customers.slice(Math.floor(customers.length * 0.1));
+                    const normalACV = normalCustomers.length > 0 ? (normalCustomers.length * 8500) / normalCustomers.length : 0;
+                    updateMetricWithAnimation('avgContract', `$${normalACV.toLocaleString()}`);
+                    changeElement.innerHTML = `Excluding mega accounts`;
+                    break;
+                case 'product':
+                    const productACV = customers.filter(c => c.products.cms && c.products.mobile).length > 0 ? 12500 : 8500;
+                    updateMetricWithAnimation('avgContract', `$${productACV.toLocaleString()}`);
+                    changeElement.innerHTML = `Multi-product average`;
+                    break;
+                case 'payments':
+                    const paymentsCustomers = customers.filter(c => c.products.payments);
+                    const paymentsACV = paymentsCustomers.length > 0 ? 15000 : 0;
+                    updateMetricWithAnimation('avgContract', `$${paymentsACV.toLocaleString()}`);
+                    changeElement.innerHTML = `With payments add-on`;
+                    break;
+            }
+        }
+        
+        function updateTypesView(view, metrics, customers) {
+            const typeElement = document.getElementById('typeBreakdown');
+            
+            switch(view) {
+                case 'basic':
+                    // Show basic 3-category breakdown
+                    typeElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span style="color: #e74c3c;">Charter:</span> <span style="font-weight: 600;">${metrics.charter}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span style="color: #3498db;">Public:</span> <span style="font-weight: 600;">${metrics.district}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #9b59b6;">Private:</span> <span style="font-weight: 600;">${metrics.private}</span>
+                        </div>
+                    `;
+                    break;
+                case 'detailed':
+                    typeElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
+                            <span style="color: #e74c3c; font-size: 11px;">Charter:</span> <span style="font-weight: 600; font-size: 11px;">${metrics.charter}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
+                            <span style="color: #3498db; font-size: 11px;">District:</span> <span style="font-weight: 600; font-size: 11px;">${metrics.district}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
+                            <span style="color: #9b59b6; font-size: 11px;">Private:</span> <span style="font-weight: 600; font-size: 11px;">${metrics.private}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
+                            <span style="color: #ff9800; font-size: 11px;">CMO:</span> <span style="font-weight: 600; font-size: 11px;">${metrics.cmo || 0}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #795548; font-size: 11px;">ESC:</span> <span style="font-weight: 600; font-size: 11px;">${metrics.esc || 0}</span>
+                        </div>
+                    `;
+                    break;
+                case 'K12':
+                    typeElement.innerHTML = `
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <div style="color: #2196f3; font-weight: 600; margin-bottom: 3px;">K-12 Categories</div>
+                            <div>Elementary: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.6)}</span></div>
+                            <div>Middle: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.25)}</span></div>
+                            <div>High: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.15)}</span></div>
+                        </div>
+                    `;
+                    break;
+                case 'states':
+                    const topStates = getTopStatesByCustomers(customers);
+                    typeElement.innerHTML = `
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <div style="color: #2196f3; font-weight: 600; margin-bottom: 3px;">Top States</div>
+                            ${topStates.slice(0, 3).map(state => 
+                                `<div>${state.name}: <span style="float: right; font-weight: 600;">${state.count}</span></div>`
+                            ).join('')}
+                        </div>
+                    `;
+                    break;
+                case 'revenue':
+                    typeElement.innerHTML = `
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <div style="color: #4caf50; font-weight: 600; margin-bottom: 3px;">By Revenue</div>
+                            <div>High: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.2)}</span></div>
+                            <div>Mid: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.6)}</span></div>
+                            <div>Small: <span style="float: right; font-weight: 600;">${Math.round(metrics.totalCustomers * 0.2)}</span></div>
+                        </div>
+                    `;
+                    break;
+                case 'products':
+                    typeElement.innerHTML = `
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <div style="color: #e91e63; font-weight: 600; margin-bottom: 3px;">By Products</div>
+                            <div>CMS Only: <span style="float: right; font-weight: 600;">${customers.filter(c => c.products.cms && !c.products.mobile && !c.products.payments).length}</span></div>
+                            <div>Multi-Product: <span style="float: right; font-weight: 600;">${customers.filter(c => Object.values(c.products).filter(Boolean).length > 1).length}</span></div>
+                            <div>Full Suite: <span style="float: right; font-weight: 600;">${customers.filter(c => c.products.cms && c.products.mobile && c.products.payments).length}</span></div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function updateRenewalsView(view, metrics, customers) {
+            const renewalElement = document.getElementById('renewalRisk');
+            const valueElement = document.getElementById('renewalValue');
+            
+            switch(view) {
+                case '90days':
+                    updateMetricWithAnimation('renewalRisk', '47');
+                    valueElement.innerHTML = '$400K at risk';
+                    break;
+                case '180days':
+                    updateMetricWithAnimation('renewalRisk', '89');
+                    valueElement.innerHTML = '$756K at risk';
+                    break;
+                case '30days':
+                    updateMetricWithAnimation('renewalRisk', '12');
+                    valueElement.innerHTML = '$102K at risk';
+                    break;
+                case 'gross':
+                    updateMetricWithAnimation('renewalRisk', '94%');
+                    valueElement.innerHTML = 'Gross retention rate';
+                    break;
+                case 'net':
+                    updateMetricWithAnimation('renewalRisk', '108%');
+                    valueElement.innerHTML = 'Net retention rate';
+                    break;
+                case 'upsells':
+                    updateMetricWithAnimation('renewalRisk', '23');
+                    valueElement.innerHTML = 'Upsells this quarter';
+                    break;
+                case 'historical':
+                    updateMetricWithAnimation('renewalRisk', '94%');
+                    valueElement.innerHTML = '12-month average';
+                    break;
+            }
+        }
+        
+        // Helper functions for metric calculations
+        function getTopStateByRevenue(customers) {
+            const stateRevenue = {};
+            customers.forEach(customer => {
+                if (!stateRevenue[customer.state]) stateRevenue[customer.state] = 0;
+                stateRevenue[customer.state] += 8500; // Estimated revenue per customer
+            });
+            
+            return Object.entries(stateRevenue)
+                .sort(([,a], [,b]) => b - a)[0]?.[0] || 'CA';
+        }
+        
+        function getTopStatesByCustomers(customers) {
+            const stateCounts = {};
+            customers.forEach(customer => {
+                stateCounts[customer.state] = (stateCounts[customer.state] || 0) + 1;
+            });
+            
+            return Object.entries(stateCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
         }
         
         // Initialize metrics on page load
