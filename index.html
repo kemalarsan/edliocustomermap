@@ -32,8 +32,12 @@
         
         .container {
             display: flex;
-            height: calc(100vh - 200px); /* Account for header + metrics dashboard */
+            height: calc(100vh - 80px); /* Default height for normal mode */
             position: relative;
+        }
+        
+        .container.advanced-mode {
+            height: calc(100vh - 200px); /* Account for header + metrics dashboard */
         }
         
         #map {
@@ -858,8 +862,8 @@
         </div>
     </div>
     
-    <!-- Metrics Dashboard -->
-    <div class="metrics-dashboard" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <!-- Advanced Metrics Dashboard (Hidden by default) -->
+    <div id="advancedMetricsDashboard" class="metrics-dashboard hidden" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
         <div class="metrics-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
             
             <!-- Total Active Customers -->
@@ -982,7 +986,10 @@
                 font-size: 24px;
             }
             .container {
-                height: calc(100vh - 180px); /* Adjust for mobile */
+                height: calc(100vh - 80px); /* Default mobile height */
+            }
+            .container.advanced-mode {
+                height: calc(100vh - 180px); /* Adjust for mobile + metrics */
             }
         }
     </style>
@@ -2330,11 +2337,13 @@
         
         // No floating buttons needed
         
-        // Check for competitive mode
+        // Check for competitive and advanced modes
         const urlParams = new URLSearchParams(window.location.search);
         const isCompetitiveMode = urlParams.get('mode') === 'competitive';
+        const isAdvancedMode = urlParams.get('mode') === 'advanced';
         console.log('URL params:', window.location.search);
         console.log('Competitive mode:', isCompetitiveMode);
+        console.log('Advanced mode:', isAdvancedMode);
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -2373,6 +2382,25 @@
                 }
             } else {
                 console.log('Not in competitive mode');
+            }
+            
+            // Show advanced features if mode=advanced
+            console.log('Checking advanced mode inside DOMContentLoaded:', isAdvancedMode);
+            if (isAdvancedMode) {
+                const advancedDashboard = document.getElementById('advancedMetricsDashboard');
+                const container = document.querySelector('.container');
+                console.log('Found advanced dashboard element:', advancedDashboard);
+                if (advancedDashboard) {
+                    advancedDashboard.classList.remove('hidden');
+                    advancedDashboard.style.display = 'block'; // Force show with inline style
+                    container.classList.add('advanced-mode'); // Adjust container height
+                    console.log('Advanced metrics dashboard should now be visible');
+                    console.log('Element classes after removal:', advancedDashboard.className);
+                } else {
+                    console.log('ERROR: advancedMetricsDashboard element not found');
+                }
+            } else {
+                console.log('Not in advanced mode');
             }
         });
         
