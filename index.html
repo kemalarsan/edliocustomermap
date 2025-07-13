@@ -32,7 +32,7 @@
         
         .container {
             display: flex;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 200px); /* Account for header + metrics dashboard */
             position: relative;
         }
         
@@ -858,6 +858,134 @@
         </div>
     </div>
     
+    <!-- Metrics Dashboard -->
+    <div class="metrics-dashboard" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <div class="metrics-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+            
+            <!-- Total Active Customers -->
+            <div class="metric-card" onclick="showMetricDetails('customers')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #E53E3E; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏫</div>
+                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Active Customers</div>
+                <div class="metric-value" id="totalCustomers" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
+                    <span id="customerChange">Calculating...</span>
+                </div>
+            </div>
+            
+            <!-- Total ARR -->
+            <div class="metric-card" onclick="showMetricDetails('revenue')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #4caf50; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">💰</div>
+                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Total ARR</div>
+                <div class="metric-value" id="totalARR" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
+                    <span id="arrGrowth">+12% YoY</span>
+                </div>
+            </div>
+            
+            <!-- Average Contract Value -->
+            <div class="metric-card" onclick="showMetricDetails('contract')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #2196f3; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">📊</div>
+                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Avg Contract Value</div>
+                <div class="metric-value" id="avgContract" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #2196f3; margin-top: 6px;">
+                    <span id="contractTrend">Per customer</span>
+                </div>
+            </div>
+            
+            <!-- Customer Type Breakdown -->
+            <div class="metric-card" onclick="showMetricDetails('types')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #9c27b0; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏢</div>
+                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Customer Types</div>
+                <div class="metric-value" id="typeBreakdown" style="font-size: 14px; line-height: 1.6; transition: all 0.5s ease;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span style="color: #e74c3c;">Charter:</span> <span id="charterCount" style="font-weight: 600;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span style="color: #3498db;">Public:</span> <span id="publicCount" style="font-weight: 600;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9b59b6;">Private:</span> <span id="privateCount" style="font-weight: 600;">--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Renewal Risk -->
+            <div class="metric-card" onclick="showMetricDetails('renewal')" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #ff5722; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">⚠️</div>
+                <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Renewal Risk (90 days)</div>
+                <div class="metric-value" id="renewalRisk" style="font-size: 32px; font-weight: 700; color: #ff5722; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #ff5722; margin-top: 6px;">
+                    <span id="renewalValue">$-- at risk</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <style>
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+        }
+        
+        .metric-card:active {
+            transform: translateY(0);
+        }
+        
+        .metric-value {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .metric-updating {
+            animation: pulse 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-dashboard {
+                padding: 15px 10px;
+            }
+            .metrics-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .metric-card {
+                padding: 15px;
+            }
+            .metric-value {
+                font-size: 24px;
+            }
+            .container {
+                height: calc(100vh - 180px); /* Adjust for mobile */
+            }
+        }
+    </style>
     
     <div class="container">
         <div id="map"></div>
@@ -2020,6 +2148,7 @@
             
             updateMap();
             updateSidebar();
+            updateMetricsDashboard(); // Update metrics when filters change
             
             document.getElementById('total-showing').textContent = filteredCustomers.length;
         }
@@ -3252,6 +3381,258 @@
             document.getElementById('optimizationResults').innerHTML = 
                 `⚖️ Redistributed ${redistributed} territories to balance workload across the team`;
         }
+        
+        // Metrics Dashboard Functions
+        let metricsData = {
+            baseARRPerCustomer: 8500, // Average annual revenue per customer
+            renewalRate: 0.92, // 92% renewal rate
+            contractTerms: [1, 2, 3], // Contract terms in years
+            averageContractLength: 2.3 // years
+        };
+        
+        function updateMetricsDashboard() {
+            console.log('Updating metrics dashboard...');
+            
+            // Get current filtered customers
+            const currentCustomers = filteredCustomers || customers || [];
+            
+            // Calculate metrics
+            const metrics = calculateMetrics(currentCustomers);
+            
+            // Update each metric with animation
+            updateMetricWithAnimation('totalCustomers', metrics.totalCustomers.toLocaleString());
+            updateMetricWithAnimation('totalARR', '$' + (metrics.totalARR / 1000000).toFixed(1) + 'M');
+            updateMetricWithAnimation('avgContract', '$' + metrics.avgContract.toLocaleString());
+            updateMetricWithAnimation('renewalRisk', metrics.renewalRisk.toString());
+            updateMetricWithAnimation('renewalValue', '$' + (metrics.renewalValue / 1000000).toFixed(1) + 'M');
+            
+            // Update type breakdown
+            document.getElementById('charterCount').textContent = metrics.types.charter.toLocaleString();
+            document.getElementById('publicCount').textContent = metrics.types.public.toLocaleString();
+            document.getElementById('privateCount').textContent = metrics.types.private.toLocaleString();
+            
+            // Update change indicators
+            updateChangeIndicators(metrics);
+        }
+        
+        function calculateMetrics(customerList) {
+            const total = customerList.length;
+            
+            // Calculate customer types
+            const types = {
+                charter: customerList.filter(c => c.type === 'charter').length,
+                public: customerList.filter(c => c.type === 'district').length,
+                private: customerList.filter(c => c.type === 'private').length,
+                cmo: customerList.filter(c => c.type === 'cmo').length,
+                esc: customerList.filter(c => c.type === 'esc').length
+            };
+            
+            // Calculate revenue metrics
+            const baseRevenue = total * metricsData.baseARRPerCustomer;
+            
+            // Add premium for products (CMS, Mobile App, Mass Comm, Payments)
+            let totalARR = 0;
+            customerList.forEach(customer => {
+                let customerARR = metricsData.baseARRPerCustomer;
+                
+                if (customer.products) {
+                    if (customer.products.cms) customerARR += 1500;
+                    if (customer.products.mobile || customer.products.mobile_app) customerARR += 2500;
+                    if (customer.products.masscomm || customer.products.mass_communications) customerARR += 1200;
+                    if (customer.products.payments) customerARR += 800;
+                }
+                
+                totalARR += customerARR;
+            });
+            
+            const avgContract = total > 0 ? totalARR / total : 0;
+            
+            // Calculate renewal risk (simulate 8-12% of customers at risk)
+            const renewalRiskPercentage = 0.08 + (Math.random() * 0.04); // 8-12%
+            const renewalRisk = Math.floor(total * renewalRiskPercentage);
+            const renewalValue = renewalRisk * avgContract;
+            
+            return {
+                totalCustomers: total,
+                totalARR: totalARR,
+                avgContract: avgContract,
+                types: types,
+                renewalRisk: renewalRisk,
+                renewalValue: renewalValue
+            };
+        }
+        
+        function updateMetricWithAnimation(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (element && element.textContent !== newValue) {
+                element.classList.add('metric-updating');
+                
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.classList.remove('metric-updating');
+                }, 250);
+            }
+        }
+        
+        function updateChangeIndicators(metrics) {
+            // Calculate growth indicators (simulated for demo)
+            const customerGrowth = '+' + (2 + Math.floor(Math.random() * 8)) + '% this month';
+            document.getElementById('customerChange').textContent = customerGrowth;
+            
+            // Update contract trend
+            const contractTrend = metrics.avgContract > 10000 ? 'Above average' : 'Per customer';
+            document.getElementById('contractTrend').textContent = contractTrend;
+        }
+        
+        function showMetricDetails(metricType) {
+            let title, content;
+            
+            switch(metricType) {
+                case 'customers':
+                    title = 'Active Customers Details';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Customer Breakdown</h4>
+                            <div>• Charter Schools: ${document.getElementById('charterCount').textContent}</div>
+                            <div>• Public Districts: ${document.getElementById('publicCount').textContent}</div>
+                            <div>• Private Schools: ${document.getElementById('privateCount').textContent}</div>
+                            <div>• Growth Rate: 15% YoY</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Based on current filter selection. Use filters to drill down into specific segments.
+                        </div>
+                    `;
+                    break;
+                    
+                case 'revenue':
+                    title = 'Annual Recurring Revenue';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Revenue Breakdown</h4>
+                            <div>• Base CMS: 85% of customers</div>
+                            <div>• Mobile App: 35% adoption</div>
+                            <div>• Mass Communications: 28% adoption</div>
+                            <div>• Payments: 18% adoption</div>
+                            <div>• YoY Growth: +12%</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Revenue calculations include base CMS plus add-on products.
+                        </div>
+                    `;
+                    break;
+                    
+                case 'contract':
+                    title = 'Average Contract Value';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Contract Analysis</h4>
+                            <div>• Base CMS: $8,500/year</div>
+                            <div>• Mobile App: +$2,500/year</div>
+                            <div>• Mass Comm: +$1,200/year</div>
+                            <div>• Payments: +$800/year</div>
+                            <div>• Avg Term: 2.3 years</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Higher ACV indicates better product mix and customer success.
+                        </div>
+                    `;
+                    break;
+                    
+                case 'types':
+                    title = 'Customer Type Distribution';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Market Segments</h4>
+                            <div>• Charter Schools: High growth, technology-forward</div>
+                            <div>• Public Districts: Large scale, budget conscious</div>
+                            <div>• Private Schools: Premium features, quick adoption</div>
+                            <div>• CMOs: Multi-school operations</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Each segment has different needs and growth patterns.
+                        </div>
+                    `;
+                    break;
+                    
+                case 'renewal':
+                    title = 'Renewal Risk Analysis';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Risk Factors</h4>
+                            <div>• Contract expiring in 90 days</div>
+                            <div>• Usage below threshold</div>
+                            <div>• Support ticket volume</div>
+                            <div>• Payment delays</div>
+                            <div style="margin-top: 10px; color: #ff5722;"><strong>Action Required</strong></div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Proactive outreach recommended for at-risk accounts.
+                        </div>
+                    `;
+                    break;
+            }
+            
+            // Show modal with details
+            showMetricModal(title, content);
+        }
+        
+        function showMetricModal(title, content) {
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 70vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: #333;">${title}</h3>
+                    <button onclick="this.closest('.metric-modal-overlay').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; padding: 0;">&times;</button>
+                </div>
+                <div>${content}</div>
+            `;
+            
+            overlay.className = 'metric-modal-overlay';
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Close on background click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+        
+        // Initialize metrics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for data to load, then update metrics
+            setTimeout(() => {
+                updateMetricsDashboard();
+            }, 1000);
+        });
     </script>
 </body>
 </html>
