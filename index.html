@@ -1999,6 +1999,7 @@
         let searchCircle = null;
         let searchCenter = null;
         let searchRadius = null;
+        let customerMarkers = new Map(); // Store customer-to-marker mapping for hover sync
         
         // Initialize map
         function initMap() {
@@ -2330,6 +2331,9 @@
                 map.removeLayer(markers);
             }
             
+            // Clear customer-marker mapping
+            customerMarkers.clear();
+            
             markers = L.markerClusterGroup({
                 chunkedLoading: true,
                 maxClusterRadius: 50,
@@ -2361,6 +2365,11 @@
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
                             </div>
                         `);
+                    
+                    // Store customer-marker mapping for hover synchronization
+                    const customerKey = `${customer.name}-${customer.lat}-${customer.lng}`;
+                    customerMarkers.set(customerKey, marker);
+                    
                     markers.addLayer(marker);
                 }
             });
@@ -2463,8 +2472,13 @@
                     if (customer.products.payments) productBadges += '<span class="product-badge product-payments">Payments</span>';
                 }
                 
+                const customerKey = `${customer.name}-${customer.lat}-${customer.lng}`;
                 return `
-                    <div class="customer-item">
+                    <div class="customer-item" 
+                         data-customer-key="${customerKey}"
+                         onmouseenter="showCustomerPopup('${customerKey}')"
+                         onmouseleave="hideCustomerPopup('${customerKey}')"
+                         style="cursor: pointer;">
                         <div class="customer-name">${customer.name}</div>
                         <div class="customer-meta">
                             <div class="customer-state">${customer.state} - <span class="type-${normalizeType(customer.type)}">${customer.type}</span></div>
@@ -2485,6 +2499,38 @@
                     ${customerListHTML}
                 </div>
             `;
+        }
+        
+        // Show customer popup on map when hovering sidebar item
+        function showCustomerPopup(customerKey) {
+            const marker = customerMarkers.get(customerKey);
+            if (marker && map) {
+                // Extract customer data from the key
+                const parts = customerKey.split('-');
+                const lat = parseFloat(parts[parts.length - 2]);
+                const lng = parseFloat(parts[parts.length - 1]);
+                
+                // Center map on the customer location
+                map.setView([lat, lng], Math.max(map.getZoom(), 10), {
+                    animate: true,
+                    duration: 0.5
+                });
+                
+                // Show the popup after a short delay to ensure map has moved
+                setTimeout(() => {
+                    if (marker.getPopup()) {
+                        marker.openPopup();
+                    }
+                }, 200);
+            }
+        }
+        
+        // Hide customer popup when leaving sidebar item
+        function hideCustomerPopup(customerKey) {
+            const marker = customerMarkers.get(customerKey);
+            if (marker && marker.getPopup() && marker.getPopup().isOpen()) {
+                marker.closePopup();
+            }
         }
         
         // Toggle sidebar visibility
