@@ -2540,19 +2540,24 @@
                 // Optimized popup display with shorter delays
                 hoverTimeout = setTimeout(() => {
                     if (markers.hasLayer(marker)) {
-                        // Only zoom in further if needed and not rapid hovering
-                        if (!isRapidHover && map.getZoom() < 13) {
+                        // Ensure zoom is high enough to uncluster markers
+                        const currentZoom = map.getZoom();
+                        if (currentZoom < 13) {
                             map.setView([lat, lng], 13, { animate: false });
                         }
                         
-                        // Quick popup display
+                        // Quick popup display with fallback methods
                         setTimeout(() => {
                             if (marker.getPopup()) {
                                 marker.openPopup();
+                            } else {
+                                // Fallback: try firing click event
+                                marker.fire('click');
                             }
-                        }, isRapidHover ? 50 : 80);
+                            console.log('Popup attempted for customer at:', lat, lng);
+                        }, isRapidHover ? 80 : 120);
                     }
-                }, isRapidHover ? 150 : 250);
+                }, isRapidHover ? 200 : 300);
             }
         }
         
