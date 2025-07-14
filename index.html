@@ -1937,6 +1937,18 @@
                 // Mark as authenticated
                 isAuthenticated = true;
                 
+                // Show admin tab immediately if user is admin and in advanced mode
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('mode') === 'advanced' && currentUser.isAdmin) {
+                    setTimeout(() => {
+                        const adminTab = document.getElementById('adminTab');
+                        if (adminTab) {
+                            adminTab.style.display = 'block';
+                            console.log('Admin tab made visible for admin user after login');
+                        }
+                    }, 100);
+                }
+                
                 // Show main content
                 showMainContent();
                 
