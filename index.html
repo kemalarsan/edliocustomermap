@@ -2522,6 +2522,15 @@
                 clearTimeout(hoverTimeout);
             }
             
+            // IMPORTANT: Close any existing hover popup first
+            if (currentHoverPopup) {
+                map.closePopup(currentHoverPopup);
+                currentHoverPopup = null;
+            }
+            
+            // Also close any other open popups to ensure clean state
+            map.closePopup();
+            
             const marker = customerMarkers.get(customerKey);
             
             if (marker && map) {
@@ -2593,6 +2602,9 @@
                 map.closePopup(currentHoverPopup);
                 currentHoverPopup = null;
             }
+            
+            // Force close all popups on the map to ensure clean state
+            map.closePopup();
             
             // Also try closing marker popup as fallback
             const marker = customerMarkers.get(customerKey);
