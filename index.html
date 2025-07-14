@@ -358,7 +358,7 @@
             background-color: #f8f9fa;
             border-radius: 10px;
             border: 1px solid #dee2e6;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-in, background-color 0.8s ease-out, border-color 0.8s ease-out;
         }
         
         .customer-item:hover {
@@ -367,6 +367,7 @@
             box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
             transform: translateY(-2px);
             cursor: pointer;
+            transition: all 0.2s ease-in;
         }
         
         .customer-name {
@@ -2515,23 +2516,29 @@
                 const lng = parseFloat(parts[1]);
                 
                 // Center map on the customer location with faster animation
-                map.setView([lat, lng], Math.max(map.getZoom(), 10), {
+                map.setView([lat, lng], Math.max(map.getZoom(), 12), {
                     animate: true,
                     duration: 0.3
                 });
                 
-                // Force popup to show immediately and ensure it's visible
+                // Wait for map to finish moving, then show popup
                 setTimeout(() => {
-                    // Try multiple approaches to ensure popup shows
-                    if (marker.getPopup()) {
-                        marker.openPopup();
-                    } else {
-                        console.log('No popup bound to marker, attempting to open anyway');
+                    // Check if marker is in a cluster - if so, uncluster first
+                    if (markers.hasLayer(marker)) {
+                        // Zoom in more to ensure marker is visible and not clustered
+                        map.setView([lat, lng], Math.max(map.getZoom(), 14), {
+                            animate: false
+                        });
+                        
+                        // Small delay to ensure unclustering
+                        setTimeout(() => {
+                            if (marker.getPopup()) {
+                                marker.openPopup();
+                                console.log('Popup opened for customer at:', lat, lng);
+                            }
+                        }, 100);
                     }
-                    
-                    // Additional fallback - manually trigger popup if needed
-                    marker.fire('click');
-                }, 100);
+                }, 400);
             }
         }
         
