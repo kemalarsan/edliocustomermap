@@ -362,9 +362,11 @@
         }
         
         .customer-item:hover {
-            background-color: #e9ecef;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: translateY(-1px);
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+            transform: translateY(-2px);
+            cursor: pointer;
         }
         
         .customer-name {
@@ -2512,18 +2514,24 @@
                 const lat = parseFloat(parts[0]);
                 const lng = parseFloat(parts[1]);
                 
-                // Center map on the customer location
+                // Center map on the customer location with faster animation
                 map.setView([lat, lng], Math.max(map.getZoom(), 10), {
                     animate: true,
-                    duration: 0.5
+                    duration: 0.3
                 });
                 
-                // Show the popup after a short delay to ensure map has moved
+                // Force popup to show immediately and ensure it's visible
                 setTimeout(() => {
+                    // Try multiple approaches to ensure popup shows
                     if (marker.getPopup()) {
                         marker.openPopup();
+                    } else {
+                        console.log('No popup bound to marker, attempting to open anyway');
                     }
-                }, 200);
+                    
+                    // Additional fallback - manually trigger popup if needed
+                    marker.fire('click');
+                }, 100);
             }
         }
         
