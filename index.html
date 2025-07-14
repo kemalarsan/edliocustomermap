@@ -728,6 +728,22 @@
             border: 1px solid #dee2e6;
         }
         
+        /* Pulse animation for marker highlight */
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+        }
+        
         /* Toggle buttons for collapsible panels */
         .panel-toggle-btn {
             position: absolute;
@@ -1140,7 +1156,12 @@
         <!-- Simple hover info overlay - positioned over marker -->
         <div id="hoverInfo" style="position: absolute; background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); padding: 20px; min-width: 300px; z-index: 2000; display: none; border: 2px solid #E53E3E; pointer-events: none;">
             <div id="hoverContent"></div>
+            <!-- Pointer arrow pointing to marker -->
+            <div id="hoverPointer" style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #E53E3E;"></div>
         </div>
+        
+        <!-- Highlight circle for the marker -->
+        <div id="markerHighlight" style="position: absolute; width: 40px; height: 40px; border: 3px solid #ffc107; border-radius: 50%; z-index: 1999; display: none; pointer-events: none; animation: pulse 1.5s infinite;"></div>
         
         <!-- Simple toggle buttons -->
         <button onclick="toggleControls()" style="position: fixed; left: 10px; top: 50%; transform: translateY(-50%); background: #E53E3E; color: white; border: none; width: 40px; height: 60px; border-radius: 8px; cursor: pointer; font-size: 18px; z-index: 1001;">‹</button>
@@ -2570,21 +2591,46 @@
                     
                     // Position overlay above marker with smart positioning
                     const hoverInfo = document.getElementById('hoverInfo');
+                    const hoverPointer = document.getElementById('hoverPointer');
+                    const markerHighlight = document.getElementById('markerHighlight');
                     const mapContainer = document.getElementById('map');
                     const mapRect = mapContainer.getBoundingClientRect();
                     
                     // Position above marker, but adjust if it goes off screen
                     let left = point.x - 150; // Center the 300px wide popup
                     let top = point.y - 200; // Position above marker
+                    let pointerDirection = 'down'; // Arrow points down by default
                     
                     // Adjust if too close to edges
                     if (left < 10) left = 10;
                     if (left > mapRect.width - 320) left = mapRect.width - 320;
-                    if (top < 10) top = point.y + 30; // Move below marker if no room above
+                    if (top < 10) {
+                        top = point.y + 30; // Move below marker if no room above
+                        pointerDirection = 'up'; // Arrow points up when below marker
+                    }
                     
+                    // Position info overlay
                     hoverInfo.style.left = left + 'px';
                     hoverInfo.style.top = top + 'px';
                     hoverInfo.style.display = 'block';
+                    
+                    // Adjust pointer direction
+                    if (pointerDirection === 'up') {
+                        hoverPointer.style.bottom = 'auto';
+                        hoverPointer.style.top = '-10px';
+                        hoverPointer.style.borderTop = 'none';
+                        hoverPointer.style.borderBottom = '10px solid #E53E3E';
+                    } else {
+                        hoverPointer.style.top = 'auto';
+                        hoverPointer.style.bottom = '-10px';
+                        hoverPointer.style.borderBottom = 'none';
+                        hoverPointer.style.borderTop = '10px solid #E53E3E';
+                    }
+                    
+                    // Position highlight circle at marker location
+                    markerHighlight.style.left = (point.x - 20) + 'px';
+                    markerHighlight.style.top = (point.y - 20) + 'px';
+                    markerHighlight.style.display = 'block';
                 }, isRapidHover ? 100 : 150);
             }
         }
@@ -2597,8 +2643,9 @@
                 hoverTimeout = null;
             }
             
-            // Simply hide the overlay (bulletproof approach)
+            // Hide both overlay and highlight circle
             document.getElementById('hoverInfo').style.display = 'none';
+            document.getElementById('markerHighlight').style.display = 'none';
         }
         
         // Toggle sidebar visibility
