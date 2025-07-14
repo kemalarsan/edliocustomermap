@@ -1,7 +1,7 @@
-# Edlio Customer Map - Stable Features (v2.0-stable)
+# Edlio Customer Map - Stable Features (v3.0-stable)
 
 ## Current Stable State
-This document describes the features in the v2.0-stable release.
+This document describes the features in the v3.0-stable release.
 
 ### Core Features ✅
 
@@ -26,13 +26,24 @@ This document describes the features in the v2.0-stable release.
      - Renewal Risk Analysis
    - Hidden by default, activated with URL parameter
 
-4. **Search & Filter Capabilities**
+4. **Complete 6-View Navigation System** (?mode=advanced)
+   - **🗺️ Map View (1)**: Interactive customer map with clustering
+   - **📊 Table View (2)**: Customer table showing first 50 records
+   - **📈 Analytics View (3)**: Revenue metrics and state breakdowns
+   - **📅 Timeline View (4)**: Contract renewals and at-risk accounts
+   - **🎯 Adoption View (5)**: Product mix analysis and upsell opportunities
+   - **🎧 Support View (6)**: Technical support metrics and issue tracking
+   - Full keyboard shortcuts (Press 1-6 to switch views)
+   - Tab-based interface with visual indicators
+   - All views respect current filter state
+
+5. **Search & Filter Capabilities**
    - Search by school name
    - Filter by school type (Charter, District, Private, CMO, ESC)
    - Filter by products (CMS, Mobile App, Mass Comm, Payments)
    - Geographic search by ZIP code with radius
 
-5. **Export Functions**
+6. **Export Functions**
    - Export current view customers to CSV
    - Export all filtered customers to CSV
    - Login activity export for admins
@@ -49,6 +60,11 @@ This document describes the features in the v2.0-stable release.
 - ✅ All filters work correctly
 - ✅ Export functions operate as expected
 - ✅ Metrics dashboard displays with advanced mode
+- ✅ All 6 navigation tabs function properly
+- ✅ Keyboard shortcuts (1-6) work seamlessly
+- ✅ View switching maintains filter state
+- ✅ Real-time data calculations in all views
+- ✅ Responsive design works on all screen sizes
 
 ### Deployment
 - Hosted on Vercel
