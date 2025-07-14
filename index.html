@@ -1053,11 +1053,13 @@
     
     <!-- Simple Navigation Tabs (Only visible in advanced mode) -->
     <div id="navigationTabs" class="navigation-tabs hidden" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: center; gap: 20px; padding: 10px 0; border-bottom: 2px solid #f0f0f0;">
-        <button id="mapTab" onclick="showMapView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease;">
+        <button id="mapTab" onclick="showMapView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
             🗺️ Map
+            <span style="position: absolute; top: 2px; right: 5px; font-size: 10px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">1</span>
         </button>
-        <button id="tableTab" onclick="showTableView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease;">
+        <button id="tableTab" onclick="showTableView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
             📊 Table
+            <span style="position: absolute; top: 2px; right: 5px; font-size: 10px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">2</span>
         </button>
     </div>
     
@@ -2504,6 +2506,32 @@
                 
                 tableContent.innerHTML = html;
         }
+        
+        // Keyboard shortcuts for tab navigation (1-2 for now)
+        document.addEventListener('keydown', function(event) {
+            // Only activate shortcuts when not typing in input fields
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.tagName === 'SELECT') {
+                return;
+            }
+            
+            // Only work in advanced mode when tabs are visible
+            const navigationTabs = document.getElementById('navigationTabs');
+            if (!navigationTabs || navigationTabs.classList.contains('hidden')) {
+                return;
+            }
+            
+            const key = event.key;
+            
+            if (key === '1') {
+                event.preventDefault();
+                showMapView();
+                console.log('Keyboard shortcut: Switched to Map view');
+            } else if (key === '2') {
+                event.preventDefault();
+                showTableView();
+                console.log('Keyboard shortcut: Switched to Table view');
+            }
+        });
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
