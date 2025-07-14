@@ -1939,12 +1939,21 @@
                 
                 // Show admin tab immediately if user is admin and in advanced mode
                 const urlParams = new URLSearchParams(window.location.search);
+                console.log('Current user after login:', currentUser);
+                console.log('Is admin:', currentUser.isAdmin);
+                console.log('Advanced mode:', urlParams.get('mode') === 'advanced');
+                
                 if (urlParams.get('mode') === 'advanced' && currentUser.isAdmin) {
+                    console.log('Admin user in advanced mode - showing admin tab');
                     setTimeout(() => {
                         const adminTab = document.getElementById('adminTab');
+                        console.log('Admin tab element found:', adminTab);
                         if (adminTab) {
                             adminTab.style.display = 'block';
+                            adminTab.style.visibility = 'visible';
                             console.log('Admin tab made visible for admin user after login');
+                        } else {
+                            console.error('Admin tab element not found!');
                         }
                     }, 100);
                 }
@@ -3054,12 +3063,20 @@
                 }
                 
                 // Show admin tab only for admin users
+                console.log('Checking admin tab visibility - currentUser:', currentUser);
                 if (currentUser && currentUser.isAdmin) {
+                    console.log('User is admin - attempting to show admin tab');
                     const adminTab = document.getElementById('adminTab');
+                    console.log('Admin tab element in advanced mode check:', adminTab);
                     if (adminTab) {
                         adminTab.style.display = 'block';
-                        console.log('Admin tab now visible for admin user');
+                        adminTab.style.visibility = 'visible';
+                        console.log('Admin tab now visible for admin user in advanced mode');
+                    } else {
+                        console.error('Admin tab not found in advanced mode check!');
                     }
+                } else {
+                    console.log('User is not admin or currentUser is null');
                 }
             } else {
                 console.log('Not in advanced mode');
