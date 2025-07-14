@@ -1077,6 +1077,10 @@
             🎧 Support
             <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">6</span>
         </button>
+        <button id="adminTab" onclick="showAdminView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative; display: none;">
+            🔐 Admin
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">7</span>
+        </button>
     </div>
     
     <!-- Table View Container (Hidden by default) -->
@@ -1116,6 +1120,14 @@
         <h2 style="margin-bottom: 20px; color: #333;">🎧 Technical Support</h2>
         <div id="supportContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <p>Loading support metrics...</p>
+        </div>
+    </div>
+
+    <!-- Admin View Container (Only visible to admin users) -->
+    <div id="adminView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">🔐 Admin Dashboard</h2>
+        <div id="adminContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading admin data...</p>
         </div>
     </div>
     
@@ -1915,7 +1927,8 @@
                     picture: payload.picture,
                     loginTime: new Date().toISOString(),
                     ipAddress: userIPAddress,
-                    authMethod: 'google'
+                    authMethod: 'google',
+                    isAdmin: payload.email === 'ali@edlio.com' // Admin detection
                 };
                 
                 // Store session
@@ -2535,11 +2548,12 @@
             document.getElementById('timelineView').classList.add('hidden');
             document.getElementById('adoptionView').classList.add('hidden');
             document.getElementById('supportView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
         }
         
         // Helper function to reset all tab styles
         function resetTabStyles() {
-            const tabs = ['mapTab', 'tableTab', 'analyticsTab', 'timelineTab', 'adoptionTab', 'supportTab'];
+            const tabs = ['mapTab', 'tableTab', 'analyticsTab', 'timelineTab', 'adoptionTab', 'supportTab', 'adminTab'];
             tabs.forEach(tabId => {
                 const tab = document.getElementById(tabId);
                 if (tab) {
@@ -2589,6 +2603,20 @@
             document.getElementById('supportView').classList.remove('hidden');
             setActiveTab('supportTab');
             loadSupportContent();
+        }
+        
+        // Admin View (Only for admin users)
+        function showAdminView() {
+            // Check admin access
+            if (!currentUser || !currentUser.isAdmin) {
+                console.log('Admin access denied - not an admin user');
+                return;
+            }
+            
+            hideAllViews();
+            document.getElementById('adminView').classList.remove('hidden');
+            setActiveTab('adminTab');
+            loadAdminContent();
         }
         
         // Update existing view functions to use helpers
@@ -2762,6 +2790,141 @@
             `;
         }
         
+        function loadAdminContent() {
+            const adminContent = document.getElementById('adminContent');
+            
+            // Get login activity from localStorage
+            const loginLogs = JSON.parse(localStorage.getItem('edlioMapLoginLogs') || '[]');
+            
+            if (loginLogs.length === 0) {
+                adminContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <h3>No login activity recorded yet</h3>
+                        <p>Login activity will appear here as users access the system.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            const sortedLogs = loginLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Calculate stats
+            const totalLogins = loginLogs.length;
+            const successfulLogins = loginLogs.filter(log => log.success).length;
+            const failedLogins = totalLogins - successfulLogins;
+            const uniqueUsers = new Set(loginLogs.map(log => log.email)).size;
+            const last24Hours = loginLogs.filter(log => {
+                const logTime = new Date(log.timestamp);
+                const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                return logTime > oneDayAgo;
+            }).length;
+            
+            adminContent.innerHTML = `
+                <div style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: #333;">🔐 Login Activity Dashboard</h3>
+                        <button onclick="exportLoginActivity()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                            📊 Export CSV
+                        </button>
+                    </div>
+                    
+                    <!-- Summary Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0; color: #2196f3;">Total Logins</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #2196f3;">${totalLogins}</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0; color: #4caf50;">Successful</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #4caf50;">${successfulLogins}</div>
+                            <div style="font-size: 12px; color: #666;">${((successfulLogins/totalLogins)*100).toFixed(1)}%</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0; color: #f44336;">Failed</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #f44336;">${failedLogins}</div>
+                            <div style="font-size: 12px; color: #666;">${((failedLogins/totalLogins)*100).toFixed(1)}%</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0; color: #9c27b0;">Unique Users</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #9c27b0;">${uniqueUsers}</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0; color: #ff9800;">Last 24h</h4>
+                            <div style="font-size: 24px; font-weight: bold; color: #ff9800;">${last24Hours}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Login Activity -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <h4 style="margin: 0 0 15px 0; color: #333;">Recent Login Activity (Last 20)</h4>
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                <thead>
+                                    <tr style="background: #e9ecef; position: sticky; top: 0;">
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Timestamp</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">User</th>
+                                        <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Status</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">IP Address</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Error</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedLogs.slice(0, 20).map(log => {
+                                        const date = new Date(log.timestamp);
+                                        const timeAgo = formatTimeAgo(date);
+                                        const statusColor = log.success ? '#4caf50' : '#f44336';
+                                        const statusIcon = log.success ? '✅' : '❌';
+                                        
+                                        return `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-family: monospace;">
+                                                    <div>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                                                    <div style="font-size: 11px; color: #666;">${timeAgo}</div>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <div style="font-weight: 600;">${log.email}</div>
+                                                    <div style="font-size: 11px; color: #666;">${log.sessionId || 'N/A'}</div>
+                                                </td>
+                                                <td style="padding: 8px; text-align: center;">
+                                                    <span style="color: ${statusColor};">${statusIcon}</span>
+                                                </td>
+                                                <td style="padding: 8px; font-family: monospace; color: #666;">
+                                                    ${log.ipAddress || 'Unknown'}
+                                                </td>
+                                                <td style="padding: 8px; font-size: 11px; color: #f44336;">
+                                                    ${log.errorMessage || ''}
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 12px; color: #666; text-align: center;">
+                            Showing last 20 of ${totalLogins} total login attempts. Click Export CSV for complete data.
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Helper function to format time ago
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return `${Math.floor(diffDays / 7)}w ago`;
+        }
+        
         // Keyboard shortcuts for tab navigation (1-2 for now)
         document.addEventListener('keydown', function(event) {
             // Only activate shortcuts when not typing in input fields
@@ -2801,6 +2964,13 @@
                 event.preventDefault();
                 showSupportView();
                 console.log('Keyboard shortcut: Switched to Support view');
+            } else if (key === '7') {
+                // Only allow admin access
+                if (currentUser && currentUser.isAdmin) {
+                    event.preventDefault();
+                    showAdminView();
+                    console.log('Keyboard shortcut: Switched to Admin view');
+                }
             }
         });
         
@@ -2869,6 +3039,15 @@
                     console.log('Navigation tabs should now be visible');
                 } else {
                     console.log('ERROR: navigationTabs element not found');
+                }
+                
+                // Show admin tab only for admin users
+                if (currentUser && currentUser.isAdmin) {
+                    const adminTab = document.getElementById('adminTab');
+                    if (adminTab) {
+                        adminTab.style.display = 'block';
+                        console.log('Admin tab now visible for admin user');
+                    }
                 }
             } else {
                 console.log('Not in advanced mode');
