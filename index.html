@@ -2003,6 +2003,8 @@
         let searchCenter = null;
         let searchRadius = null;
         let customerMarkers = new Map(); // Store customer-to-marker mapping for hover sync
+        let hoverTimeout = null; // Track hover timeouts for performance
+        let lastHoverTime = 0; // Track timing for debouncing
         
         // Initialize map
         function initMap() {
@@ -2507,6 +2509,15 @@
         
         // Show customer popup on map when hovering sidebar item
         function showCustomerPopup(customerKey) {
+            const currentTime = Date.now();
+            const timeSinceLastHover = currentTime - lastHoverTime;
+            lastHoverTime = currentTime;
+            
+            // Clear any existing hover timeout to prevent overlapping operations
+            if (hoverTimeout) {
+                clearTimeout(hoverTimeout);
+            }
+            
             const marker = customerMarkers.get(customerKey);
             
             if (marker && map) {
@@ -2515,35 +2526,44 @@
                 const lat = parseFloat(parts[0]);
                 const lng = parseFloat(parts[1]);
                 
-                // Center map on the customer location with faster animation
-                map.setView([lat, lng], Math.max(map.getZoom(), 12), {
+                // Use faster animation for rapid hovering, slower for deliberate moves
+                const isRapidHover = timeSinceLastHover < 500;
+                const animationDuration = isRapidHover ? 0.15 : 0.25;
+                const targetZoom = Math.max(map.getZoom(), isRapidHover ? 12 : 13);
+                
+                // Center map on the customer location
+                map.setView([lat, lng], targetZoom, {
                     animate: true,
-                    duration: 0.3
+                    duration: animationDuration
                 });
                 
-                // Wait for map to finish moving, then show popup
-                setTimeout(() => {
-                    // Check if marker is in a cluster - if so, uncluster first
+                // Optimized popup display with shorter delays
+                hoverTimeout = setTimeout(() => {
                     if (markers.hasLayer(marker)) {
-                        // Zoom in more to ensure marker is visible and not clustered
-                        map.setView([lat, lng], Math.max(map.getZoom(), 14), {
-                            animate: false
-                        });
+                        // Only zoom in further if needed and not rapid hovering
+                        if (!isRapidHover && map.getZoom() < 13) {
+                            map.setView([lat, lng], 13, { animate: false });
+                        }
                         
-                        // Small delay to ensure unclustering
+                        // Quick popup display
                         setTimeout(() => {
                             if (marker.getPopup()) {
                                 marker.openPopup();
-                                console.log('Popup opened for customer at:', lat, lng);
                             }
-                        }, 100);
+                        }, isRapidHover ? 50 : 80);
                     }
-                }, 400);
+                }, isRapidHover ? 150 : 250);
             }
         }
         
         // Hide customer popup when leaving sidebar item
         function hideCustomerPopup(customerKey) {
+            // Clear any pending hover operations for smoother experience
+            if (hoverTimeout) {
+                clearTimeout(hoverTimeout);
+                hoverTimeout = null;
+            }
+            
             const marker = customerMarkers.get(customerKey);
             if (marker && marker.getPopup() && marker.getPopup().isOpen()) {
                 marker.closePopup();
