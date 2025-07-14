@@ -1792,6 +1792,11 @@
                     if (now - parsed.timestamp < SESSION_DURATION) {
                         isAuthenticated = true;
                         currentUser = parsed.user;
+                        // Ensure admin detection is applied to restored user
+                        if (currentUser && currentUser.email === 'ali@edlio.com') {
+                            currentUser.isAdmin = true;
+                            console.log('Admin status applied to restored user session');
+                        }
                         return true;
                     } else {
                         // Session expired, remove old auth
