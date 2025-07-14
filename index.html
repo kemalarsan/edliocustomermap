@@ -1124,9 +1124,14 @@
                     <span>Adoption</span>
                     <kbd style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 10px; color: #666;">5</kbd>
                 </button>
+                <button class="nav-tab" data-view="support" onclick="switchView('support')" style="padding: 12px 20px; border: none; background: none; font-size: 14px; font-weight: 500; color: #666; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 16px;">🎧</span>
+                    <span>Support</span>
+                    <kbd style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 10px; color: #666;">6</kbd>
+                </button>
             </div>
             <div class="view-indicator" style="margin-left: auto; font-size: 12px; color: #999; font-weight: 500;">
-                Press <kbd style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 10px;">1-5</kbd> to switch views
+                Press <kbd style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 10px;">1-6</kbd> to switch views
             </div>
         </div>
     </div>
@@ -1289,6 +1294,186 @@
                 </div>
                 <div id="adoptionMatrix" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; min-height: 400px;">
                     <div style="text-align: center; color: #666; padding: 40px;">Loading product adoption matrix...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Support Dashboard View -->
+        <div id="supportView" class="view-container hidden">
+            <div class="support-content" style="padding: 20px; height: 100%; overflow: auto; background: #f8f9fa;">
+                <div class="support-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #333;">Technical Support Dashboard</h2>
+                    <div class="support-controls" style="display: flex; gap: 10px;">
+                        <select id="supportTimeframe" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                            <option value="365">Last Year</option>
+                        </select>
+                        <button onclick="exportSupportData()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📊 Export Report</button>
+                    </div>
+                </div>
+                
+                <!-- Support Metrics Row -->
+                <div class="support-metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div class="support-metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 16px; margin-bottom: 10px;">🎫</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #E53E3E; margin-bottom: 5px;" id="totalTickets">247</div>
+                        <div style="font-size: 12px; color: #666;">Total Tickets</div>
+                        <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">↓ 12% vs last month</div>
+                    </div>
+                    
+                    <div class="support-metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 16px; margin-bottom: 10px;">⏱️</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #2196f3; margin-bottom: 5px;" id="avgResolutionTime">4.2h</div>
+                        <div style="font-size: 12px; color: #666;">Avg Resolution Time</div>
+                        <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">↓ 0.8h improvement</div>
+                    </div>
+                    
+                    <div class="support-metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 16px; margin-bottom: 10px;">🤖</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #9c27b0; margin-bottom: 5px;" id="aiResolutionRate">68%</div>
+                        <div style="font-size: 12px; color: #666;">AI Resolution Rate</div>
+                        <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">↑ 5% improvement</div>
+                    </div>
+                    
+                    <div class="support-metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 16px; margin-bottom: 10px;">⭐</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #ff9800; margin-bottom: 5px;" id="npsScore">8.4</div>
+                        <div style="font-size: 12px; color: #666;">NPS Score</div>
+                        <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">↑ 0.3 improvement</div>
+                    </div>
+                    
+                    <div class="support-metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 16px; margin-bottom: 10px;">✅</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #4caf50; margin-bottom: 5px;" id="resolutionRate">94%</div>
+                        <div style="font-size: 12px; color: #666;">Resolution Rate</div>
+                        <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">↑ 2% improvement</div>
+                    </div>
+                </div>
+                
+                <!-- Support Analytics Grid -->
+                <div class="support-analytics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                    <!-- Ticket Distribution -->
+                    <div class="support-analytics-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 15px 0; color: #E53E3E;">📊 Ticket Distribution</h3>
+                        <div id="ticketDistribution" style="height: 200px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                                <span style="font-size: 12px; color: #666;">🤖 AI Resolved</span>
+                                <span style="font-weight: 600; color: #9c27b0;">168 (68%)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                                <span style="font-size: 12px; color: #666;">📧 Email Support</span>
+                                <span style="font-weight: 600; color: #2196f3;">52 (21%)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                                <span style="font-size: 12px; color: #666;">📞 Phone Support</span>
+                                <span style="font-weight: 600; color: #ff9800;">19 (8%)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                                <span style="font-size: 12px; color: #666;">🔄 Escalated</span>
+                                <span style="font-weight: 600; color: #ff5722;">8 (3%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Ticket Makers -->
+                    <div class="support-analytics-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 15px 0; color: #E53E3E;">🏢 Top Ticket Creators</h3>
+                        <div id="topTicketMakers" style="height: 200px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #fff3e0; border-radius: 6px; border-left: 4px solid #ff9800;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">ABC Charter School</div>
+                                    <div style="font-size: 11px; color: #666;">Technical Issues</div>
+                                </div>
+                                <span style="font-weight: bold; color: #ff9800;">23</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #f3e5f5; border-radius: 6px; border-left: 4px solid #9c27b0;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Metro School District</div>
+                                    <div style="font-size: 11px; color: #666;">Feature Requests</div>
+                                </div>
+                                <span style="font-weight: bold; color: #9c27b0;">18</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #e3f2fd; border-radius: 6px; border-left: 4px solid #2196f3;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Elite Academy</div>
+                                    <div style="font-size: 11px; color: #666;">Training Questions</div>
+                                </div>
+                                <span style="font-weight: bold; color: #2196f3;">15</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #e8f5e9; border-radius: 6px; border-left: 4px solid #4caf50;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Valley High School</div>
+                                    <div style="font-size: 11px; color: #666;">General Support</div>
+                                </div>
+                                <span style="font-weight: bold; color: #4caf50;">12</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Support Agents -->
+                    <div class="support-analytics-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 15px 0; color: #E53E3E;">🏆 Top Support Agents</h3>
+                        <div id="topSupportAgents" style="height: 200px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #fff9c4; border-radius: 6px; border-left: 4px solid #ffc107;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Sarah Martinez 🥇</div>
+                                    <div style="font-size: 11px; color: #666;">Avg Resolution: 2.1h</div>
+                                </div>
+                                <span style="font-weight: bold; color: #ffc107;">89 resolved</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #f5f5f5; border-radius: 6px; border-left: 4px solid #9e9e9e;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Michael Chen 🥈</div>
+                                    <div style="font-size: 11px; color: #666;">Avg Resolution: 2.8h</div>
+                                </div>
+                                <span style="font-weight: bold; color: #9e9e9e;">76 resolved</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #fce4d3; border-radius: 6px; border-left: 4px solid #ff7043;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">Emily Johnson 🥉</div>
+                                    <div style="font-size: 11px; color: #666;">Avg Resolution: 3.4h</div>
+                                </div>
+                                <span style="font-weight: bold; color: #ff7043;">64 resolved</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; background: #e8f5e9; border-radius: 6px; border-left: 4px solid #4caf50;">
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #333;">David Rodriguez</div>
+                                    <div style="font-size: 11px; color: #666;">Avg Resolution: 4.1h</div>
+                                </div>
+                                <span style="font-weight: bold; color: #4caf50;">58 resolved</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- NPS Trend -->
+                    <div class="support-analytics-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 15px 0; color: #E53E3E;">⭐ NPS Score Trend</h3>
+                        <div id="npsTrend" style="height: 200px;">
+                            <div style="margin-bottom: 15px; padding: 10px; background: linear-gradient(90deg, #4caf50 0%, #8bc34a 50%, #cddc39 100%); border-radius: 8px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">8.4 / 10</div>
+                                <div style="font-size: 12px; color: white; opacity: 0.9;">Current NPS Score</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center;">
+                                <div style="padding: 8px; background: #e8f5e9; border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: bold; color: #4caf50;">73%</div>
+                                    <div style="font-size: 10px; color: #666;">Promoters</div>
+                                </div>
+                                <div style="padding: 8px; background: #fff3e0; border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: bold; color: #ff9800;">21%</div>
+                                    <div style="font-size: 10px; color: #666;">Passive</div>
+                                </div>
+                                <div style="padding: 8px; background: #ffebee; border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: bold; color: #f44336;">6%</div>
+                                    <div style="font-size: 10px; color: #666;">Detractors</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px; padding: 8px; background: #f8f9fa; border-radius: 6px; text-align: center;">
+                                <div style="font-size: 11px; color: #666;">📈 +0.3 improvement from last month</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4326,6 +4511,9 @@
                 case 'adoption':
                     loadAdoptionView();
                     break;
+                case 'support':
+                    loadSupportView();
+                    break;
             }
         }
         
@@ -4508,6 +4696,77 @@
             document.getElementById('adoptionMatrix').innerHTML = matrixHTML;
         }
         
+        function loadSupportView() {
+            // Support view is pre-loaded with static data, but we can refresh metrics here
+            updateSupportMetrics();
+        }
+        
+        function updateSupportMetrics() {
+            // Simulate dynamic support metrics based on current timeframe
+            const timeframe = document.getElementById('supportTimeframe')?.value || '30';
+            
+            // Update metrics based on timeframe
+            const metrics = getSupportMetrics(timeframe);
+            
+            // Update the metric cards
+            if (document.getElementById('totalTickets')) {
+                document.getElementById('totalTickets').textContent = metrics.totalTickets;
+            }
+            if (document.getElementById('avgResolutionTime')) {
+                document.getElementById('avgResolutionTime').textContent = metrics.avgResolutionTime;
+            }
+            if (document.getElementById('aiResolutionRate')) {
+                document.getElementById('aiResolutionRate').textContent = metrics.aiResolutionRate;
+            }
+            if (document.getElementById('npsScore')) {
+                document.getElementById('npsScore').textContent = metrics.npsScore;
+            }
+            if (document.getElementById('resolutionRate')) {
+                document.getElementById('resolutionRate').textContent = metrics.resolutionRate;
+            }
+        }
+        
+        function getSupportMetrics(timeframeDays) {
+            // Mock support metrics that vary by timeframe
+            const baseMetrics = {
+                7: { totalTickets: 67, avgResolutionTime: '3.8h', aiResolutionRate: '71%', npsScore: '8.6', resolutionRate: '96%' },
+                30: { totalTickets: 247, avgResolutionTime: '4.2h', aiResolutionRate: '68%', npsScore: '8.4', resolutionRate: '94%' },
+                90: { totalTickets: 718, avgResolutionTime: '4.5h', aiResolutionRate: '65%', npsScore: '8.2', resolutionRate: '92%' },
+                365: { totalTickets: 2846, avgResolutionTime: '4.8h', aiResolutionRate: '61%', npsScore: '8.0', resolutionRate: '90%' }
+            };
+            
+            return baseMetrics[timeframeDays] || baseMetrics[30];
+        }
+        
+        function exportSupportData() {
+            // Generate support report CSV
+            const timeframe = document.getElementById('supportTimeframe')?.value || '30';
+            const metrics = getSupportMetrics(timeframe);
+            
+            const csvContent = "data:text/csv;charset=utf-8," +
+                "Metric,Value,Timeframe\n" +
+                `Total Tickets,${metrics.totalTickets},${timeframe} days\n` +
+                `Average Resolution Time,${metrics.avgResolutionTime},${timeframe} days\n` +
+                `AI Resolution Rate,${metrics.aiResolutionRate},${timeframe} days\n` +
+                `NPS Score,${metrics.npsScore},${timeframe} days\n` +
+                `Resolution Rate,${metrics.resolutionRate},${timeframe} days\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `edlio_support_report_${timeframe}days_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Listen for support timeframe changes
+        document.addEventListener('change', function(event) {
+            if (event.target.id === 'supportTimeframe') {
+                updateSupportMetrics();
+            }
+        });
+        
         // Keyboard shortcuts for view switching
         document.addEventListener('keydown', function(event) {
             // Only activate shortcuts when not typing in input fields
@@ -4516,9 +4775,9 @@
             }
             
             const key = event.key;
-            const views = ['map', 'table', 'analytics', 'timeline', 'adoption'];
+            const views = ['map', 'table', 'analytics', 'timeline', 'adoption', 'support'];
             
-            if (key >= '1' && key <= '5') {
+            if (key >= '1' && key <= '6') {
                 event.preventDefault();
                 const viewIndex = parseInt(key) - 1;
                 if (views[viewIndex]) {
