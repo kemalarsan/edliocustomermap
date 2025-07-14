@@ -1137,6 +1137,11 @@
     <div class="container">
         <div id="map"></div>
         
+        <!-- Simple hover info overlay -->
+        <div id="hoverInfo" style="position: absolute; top: 20px; right: 20px; background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); padding: 20px; min-width: 300px; z-index: 2000; display: none; border: 2px solid #E53E3E;">
+            <div id="hoverContent"></div>
+        </div>
+        
         <!-- Simple toggle buttons -->
         <button onclick="toggleControls()" style="position: fixed; left: 10px; top: 50%; transform: translateY(-50%); background: #E53E3E; color: white; border: none; width: 40px; height: 60px; border-radius: 8px; cursor: pointer; font-size: 18px; z-index: 1001;">‹</button>
         <button onclick="toggleSidebar()" style="position: fixed; right: 10px; top: 50%; transform: translateY(-50%); background: #E53E3E; color: white; border: none; width: 40px; height: 60px; border-radius: 8px; cursor: pointer; font-size: 18px; z-index: 1001;">›</button>
@@ -2006,7 +2011,6 @@
         let customerData = new Map(); // Store customer data for popup creation
         let hoverTimeout = null; // Track hover timeouts for performance
         let lastHoverTime = 0; // Track timing for debouncing
-        let currentHoverPopup = null; // Track temporary popup
         
         // Initialize map
         function initMap() {
@@ -2511,38 +2515,28 @@
             `;
         }
         
-        // Show customer popup on map when hovering sidebar item
+        // Show customer info when hovering sidebar item
         function showCustomerPopup(customerKey) {
             const currentTime = Date.now();
             const timeSinceLastHover = currentTime - lastHoverTime;
             lastHoverTime = currentTime;
             
-            // Clear any existing hover timeout to prevent overlapping operations
+            // Clear any existing hover timeout
             if (hoverTimeout) {
                 clearTimeout(hoverTimeout);
             }
             
-            // IMPORTANT: Close any existing hover popup first
-            if (currentHoverPopup) {
-                map.closePopup(currentHoverPopup);
-                currentHoverPopup = null;
-            }
-            
-            // Also close any other open popups to ensure clean state
-            map.closePopup();
-            
-            const marker = customerMarkers.get(customerKey);
-            
-            if (marker && map) {
-                // Extract customer data from the key format: lat_lng
+            const customer = customerData.get(customerKey);
+            if (customer && map) {
+                // Extract coordinates
                 const parts = customerKey.split('_');
                 const lat = parseFloat(parts[0]);
                 const lng = parseFloat(parts[1]);
                 
-                // Use faster animation for rapid hovering, slower for deliberate moves
+                // Use faster animation for rapid hovering
                 const isRapidHover = timeSinceLastHover < 500;
                 const animationDuration = isRapidHover ? 0.15 : 0.25;
-                const targetZoom = Math.max(map.getZoom(), isRapidHover ? 12 : 13);
+                const targetZoom = Math.max(map.getZoom(), 12);
                 
                 // Center map on the customer location
                 map.setView([lat, lng], targetZoom, {
@@ -2550,67 +2544,43 @@
                     duration: animationDuration
                 });
                 
-                // Create and show popup directly on map coordinates
+                // Show simple overlay info (bulletproof approach)
                 hoverTimeout = setTimeout(() => {
-                    const customer = customerData.get(customerKey);
-                    if (customer) {
-                        // Create product badges for popup
-                        let productBadges = '';
-                        if (customer.products) {
-                            if (customer.products.cms) productBadges += '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">CMS</span>';
-                            if (customer.products.mobile) productBadges += '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mobile</span>';
-                            if (customer.products.masscomm) productBadges += '<span style="background: #fff3e0; color: #f57c00; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mass Comm</span>';
-                            if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
-                        }
-                        
-                        // Create temporary popup directly on map
-                        currentHoverPopup = L.popup({
-                            closeButton: false,
-                            autoClose: false,
-                            closeOnClick: false,
-                            className: 'hover-popup'
-                        })
-                        .setLatLng([lat, lng])
-                        .setContent(`
-                            <div style="min-width: 280px;">
-                                <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span style="color: #E53E3E;">${customer.type}</span></p>
-                                ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
-                                <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
-                                <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
-                            </div>
-                        `)
-                        .openOn(map);
-                        
-                        console.log('Temporary popup created for:', customer.name);
+                    // Create product badges
+                    let productBadges = '';
+                    if (customer.products) {
+                        if (customer.products.cms) productBadges += '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">CMS</span>';
+                        if (customer.products.mobile) productBadges += '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mobile</span>';
+                        if (customer.products.masscomm) productBadges += '<span style="background: #fff3e0; color: #f57c00; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mass Comm</span>';
+                        if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
                     }
-                }, isRapidHover ? 150 : 250);
+                    
+                    // Update simple overlay content
+                    document.getElementById('hoverContent').innerHTML = `
+                        <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
+                        <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
+                        <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span style="color: #E53E3E;">${customer.type}</span></p>
+                        ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
+                        <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
+                        <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
+                    `;
+                    
+                    // Show the overlay
+                    document.getElementById('hoverInfo').style.display = 'block';
+                }, isRapidHover ? 100 : 150);
             }
         }
         
-        // Hide customer popup when leaving sidebar item
+        // Hide customer info when leaving sidebar item
         function hideCustomerPopup(customerKey) {
-            // Clear any pending hover operations for smoother experience
+            // Clear any pending hover operations
             if (hoverTimeout) {
                 clearTimeout(hoverTimeout);
                 hoverTimeout = null;
             }
             
-            // Close temporary hover popup
-            if (currentHoverPopup) {
-                map.closePopup(currentHoverPopup);
-                currentHoverPopup = null;
-            }
-            
-            // Force close all popups on the map to ensure clean state
-            map.closePopup();
-            
-            // Also try closing marker popup as fallback
-            const marker = customerMarkers.get(customerKey);
-            if (marker && marker.getPopup() && marker.getPopup().isOpen()) {
-                marker.closePopup();
-            }
+            // Simply hide the overlay (bulletproof approach)
+            document.getElementById('hoverInfo').style.display = 'none';
         }
         
         // Toggle sidebar visibility
