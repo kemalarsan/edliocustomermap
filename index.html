@@ -1051,6 +1051,24 @@
         }
     </style>
     
+    <!-- Simple Navigation Tabs (Only visible in advanced mode) -->
+    <div id="navigationTabs" class="navigation-tabs hidden" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: center; gap: 20px; padding: 10px 0; border-bottom: 2px solid #f0f0f0;">
+        <button id="mapTab" onclick="showMapView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease;">
+            🗺️ Map
+        </button>
+        <button id="tableTab" onclick="showTableView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease;">
+            📊 Table
+        </button>
+    </div>
+    
+    <!-- Table View Container (Hidden by default) -->
+    <div id="tableView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">Customer Table</h2>
+        <div id="tableContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Table view will be implemented here...</p>
+        </div>
+    </div>
+    
     <div class="container">
         <div id="map"></div>
         
@@ -2402,6 +2420,91 @@
         console.log('Competitive mode:', isCompetitiveMode);
         console.log('Advanced mode:', isAdvancedMode);
         
+        // Simple Tab Navigation Functions (Global scope for onclick handlers)
+        function showMapView() {
+                // Hide table view
+                document.getElementById('tableView').classList.add('hidden');
+                // Show map container
+                document.querySelector('.container').classList.remove('hidden');
+                
+                // Update tab styles
+                document.getElementById('mapTab').style.color = '#E53E3E';
+                document.getElementById('mapTab').style.borderBottomColor = '#E53E3E';
+                document.getElementById('tableTab').style.color = '#666';
+                document.getElementById('tableTab').style.borderBottomColor = 'transparent';
+            }
+            
+            function showTableView() {
+                // Hide map container
+                document.querySelector('.container').classList.add('hidden');
+                // Show table view
+                document.getElementById('tableView').classList.remove('hidden');
+                
+                // Update tab styles
+                document.getElementById('tableTab').style.color = '#E53E3E';
+                document.getElementById('tableTab').style.borderBottomColor = '#E53E3E';
+                document.getElementById('mapTab').style.color = '#666';
+                document.getElementById('mapTab').style.borderBottomColor = 'transparent';
+                
+                // Load simple table content
+                loadSimpleTable();
+            }
+            
+            function loadSimpleTable() {
+                const tableContent = document.getElementById('tableContent');
+                const customers = getFilteredCustomers();
+                
+                if (customers.length === 0) {
+                    tableContent.innerHTML = '<p>No customers found with current filters.</p>';
+                    return;
+                }
+                
+                // Create simple table
+                let html = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>${customers.length} customers</strong>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Name</th>
+                                <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">State</th>
+                                <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Type</th>
+                                <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Products</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                // Add first 50 customers to keep it simple
+                customers.slice(0, 50).forEach(customer => {
+                    const products = [];
+                    if (customer.products.cms) products.push('CMS');
+                    if (customer.products.mobile) products.push('Mobile');
+                    if (customer.products.masscomm) products.push('MassComm');
+                    if (customer.products.payments) products.push('Payments');
+                    
+                    html += `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 8px;">${customer.name}</td>
+                            <td style="padding: 8px;">${customer.state}</td>
+                            <td style="padding: 8px;">${customer.type}</td>
+                            <td style="padding: 8px;">${products.join(', ') || 'None'}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 10px; color: #666; font-size: 14px;">
+                        Showing first 50 of ${customers.length} customers
+                    </div>
+                `;
+                
+                tableContent.innerHTML = html;
+        }
+        
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Check authentication first
@@ -2445,6 +2548,7 @@
             console.log('Checking advanced mode inside DOMContentLoaded:', isAdvancedMode);
             if (isAdvancedMode) {
                 const advancedDashboard = document.getElementById('advancedMetricsDashboard');
+                const navigationTabs = document.getElementById('navigationTabs');
                 const container = document.querySelector('.container');
                 console.log('Found advanced dashboard element:', advancedDashboard);
                 if (advancedDashboard) {
@@ -2455,6 +2559,17 @@
                     console.log('Element classes after removal:', advancedDashboard.className);
                 } else {
                     console.log('ERROR: advancedMetricsDashboard element not found');
+                }
+                
+                // Show navigation tabs in advanced mode
+                if (navigationTabs) {
+                    navigationTabs.classList.remove('hidden');
+                    navigationTabs.style.display = 'flex'; // Force show with inline style
+                    // Set Map as default active tab
+                    showMapView();
+                    console.log('Navigation tabs should now be visible');
+                } else {
+                    console.log('ERROR: navigationTabs element not found');
                 }
             } else {
                 console.log('Not in advanced mode');
