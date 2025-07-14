@@ -2397,7 +2397,15 @@
                                 <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
                             </div>
-                        `);
+                        `)
+                        .on('mouseover', function(e) {
+                            // Show the same hover overlay when mouse enters marker
+                            showMarkerHover(customer, e.latlng);
+                        })
+                        .on('mouseout', function(e) {
+                            // Hide hover overlay when mouse leaves marker
+                            hideMarkerHover();
+                        });
                     
                     // Store customer-marker mapping for hover synchronization
                     // Use coordinates as the primary key (simpler and more reliable)
@@ -2643,6 +2651,86 @@
                 hoverTimeout = null;
             }
             
+            // Hide both overlay and highlight circle
+            document.getElementById('hoverInfo').style.display = 'none';
+            document.getElementById('markerHighlight').style.display = 'none';
+        }
+        
+        // Show hover overlay when hovering directly on map marker
+        function showMarkerHover(customer, latlng) {
+            // Clear any existing timeout
+            if (hoverTimeout) {
+                clearTimeout(hoverTimeout);
+            }
+            
+            // Convert lat/lng to screen coordinates
+            const point = map.latLngToContainerPoint(latlng);
+            
+            // Create product badges
+            let productBadges = '';
+            if (customer.products) {
+                if (customer.products.cms) productBadges += '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">CMS</span>';
+                if (customer.products.mobile) productBadges += '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mobile</span>';
+                if (customer.products.masscomm) productBadges += '<span style="background: #fff3e0; color: #f57c00; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mass Comm</span>';
+                if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
+            }
+            
+            // Update overlay content
+            document.getElementById('hoverContent').innerHTML = `
+                <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
+                <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
+                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span style="color: #E53E3E;">${customer.type}</span></p>
+                ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
+                <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
+                <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
+            `;
+            
+            // Position overlay above marker with smart positioning
+            const hoverInfo = document.getElementById('hoverInfo');
+            const hoverPointer = document.getElementById('hoverPointer');
+            const markerHighlight = document.getElementById('markerHighlight');
+            const mapContainer = document.getElementById('map');
+            const mapRect = mapContainer.getBoundingClientRect();
+            
+            // Position above marker, but adjust if it goes off screen
+            let left = point.x - 150; // Center the 300px wide popup
+            let top = point.y - 200; // Position above marker
+            let pointerDirection = 'down'; // Arrow points down by default
+            
+            // Adjust if too close to edges
+            if (left < 10) left = 10;
+            if (left > mapRect.width - 320) left = mapRect.width - 320;
+            if (top < 10) {
+                top = point.y + 30; // Move below marker if no room above
+                pointerDirection = 'up'; // Arrow points up when below marker
+            }
+            
+            // Position info overlay
+            hoverInfo.style.left = left + 'px';
+            hoverInfo.style.top = top + 'px';
+            hoverInfo.style.display = 'block';
+            
+            // Adjust pointer direction
+            if (pointerDirection === 'up') {
+                hoverPointer.style.bottom = 'auto';
+                hoverPointer.style.top = '-10px';
+                hoverPointer.style.borderTop = 'none';
+                hoverPointer.style.borderBottom = '10px solid #E53E3E';
+            } else {
+                hoverPointer.style.top = 'auto';
+                hoverPointer.style.bottom = '-10px';
+                hoverPointer.style.borderBottom = 'none';
+                hoverPointer.style.borderTop = '10px solid #E53E3E';
+            }
+            
+            // Position highlight circle at marker location
+            markerHighlight.style.left = (point.x - 20) + 'px';
+            markerHighlight.style.top = (point.y - 20) + 'px';
+            markerHighlight.style.display = 'block';
+        }
+        
+        // Hide hover overlay when leaving map marker
+        function hideMarkerHover() {
             // Hide both overlay and highlight circle
             document.getElementById('hoverInfo').style.display = 'none';
             document.getElementById('markerHighlight').style.display = 'none';
