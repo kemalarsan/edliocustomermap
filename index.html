@@ -1051,15 +1051,31 @@
         }
     </style>
     
-    <!-- Simple Navigation Tabs (Only visible in advanced mode) -->
-    <div id="navigationTabs" class="navigation-tabs hidden" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: center; gap: 20px; padding: 10px 0; border-bottom: 2px solid #f0f0f0;">
-        <button id="mapTab" onclick="showMapView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+    <!-- Navigation Tabs with all 6 views (Only visible in advanced mode) -->
+    <div id="navigationTabs" class="navigation-tabs hidden" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: center; gap: 15px; padding: 10px 0; border-bottom: 2px solid #f0f0f0; flex-wrap: wrap;">
+        <button id="mapTab" onclick="showMapView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
             🗺️ Map
-            <span style="position: absolute; top: 2px; right: 5px; font-size: 10px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">1</span>
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">1</span>
         </button>
-        <button id="tableTab" onclick="showTableView()" class="tab-button" style="background: none; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+        <button id="tableTab" onclick="showTableView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
             📊 Table
-            <span style="position: absolute; top: 2px; right: 5px; font-size: 10px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">2</span>
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">2</span>
+        </button>
+        <button id="analyticsTab" onclick="showAnalyticsView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+            📈 Analytics
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">3</span>
+        </button>
+        <button id="timelineTab" onclick="showTimelineView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+            📅 Timeline
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">4</span>
+        </button>
+        <button id="adoptionTab" onclick="showAdoptionView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+            🎯 Adoption
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">5</span>
+        </button>
+        <button id="supportTab" onclick="showSupportView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+            🎧 Support
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">6</span>
         </button>
     </div>
     
@@ -1068,6 +1084,38 @@
         <h2 style="margin-bottom: 20px; color: #333;">Customer Table</h2>
         <div id="tableContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <p>Table view will be implemented here...</p>
+        </div>
+    </div>
+
+    <!-- Analytics View Container -->
+    <div id="analyticsView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">📈 Analytics Dashboard</h2>
+        <div id="analyticsContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading analytics...</p>
+        </div>
+    </div>
+
+    <!-- Timeline View Container -->
+    <div id="timelineView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">📅 Contract Timeline</h2>
+        <div id="timelineContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading timeline...</p>
+        </div>
+    </div>
+
+    <!-- Adoption View Container -->
+    <div id="adoptionView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">🎯 Product Adoption</h2>
+        <div id="adoptionContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading adoption matrix...</p>
+        </div>
+    </div>
+
+    <!-- Support View Container -->
+    <div id="supportView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">🎧 Technical Support</h2>
+        <div id="supportContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading support metrics...</p>
         </div>
     </div>
     
@@ -2422,35 +2470,7 @@
         console.log('Competitive mode:', isCompetitiveMode);
         console.log('Advanced mode:', isAdvancedMode);
         
-        // Simple Tab Navigation Functions (Global scope for onclick handlers)
-        function showMapView() {
-                // Hide table view
-                document.getElementById('tableView').classList.add('hidden');
-                // Show map container
-                document.querySelector('.container').classList.remove('hidden');
-                
-                // Update tab styles
-                document.getElementById('mapTab').style.color = '#E53E3E';
-                document.getElementById('mapTab').style.borderBottomColor = '#E53E3E';
-                document.getElementById('tableTab').style.color = '#666';
-                document.getElementById('tableTab').style.borderBottomColor = 'transparent';
-            }
-            
-            function showTableView() {
-                // Hide map container
-                document.querySelector('.container').classList.add('hidden');
-                // Show table view
-                document.getElementById('tableView').classList.remove('hidden');
-                
-                // Update tab styles
-                document.getElementById('tableTab').style.color = '#E53E3E';
-                document.getElementById('tableTab').style.borderBottomColor = '#E53E3E';
-                document.getElementById('mapTab').style.color = '#666';
-                document.getElementById('mapTab').style.borderBottomColor = 'transparent';
-                
-                // Load simple table content
-                loadSimpleTable();
-            }
+        // Tab Navigation Functions moved below after loadSimpleTable function
             
             function loadSimpleTable() {
                 const tableContent = document.getElementById('tableContent');
@@ -2507,6 +2527,241 @@
                 tableContent.innerHTML = html;
         }
         
+        // Helper function to hide all views
+        function hideAllViews() {
+            document.querySelector('.container').classList.add('hidden');
+            document.getElementById('tableView').classList.add('hidden');
+            document.getElementById('analyticsView').classList.add('hidden');
+            document.getElementById('timelineView').classList.add('hidden');
+            document.getElementById('adoptionView').classList.add('hidden');
+            document.getElementById('supportView').classList.add('hidden');
+        }
+        
+        // Helper function to reset all tab styles
+        function resetTabStyles() {
+            const tabs = ['mapTab', 'tableTab', 'analyticsTab', 'timelineTab', 'adoptionTab', 'supportTab'];
+            tabs.forEach(tabId => {
+                const tab = document.getElementById(tabId);
+                if (tab) {
+                    tab.style.color = '#666';
+                    tab.style.borderBottomColor = 'transparent';
+                }
+            });
+        }
+        
+        // Helper function to set active tab
+        function setActiveTab(tabId) {
+            resetTabStyles();
+            const tab = document.getElementById(tabId);
+            if (tab) {
+                tab.style.color = '#E53E3E';
+                tab.style.borderBottomColor = '#E53E3E';
+            }
+        }
+        
+        // Analytics View
+        function showAnalyticsView() {
+            hideAllViews();
+            document.getElementById('analyticsView').classList.remove('hidden');
+            setActiveTab('analyticsTab');
+            loadAnalyticsContent();
+        }
+        
+        // Timeline View
+        function showTimelineView() {
+            hideAllViews();
+            document.getElementById('timelineView').classList.remove('hidden');
+            setActiveTab('timelineTab');
+            loadTimelineContent();
+        }
+        
+        // Adoption View
+        function showAdoptionView() {
+            hideAllViews();
+            document.getElementById('adoptionView').classList.remove('hidden');
+            setActiveTab('adoptionTab');
+            loadAdoptionContent();
+        }
+        
+        // Support View
+        function showSupportView() {
+            hideAllViews();
+            document.getElementById('supportView').classList.remove('hidden');
+            setActiveTab('supportTab');
+            loadSupportContent();
+        }
+        
+        // Update existing view functions to use helpers
+        function showMapView() {
+            hideAllViews();
+            document.querySelector('.container').classList.remove('hidden');
+            setActiveTab('mapTab');
+        }
+        
+        function showTableView() {
+            hideAllViews();
+            document.getElementById('tableView').classList.remove('hidden');
+            setActiveTab('tableTab');
+            loadSimpleTable();
+        }
+        
+        // Content loading functions for new views
+        function loadAnalyticsContent() {
+            const customers = getFilteredCustomers();
+            const analyticsContent = document.getElementById('analyticsContent');
+            
+            // Calculate basic analytics
+            const totalRevenue = customers.length * 8500; // Approximate
+            const avgContractValue = 8500;
+            const stateBreakdown = {};
+            customers.forEach(c => {
+                stateBreakdown[c.state] = (stateBreakdown[c.state] || 0) + 1;
+            });
+            const topStates = Object.entries(stateBreakdown).sort(([,a], [,b]) => b - a).slice(0, 5);
+            
+            analyticsContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #E53E3E;">Total Revenue</h3>
+                        <div style="font-size: 24px; font-weight: bold;">$${(totalRevenue/1000000).toFixed(1)}M</div>
+                        <div style="font-size: 12px; color: #666;">Annual Recurring Revenue</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #2196f3;">Customers</h3>
+                        <div style="font-size: 24px; font-weight: bold;">${customers.length}</div>
+                        <div style="font-size: 12px; color: #666;">Active Customers</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #4caf50;">Avg Contract</h3>
+                        <div style="font-size: 24px; font-weight: bold;">$${avgContractValue.toLocaleString()}</div>
+                        <div style="font-size: 12px; color: #666;">Per Customer</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 15px 0;">Top 5 States by Customer Count</h3>
+                    ${topStates.map(([state, count]) => `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>${state}</span>
+                            <span style="font-weight: bold; color: #E53E3E;">${count} customers</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function loadTimelineContent() {
+            const timelineContent = document.getElementById('timelineContent');
+            
+            timelineContent.innerHTML = `
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 15px 0;">Contract Timeline & Renewals</h3>
+                    
+                    <div style="margin-bottom: 15px; padding: 15px; background: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
+                        <div style="font-weight: bold; color: #333;">Upcoming Renewals (Next 90 Days)</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">~ 85 contracts worth $3.2M ARR</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; padding: 15px; background: #d1ecf1; border-radius: 6px; border-left: 4px solid #17a2b8;">
+                        <div style="font-weight: bold; color: #333;">New Contracts (This Quarter)</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">23 new customers, $195k ARR added</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; padding: 15px; background: #f8d7da; border-radius: 6px; border-left: 4px solid #dc3545;">
+                        <div style="font-weight: bold; color: #333;">At-Risk Contracts</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">12 contracts requiring attention, $480k ARR</div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; font-size: 12px; color: #666;">
+                        * Based on current customer data and estimated contract values
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadAdoptionContent() {
+            const customers = getFilteredCustomers();
+            const adoptionContent = document.getElementById('adoptionContent');
+            
+            // Calculate product adoption
+            const cmsOnly = customers.filter(c => c.products.cms && !c.products.mobile && !c.products.payments).length;
+            const cmsAndMobile = customers.filter(c => c.products.cms && c.products.mobile && !c.products.payments).length;
+            const fullSuite = customers.filter(c => c.products.cms && c.products.mobile && c.products.payments).length;
+            const other = customers.filter(c => !c.products.cms).length;
+            
+            adoptionContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #1976d2;">${cmsOnly}</div>
+                        <div style="font-size: 14px; color: #333; margin: 5px 0;">CMS Only</div>
+                        <div style="font-size: 12px; color: #666;">${((cmsOnly / customers.length) * 100).toFixed(1)}%</div>
+                    </div>
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #388e3c;">${cmsAndMobile}</div>
+                        <div style="font-size: 14px; color: #333; margin: 5px 0;">CMS + Mobile</div>
+                        <div style="font-size: 12px; color: #666;">${((cmsAndMobile / customers.length) * 100).toFixed(1)}%</div>
+                    </div>
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #f57c00;">${fullSuite}</div>
+                        <div style="font-size: 14px; color: #333; margin: 5px 0;">Full Suite</div>
+                        <div style="font-size: 12px; color: #666;">${((fullSuite / customers.length) * 100).toFixed(1)}%</div>
+                    </div>
+                    <div style="background: #fce4ec; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #c2185b;">${other}</div>
+                        <div style="font-size: 14px; color: #333; margin: 5px 0;">Other</div>
+                        <div style="font-size: 12px; color: #666;">${((other / customers.length) * 100).toFixed(1)}%</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 15px 0;">Upsell Opportunities</h3>
+                    <div style="margin-bottom: 10px;">🎯 <strong>${cmsOnly}</strong> customers could upgrade to Mobile App (+$4,000 ARR each)</div>
+                    <div>💰 <strong>${cmsAndMobile}</strong> customers could add Payments (+$6,000 ARR each)</div>
+                    <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                        Potential additional ARR: $${((cmsOnly * 4000 + cmsAndMobile * 6000)/1000).toFixed(0)}k
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadSupportContent() {
+            const supportContent = document.getElementById('supportContent');
+            
+            supportContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #E53E3E;">🎫 Total Tickets</h3>
+                        <div style="font-size: 24px; font-weight: bold;">247</div>
+                        <div style="font-size: 12px; color: #4caf50;">↓ 12% vs last month</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #2196f3;">⏱️ Avg Resolution</h3>
+                        <div style="font-size: 24px; font-weight: bold;">4.2h</div>
+                        <div style="font-size: 12px; color: #4caf50;">↓ 0.8h improvement</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #9c27b0;">🤖 AI Resolution</h3>
+                        <div style="font-size: 24px; font-weight: bold;">68%</div>
+                        <div style="font-size: 12px; color: #4caf50;">↑ 5% improvement</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0; color: #ff9800;">⭐ NPS Score</h3>
+                        <div style="font-size: 24px; font-weight: bold;">8.4</div>
+                        <div style="font-size: 12px; color: #4caf50;">↑ 0.3 improvement</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 15px 0;">Top Issues This Month</h3>
+                    <div style="margin-bottom: 8px;">• Login/Authentication Issues (18% of tickets)</div>
+                    <div style="margin-bottom: 8px;">• Mobile App Sync Problems (15% of tickets)</div>
+                    <div style="margin-bottom: 8px;">• Payment Processing Questions (12% of tickets)</div>
+                    <div style="margin-bottom: 8px;">• Feature Requests (22% of tickets)</div>
+                    <div style="margin-bottom: 8px;">• General Usage Questions (33% of tickets)</div>
+                </div>
+            `;
+        }
+        
         // Keyboard shortcuts for tab navigation (1-2 for now)
         document.addEventListener('keydown', function(event) {
             // Only activate shortcuts when not typing in input fields
@@ -2530,6 +2785,22 @@
                 event.preventDefault();
                 showTableView();
                 console.log('Keyboard shortcut: Switched to Table view');
+            } else if (key === '3') {
+                event.preventDefault();
+                showAnalyticsView();
+                console.log('Keyboard shortcut: Switched to Analytics view');
+            } else if (key === '4') {
+                event.preventDefault();
+                showTimelineView();
+                console.log('Keyboard shortcut: Switched to Timeline view');
+            } else if (key === '5') {
+                event.preventDefault();
+                showAdoptionView();
+                console.log('Keyboard shortcut: Switched to Adoption view');
+            } else if (key === '6') {
+                event.preventDefault();
+                showSupportView();
+                console.log('Keyboard shortcut: Switched to Support view');
             }
         });
         
