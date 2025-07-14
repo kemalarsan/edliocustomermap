@@ -1137,8 +1137,8 @@
     <div class="container">
         <div id="map"></div>
         
-        <!-- Simple hover info overlay -->
-        <div id="hoverInfo" style="position: absolute; top: 20px; right: 20px; background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); padding: 20px; min-width: 300px; z-index: 2000; display: none; border: 2px solid #E53E3E;">
+        <!-- Simple hover info overlay - positioned over marker -->
+        <div id="hoverInfo" style="position: absolute; background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); padding: 20px; min-width: 300px; z-index: 2000; display: none; border: 2px solid #E53E3E; pointer-events: none;">
             <div id="hoverContent"></div>
         </div>
         
@@ -2544,8 +2544,11 @@
                     duration: animationDuration
                 });
                 
-                // Show simple overlay info (bulletproof approach)
+                // Show simple overlay info positioned over marker
                 hoverTimeout = setTimeout(() => {
+                    // Convert lat/lng to screen coordinates
+                    const point = map.latLngToContainerPoint([lat, lng]);
+                    
                     // Create product badges
                     let productBadges = '';
                     if (customer.products) {
@@ -2555,7 +2558,7 @@
                         if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
                     }
                     
-                    // Update simple overlay content
+                    // Update overlay content
                     document.getElementById('hoverContent').innerHTML = `
                         <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
                         <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
@@ -2565,8 +2568,23 @@
                         <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
                     `;
                     
-                    // Show the overlay
-                    document.getElementById('hoverInfo').style.display = 'block';
+                    // Position overlay above marker with smart positioning
+                    const hoverInfo = document.getElementById('hoverInfo');
+                    const mapContainer = document.getElementById('map');
+                    const mapRect = mapContainer.getBoundingClientRect();
+                    
+                    // Position above marker, but adjust if it goes off screen
+                    let left = point.x - 150; // Center the 300px wide popup
+                    let top = point.y - 200; // Position above marker
+                    
+                    // Adjust if too close to edges
+                    if (left < 10) left = 10;
+                    if (left > mapRect.width - 320) left = mapRect.width - 320;
+                    if (top < 10) top = point.y + 30; // Move below marker if no room above
+                    
+                    hoverInfo.style.left = left + 'px';
+                    hoverInfo.style.top = top + 'px';
+                    hoverInfo.style.display = 'block';
                 }, isRapidHover ? 100 : 150);
             }
         }
