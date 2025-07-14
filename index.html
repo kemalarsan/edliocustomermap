@@ -2003,8 +2003,10 @@
         let searchCenter = null;
         let searchRadius = null;
         let customerMarkers = new Map(); // Store customer-to-marker mapping for hover sync
+        let customerData = new Map(); // Store customer data for popup creation
         let hoverTimeout = null; // Track hover timeouts for performance
         let lastHoverTime = 0; // Track timing for debouncing
+        let currentHoverPopup = null; // Track temporary popup
         
         // Initialize map
         function initMap() {
@@ -2336,8 +2338,9 @@
                 map.removeLayer(markers);
             }
             
-            // Clear customer-marker mapping
+            // Clear customer-marker mapping and data
             customerMarkers.clear();
+            customerData.clear();
             
             markers = L.markerClusterGroup({
                 chunkedLoading: true,
@@ -2375,6 +2378,7 @@
                     // Use coordinates as the primary key (simpler and more reliable)
                     const customerKey = `${customer.lat.toFixed(6)}_${customer.lng.toFixed(6)}`;
                     customerMarkers.set(customerKey, marker);
+                    customerData.set(customerKey, customer); // Store customer data for popup creation
                     
                     markers.addLayer(marker);
                 }
@@ -2537,39 +2541,42 @@
                     duration: animationDuration
                 });
                 
-                // Optimized popup display with shorter delays
+                // Create and show popup directly on map coordinates
                 hoverTimeout = setTimeout(() => {
-                    console.log('Attempting popup for marker:', marker);
-                    console.log('Marker in cluster?', markers.hasLayer(marker));
-                    console.log('Current zoom:', map.getZoom());
-                    
-                    // Force zoom to 15 to ensure unclustering
-                    map.setView([lat, lng], 15, { animate: false });
-                    
-                    // Wait longer for unclustering to complete
-                    setTimeout(() => {
-                        console.log('Zoom after unclustering:', map.getZoom());
-                        
-                        // Try multiple approaches to show popup
-                        if (marker.getPopup()) {
-                            console.log('Popup exists, attempting to open');
-                            marker.openPopup();
-                            
-                            // Check if popup actually opened
-                            setTimeout(() => {
-                                if (marker.getPopup().isOpen()) {
-                                    console.log('SUCCESS: Popup is now open');
-                                } else {
-                                    console.log('FAILED: Popup did not open, trying click event');
-                                    marker.fire('click');
-                                }
-                            }, 50);
-                        } else {
-                            console.log('No popup found on marker, trying click event');
-                            marker.fire('click');
+                    const customer = customerData.get(customerKey);
+                    if (customer) {
+                        // Create product badges for popup
+                        let productBadges = '';
+                        if (customer.products) {
+                            if (customer.products.cms) productBadges += '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">CMS</span>';
+                            if (customer.products.mobile) productBadges += '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mobile</span>';
+                            if (customer.products.masscomm) productBadges += '<span style="background: #fff3e0; color: #f57c00; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Mass Comm</span>';
+                            if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
                         }
-                    }, 300);
-                }, isRapidHover ? 200 : 300);
+                        
+                        // Create temporary popup directly on map
+                        currentHoverPopup = L.popup({
+                            closeButton: false,
+                            autoClose: false,
+                            closeOnClick: false,
+                            className: 'hover-popup'
+                        })
+                        .setLatLng([lat, lng])
+                        .setContent(`
+                            <div style="min-width: 280px;">
+                                <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
+                                <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
+                                <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span style="color: #E53E3E;">${customer.type}</span></p>
+                                ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
+                                <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
+                                <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
+                            </div>
+                        `)
+                        .openOn(map);
+                        
+                        console.log('Temporary popup created for:', customer.name);
+                    }
+                }, isRapidHover ? 150 : 250);
             }
         }
         
@@ -2581,6 +2588,13 @@
                 hoverTimeout = null;
             }
             
+            // Close temporary hover popup
+            if (currentHoverPopup) {
+                map.closePopup(currentHoverPopup);
+                currentHoverPopup = null;
+            }
+            
+            // Also try closing marker popup as fallback
             const marker = customerMarkers.get(customerKey);
             if (marker && marker.getPopup() && marker.getPopup().isOpen()) {
                 marker.closePopup();
