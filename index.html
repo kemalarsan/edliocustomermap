@@ -2367,7 +2367,8 @@
                         `);
                     
                     // Store customer-marker mapping for hover synchronization
-                    const customerKey = `${customer.name}-${customer.lat}-${customer.lng}`;
+                    // Use a more reliable key format that handles special characters
+                    const customerKey = `${customer.lat.toFixed(6)}_${customer.lng.toFixed(6)}_${btoa(customer.name).replace(/[^a-zA-Z0-9]/g, '')}`;
                     customerMarkers.set(customerKey, marker);
                     
                     markers.addLayer(marker);
@@ -2472,7 +2473,7 @@
                     if (customer.products.payments) productBadges += '<span class="product-badge product-payments">Payments</span>';
                 }
                 
-                const customerKey = `${customer.name}-${customer.lat}-${customer.lng}`;
+                const customerKey = `${customer.lat.toFixed(6)}_${customer.lng.toFixed(6)}_${btoa(customer.name).replace(/[^a-zA-Z0-9]/g, '')}`;
                 return `
                     <div class="customer-item" 
                          data-customer-key="${customerKey}"
@@ -2503,12 +2504,19 @@
         
         // Show customer popup on map when hovering sidebar item
         function showCustomerPopup(customerKey) {
+            console.log('showCustomerPopup called with key:', customerKey);
+            console.log('customerMarkers map size:', customerMarkers.size);
+            console.log('Available keys:', Array.from(customerMarkers.keys()).slice(0, 5));
+            
             const marker = customerMarkers.get(customerKey);
+            console.log('Found marker:', marker);
+            
             if (marker && map) {
-                // Extract customer data from the key
-                const parts = customerKey.split('-');
-                const lat = parseFloat(parts[parts.length - 2]);
-                const lng = parseFloat(parts[parts.length - 1]);
+                // Extract customer data from the new key format: lat_lng_nameHash
+                const parts = customerKey.split('_');
+                const lat = parseFloat(parts[0]);
+                const lng = parseFloat(parts[1]);
+                console.log('Extracted coordinates:', lat, lng);
                 
                 // Center map on the customer location
                 map.setView([lat, lng], Math.max(map.getZoom(), 10), {
@@ -2520,8 +2528,15 @@
                 setTimeout(() => {
                     if (marker.getPopup()) {
                         marker.openPopup();
+                        console.log('Popup opened successfully');
+                    } else {
+                        console.log('No popup found on marker');
                     }
                 }, 200);
+            } else {
+                console.log('Marker not found or map not initialized');
+                if (!marker) console.log('Marker is null for key:', customerKey);
+                if (!map) console.log('Map is not initialized');
             }
         }
         
