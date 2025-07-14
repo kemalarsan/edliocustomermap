@@ -1210,23 +1210,115 @@
             <div id="map"></div>
         </div>
         
-        <!-- Table View -->
+        <!-- Advanced Table View -->
         <div id="tableView" class="view-container hidden">
-            <div class="table-content" style="padding: 20px; height: 100%; overflow: auto; background: #f8f9fa;">
-                <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; color: #333;">Customer Database</h2>
-                    <div class="table-actions" style="display: flex; gap: 10px;">
-                        <button onclick="exportTableData()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📊 Export CSV</button>
-                        <select id="tableSort" onchange="sortTable(this.value)" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            <option value="name">Sort by Name</option>
-                            <option value="state">Sort by State</option>
-                            <option value="type">Sort by Type</option>
-                            <option value="products">Sort by Products</option>
+            <div class="table-content" style="padding: 20px; height: 100%; overflow: hidden; background: #f8f9fa; display: flex; flex-direction: column;">
+                <!-- Table Header with Actions -->
+                <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0;">
+                    <div class="table-title-section">
+                        <h2 style="margin: 0; color: #333;">Customer Database</h2>
+                        <div style="font-size: 12px; color: #666; margin-top: 2px;" id="tableRecordCount">Loading...</div>
+                    </div>
+                    <div class="table-actions" style="display: flex; gap: 10px; align-items: center;">
+                        <div class="bulk-actions" id="bulkActions" style="display: none; background: #E53E3E; color: white; padding: 8px 16px; border-radius: 6px; font-size: 12px;">
+                            <span id="selectedCount">0</span> selected 
+                            <button onclick="bulkExportSelected()" style="background: none; border: none; color: white; cursor: pointer; margin-left: 10px; padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3);">Export</button>
+                            <button onclick="bulkClearSelection()" style="background: none; border: none; color: white; cursor: pointer; margin-left: 5px; padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3);">Clear</button>
+                        </div>
+                        <button onclick="exportTableData()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📊 Export All</button>
+                        <button onclick="toggleColumnCustomization()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">⚙️ Columns</button>
+                    </div>
+                </div>
+                
+                <!-- Search and Filters Bar -->
+                <div class="table-controls" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0;">
+                    <div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 15px; align-items: center;">
+                        <!-- Global Search -->
+                        <div class="search-container" style="position: relative;">
+                            <input type="text" id="globalTableSearch" placeholder="Search customers, states, products..." style="width: 100%; padding: 10px 40px 10px 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #999;">🔍</span>
+                        </div>
+                        
+                        <!-- Quick Filters -->
+                        <select id="typeFilter" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">All Types</option>
+                            <option value="charter">Charter</option>
+                            <option value="district">District</option>
+                            <option value="private">Private</option>
+                            <option value="cmo">CMO</option>
+                        </select>
+                        
+                        <select id="stateFilter" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">All States</option>
+                        </select>
+                        
+                        <select id="healthFilter" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">All Health</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
                         </select>
                     </div>
                 </div>
-                <div id="customerTable" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
-                    <div style="padding: 20px; text-align: center; color: #666;">Loading customer data...</div>
+                
+                <!-- Column Customization Panel -->
+                <div id="columnCustomization" class="hidden" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">Show/Hide Columns</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="name" checked> Customer Name
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="type" checked> Type
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="state" checked> State
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="contract-value" checked> Contract Value
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="contract-end" checked> Contract End
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="products" checked> Products
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="health" checked> Health Score
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="activity" checked> Last Activity
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" class="column-toggle" data-column="website" checked> Website
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Table Container -->
+                <div class="table-wrapper" style="flex: 1; overflow: hidden; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <div id="customerTableContainer" style="flex: 1; overflow: auto;">
+                        <div style="padding: 40px; text-align: center; color: #666;">Loading customer data...</div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="table-pagination" style="padding: 15px; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
+                        <div class="pagination-info" style="font-size: 12px; color: #666;">
+                            Showing <span id="paginationStart">0</span> to <span id="paginationEnd">0</span> of <span id="paginationTotal">0</span> customers
+                        </div>
+                        <div class="pagination-controls" style="display: flex; gap: 10px; align-items: center;">
+                            <select id="pageSize" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                <option value="25">25 per page</option>
+                                <option value="50" selected>50 per page</option>
+                                <option value="100">100 per page</option>
+                                <option value="500">500 per page</option>
+                            </select>
+                            <button onclick="previousPage()" id="prevPageBtn" style="padding: 6px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">← Previous</button>
+                            <span id="currentPageInfo" style="font-size: 12px; color: #666;">Page 1</span>
+                            <button onclick="nextPage()" id="nextPageBtn" style="padding: 6px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">Next →</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4517,41 +4609,297 @@
             }
         }
         
+        // Advanced Table Management System
+        let tableData = [];
+        let filteredTableData = [];
+        let selectedRows = new Set();
+        let currentPage = 1;
+        let pageSize = 50;
+        let sortColumn = '';
+        let sortDirection = 'asc';
+        let visibleColumns = new Set(['name', 'type', 'state', 'contract-value', 'contract-end', 'products', 'health', 'activity', 'website']);
+        
         function loadTableView() {
-            const tableContainer = document.getElementById('customerTable');
-            const customers = getFilteredCustomers();
+            // Initialize table data with enhanced customer information
+            tableData = getFilteredCustomers().map(customer => ({
+                ...customer,
+                contractValue: generateContractValue(customer),
+                contractEndDate: generateContractEndDate(customer),
+                healthScore: generateHealthScore(customer),
+                lastActivity: generateLastActivity(customer)
+            }));
             
-            if (customers.length === 0) {
-                tableContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No customers match current filters</div>';
+            filteredTableData = [...tableData];
+            
+            // Initialize UI components
+            initializeTableFilters();
+            setupTableEventListeners();
+            renderTable();
+            updateRecordCount();
+        }
+        
+        function generateContractValue(customer) {
+            // Generate realistic contract values based on customer type and products
+            let baseValue = 8500;
+            if (customer.products.mobile) baseValue += 4000;
+            if (customer.products.payments) baseValue += 6000;
+            if (customer.products.masscomm) baseValue += 3000;
+            
+            // Add variation based on customer type
+            const typeMultipliers = { 'district': 1.5, 'charter': 1.0, 'private': 0.8, 'cmo': 2.0, 'esc': 1.2 };
+            baseValue *= (typeMultipliers[customer.type] || 1.0);
+            
+            // Add random variation
+            const variation = 0.8 + (Math.random() * 0.4); // 80% to 120%
+            return Math.round(baseValue * variation);
+        }
+        
+        function generateContractEndDate(customer) {
+            // Generate contract end dates with some in warning period
+            const now = new Date();
+            const daysToAdd = Math.random() < 0.15 ? 
+                Math.floor(Math.random() * 90) : // 15% chance of warning period
+                90 + Math.floor(Math.random() * 275); // Most contracts 90-365 days out
+            
+            const endDate = new Date(now.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
+            return endDate;
+        }
+        
+        function generateHealthScore(customer) {
+            // Generate numeric health scores with realistic distribution
+            const scoreRanges = [
+                { min: 90, max: 100, weight: 0.4 }, // Excellent
+                { min: 75, max: 89, weight: 0.35 }, // Good
+                { min: 60, max: 74, weight: 0.2 },  // Fair
+                { min: 30, max: 59, weight: 0.05 }  // Poor
+            ];
+            
+            const random = Math.random();
+            let cumulative = 0;
+            for (let range of scoreRanges) {
+                cumulative += range.weight;
+                if (random < cumulative) {
+                    return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+                }
+            }
+            return 85; // Default to good score
+        }
+        
+        function generateLastActivity(customer) {
+            // Generate last activity dates
+            const now = new Date();
+            const daysAgo = Math.floor(Math.random() * 30); // Activity within last 30 days
+            return new Date(now.getTime() - (daysAgo * 24 * 60 * 60 * 1000));
+        }
+        
+        function initializeTableFilters() {
+            // Populate state filter
+            const stateFilter = document.getElementById('stateFilter');
+            const states = [...new Set(tableData.map(c => c.state))].sort();
+            stateFilter.innerHTML = '<option value="">All States</option>' + 
+                states.map(state => `<option value="${state}">${state}</option>`).join('');
+        }
+        
+        function setupTableEventListeners() {
+            // Global search
+            document.getElementById('globalTableSearch').addEventListener('input', handleGlobalSearch);
+            
+            // Quick filters
+            document.getElementById('typeFilter').addEventListener('change', applyFilters);
+            document.getElementById('stateFilter').addEventListener('change', applyFilters);
+            document.getElementById('healthFilter').addEventListener('change', applyFilters);
+            
+            // Pagination
+            document.getElementById('pageSize').addEventListener('change', handlePageSizeChange);
+            
+            // Column toggles
+            document.querySelectorAll('.column-toggle').forEach(toggle => {
+                toggle.addEventListener('change', handleColumnToggle);
+            });
+        }
+        
+        function handleGlobalSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            applyFilters();
+        }
+        
+        function applyFilters() {
+            const searchTerm = document.getElementById('globalTableSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const stateFilter = document.getElementById('stateFilter').value;
+            const healthFilter = document.getElementById('healthFilter').value;
+            
+            filteredTableData = tableData.filter(customer => {
+                // Global search across all fields
+                const searchFields = [
+                    customer.name,
+                    customer.state,
+                    customer.type,
+                    formatProducts(customer.products),
+                    customer.healthScore,
+                    customer.contractValue.toString()
+                ].join(' ').toLowerCase();
+                
+                const matchesSearch = !searchTerm || searchFields.includes(searchTerm);
+                const matchesType = !typeFilter || customer.type === typeFilter;
+                const matchesState = !stateFilter || customer.state === stateFilter;
+                const matchesHealth = !healthFilter || customer.healthScore === healthFilter;
+                
+                return matchesSearch && matchesType && matchesState && matchesHealth;
+            });
+            
+            currentPage = 1;
+            renderTable();
+            updateRecordCount();
+        }
+        
+        function handlePageSizeChange(event) {
+            pageSize = parseInt(event.target.value);
+            currentPage = 1;
+            renderTable();
+        }
+        
+        function handleColumnToggle(event) {
+            const column = event.target.dataset.column;
+            if (event.target.checked) {
+                visibleColumns.add(column);
+            } else {
+                visibleColumns.delete(column);
+            }
+            renderTable();
+        }
+        
+        function sortTableByColumn(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            
+            filteredTableData.sort((a, b) => {
+                let aVal = getColumnValue(a, column);
+                let bVal = getColumnValue(b, column);
+                
+                // Handle different data types
+                if (column === 'contract-value') {
+                    aVal = a.contractValue;
+                    bVal = b.contractValue;
+                } else if (column === 'contract-end') {
+                    aVal = a.contractEndDate.getTime();
+                    bVal = b.contractEndDate.getTime();
+                } else if (column === 'activity') {
+                    aVal = a.lastActivity.getTime();
+                    bVal = b.lastActivity.getTime();
+                } else {
+                    aVal = aVal.toString().toLowerCase();
+                    bVal = bVal.toString().toLowerCase();
+                }
+                
+                if (sortDirection === 'asc') {
+                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+                } else {
+                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+                }
+            });
+            
+            renderTable();
+        }
+        
+        function getColumnValue(row, column) {
+            switch(column) {
+                case 'name': return row.name;
+                case 'type': return row.type;
+                case 'state': return row.state;
+                case 'products': return Object.values(row.products).filter(Boolean).length;
+                case 'health': return row.healthScore;
+                default: return '';
+            }
+        }
+        
+        function renderTable() {
+            const container = document.getElementById('customerTableContainer');
+            
+            if (filteredTableData.length === 0) {
+                container.innerHTML = '<div style="padding: 40px; text-align: center; color: #666;">No customers match current filters</div>';
                 return;
             }
             
+            // Calculate pagination
+            totalPages = Math.ceil(filteredTableData.length / pageSize);
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredTableData.length);
+            const pageData = filteredTableData.slice(startIndex, endIndex);
+            
+            // Build table HTML
             const tableHTML = `
-                <table class="customer-table">
+                <table class="advanced-customer-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
                     <thead>
-                        <tr>
-                            <th onclick="sortTable('name')" style="cursor: pointer;">Name ↕️</th>
-                            <th onclick="sortTable('state')" style="cursor: pointer;">State ↕️</th>
-                            <th onclick="sortTable('type')" style="cursor: pointer;">Type ↕️</th>
-                            <th>Products</th>
-                            <th>Website</th>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #e0e0e0;">
+                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">
+                                <input type="checkbox" onchange="toggleSelectAll(this)" style="margin-right: 8px;">
+                                Select
+                            </th>
+                            ${visibleColumns.has('name') ? `<th onclick="sortTableByColumn('name')" style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Customer Name ${getSortIcon('name')}</th>` : ''}
+                            ${visibleColumns.has('type') ? `<th onclick="sortTableByColumn('type')" style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Type ${getSortIcon('type')}</th>` : ''}
+                            ${visibleColumns.has('state') ? `<th onclick="sortTableByColumn('state')" style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">State ${getSortIcon('state')}</th>` : ''}
+                            ${visibleColumns.has('contract-value') ? `<th onclick="sortTableByColumn('contract-value')" style="padding: 12px 8px; text-align: right; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Contract Value ${getSortIcon('contract-value')}</th>` : ''}
+                            ${visibleColumns.has('contract-end') ? `<th onclick="sortTableByColumn('contract-end')" style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Contract End ${getSortIcon('contract-end')}</th>` : ''}
+                            ${visibleColumns.has('products') ? `<th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Products</th>` : ''}
+                            ${visibleColumns.has('health') ? `<th onclick="sortTableByColumn('health')" style="padding: 12px 8px; text-align: center; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Health ${getSortIcon('health')}</th>` : ''}
+                            ${visibleColumns.has('activity') ? `<th onclick="sortTableByColumn('activity')" style="padding: 12px 8px; text-align: left; font-weight: 600; color: #333; cursor: pointer; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Last Activity ${getSortIcon('activity')}</th>` : ''}
+                            ${visibleColumns.has('website') ? `<th style="padding: 12px 8px; text-align: center; font-weight: 600; color: #333; position: sticky; top: 0; background: #f8f9fa; z-index: 10;">Website</th>` : ''}
                         </tr>
                     </thead>
                     <tbody>
-                        ${customers.map(customer => `
-                            <tr>
-                                <td style="font-weight: 600; color: #333;">${customer.name}</td>
-                                <td><span style="background: #e3f2fd; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">${customer.state}</span></td>
-                                <td><span style="background: ${getTypeColor(customer.type)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">${customer.type}</span></td>
-                                <td>${formatProducts(customer.products)}</td>
-                                <td>${customer.url ? `<a href="${customer.url}" target="_blank" style="color: #E53E3E; text-decoration: none;">🔗 Visit</a>` : '-'}</td>
-                            </tr>
-                        `).join('')}
+                        ${pageData.map((customer, index) => {
+                            const rowIndex = startIndex + index;
+                            const isSelected = selectedRows.has(rowIndex);
+                            return `
+                                <tr style="border-bottom: 1px solid #e0e0e0; ${isSelected ? 'background: #fff3cd;' : ''}" 
+                                    onmouseover="this.style.background='#f8f9fa'" 
+                                    onmouseout="this.style.background='${isSelected ? '#fff3cd' : 'white'}'">
+                                    <td style="padding: 12px 8px;">
+                                        <input type="checkbox" onchange="toggleRowSelection(${rowIndex}, this)" ${isSelected ? 'checked' : ''}>
+                                    </td>
+                                    ${visibleColumns.has('name') ? `<td style="padding: 12px 8px;">
+                                        <div style="font-weight: 600; color: #333; margin-bottom: 2px;">${customer.name}</div>
+                                        <div style="font-size: 11px; color: #666;">${customer.state} • ${customer.type}</div>
+                                    </td>` : ''}
+                                    ${visibleColumns.has('type') ? `<td style="padding: 12px 8px;">
+                                        <span style="background: ${getTypeColor(customer.type)}; color: white; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">${customer.type.toUpperCase()}</span>
+                                    </td>` : ''}
+                                    ${visibleColumns.has('state') ? `<td style="padding: 12px 8px;">
+                                        <span style="background: #e3f2fd; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">${customer.state}</span>
+                                    </td>` : ''}
+                                    ${visibleColumns.has('contract-value') ? `<td style="padding: 12px 8px; text-align: right;">
+                                        <div style="font-weight: 600; color: #333;">$${customer.contractValue.toLocaleString()}</div>
+                                        <div style="font-size: 11px; color: #666;">Annual</div>
+                                    </td>` : ''}
+                                    ${visibleColumns.has('contract-end') ? `<td style="padding: 12px 8px;">
+                                        ${formatContractEndDate(customer.contractEndDate)}
+                                    </td>` : ''}
+                                    ${visibleColumns.has('products') ? `<td style="padding: 12px 8px;">
+                                        ${formatProducts(customer.products)}
+                                    </td>` : ''}
+                                    ${visibleColumns.has('health') ? `<td style="padding: 12px 8px; text-align: center;">
+                                        ${formatHealthScore(customer.healthScore)}
+                                    </td>` : ''}
+                                    ${visibleColumns.has('activity') ? `<td style="padding: 12px 8px;">
+                                        <div style="color: #333;">${formatLastActivity(customer.lastActivity)}</div>
+                                    </td>` : ''}
+                                    ${visibleColumns.has('website') ? `<td style="padding: 12px 8px; text-align: center;">
+                                        ${customer.url ? `<a href="${customer.url}" target="_blank" style="color: #E53E3E; text-decoration: none; font-size: 16px;" title="Visit website">🔗</a>` : '-'}
+                                    </td>` : ''}
+                                </tr>
+                            `;
+                        }).join('')}
                     </tbody>
                 </table>
             `;
             
-            tableContainer.innerHTML = tableHTML;
+            container.innerHTML = tableHTML;
+            updatePaginationInfo(currentPage, totalPages, filteredTableData.length);
         }
         
         function getTypeColor(type) {
@@ -4595,6 +4943,168 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // Helper functions for table rendering
+        function formatContractEndDate(date) {
+            if (!date) return '<span style="color: #999;">-</span>';
+            
+            const today = new Date();
+            const endDate = new Date(date);
+            const diffDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+            
+            let color = '#333';
+            let icon = '';
+            if (diffDays < 0) {
+                color = '#d32f2f';
+                icon = '🔴 ';
+            } else if (diffDays <= 30) {
+                color = '#ff5722';
+                icon = '🟠 ';
+            } else if (diffDays <= 90) {
+                color = '#ff9800';
+                icon = '🟡 ';
+            }
+            
+            return `
+                <div style="color: ${color};">
+                    ${icon}${endDate.toLocaleDateString()}
+                </div>
+                <div style="font-size: 11px; color: #666;">${diffDays > 0 ? diffDays + ' days' : 'Expired'}</div>
+            `;
+        }
+
+        function formatHealthScore(score) {
+            if (typeof score !== 'number') return '<span style="color: #999;">-</span>';
+            
+            let color = '#4caf50';
+            let icon = '🟢';
+            if (score < 70) {
+                color = '#d32f2f';
+                icon = '🔴';
+            } else if (score < 85) {
+                color = '#ff9800';
+                icon = '🟡';
+            }
+            
+            return `
+                <div style="color: ${color}; font-weight: 600;">
+                    ${icon} ${score}%
+                </div>
+            `;
+        }
+
+        function formatLastActivity(date) {
+            if (!date) return '<span style="color: #999;">No activity</span>';
+            
+            const today = new Date();
+            const activityDate = new Date(date);
+            const diffDays = Math.floor((today - activityDate) / (1000 * 60 * 60 * 24));
+            
+            let color = '#333';
+            if (diffDays > 30) {
+                color = '#ff5722';
+            } else if (diffDays > 7) {
+                color = '#ff9800';
+            } else {
+                color = '#4caf50';
+            }
+            
+            let timeText = '';
+            if (diffDays === 0) {
+                timeText = 'Today';
+            } else if (diffDays === 1) {
+                timeText = 'Yesterday';
+            } else if (diffDays < 7) {
+                timeText = diffDays + ' days ago';
+            } else if (diffDays < 30) {
+                timeText = Math.floor(diffDays / 7) + ' weeks ago';
+            } else {
+                timeText = Math.floor(diffDays / 30) + ' months ago';
+            }
+            
+            return `<span style="color: ${color};">${timeText}</span>`;
+        }
+
+        function getSortIcon(column) {
+            // For now, return empty. In a full implementation, this would track sort state
+            return '<span style="margin-left: 4px; font-size: 10px; color: #999;">⚪</span>';
+        }
+
+        // Pagination functions
+        let currentPage = 1;
+        let totalPages = 1;
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadTableView();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadTableView();
+            }
+        }
+
+        function updatePaginationInfo(currentPage, totalPages, totalRecords) {
+            const startRecord = ((currentPage - 1) * 50) + 1;
+            const endRecord = Math.min(currentPage * 50, totalRecords);
+            
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${startRecord}-${endRecord} of ${totalRecords} customers`;
+        }
+
+        // Bulk selection functions
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('input[name="customerSelect"]');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            updateBulkActionButtons();
+        }
+
+        function toggleRowSelection(checkbox) {
+            updateBulkActionButtons();
+        }
+
+        function updateBulkActionButtons() {
+            const selected = document.querySelectorAll('input[name="customerSelect"]:checked');
+            const bulkActions = document.getElementById('bulkActions');
+            if (selected.length > 0) {
+                bulkActions.style.display = 'block';
+                bulkActions.querySelector('.selected-count').textContent = selected.length;
+            } else {
+                bulkActions.style.display = 'none';
+            }
+        }
+
+        function bulkExportSelected() {
+            const selected = document.querySelectorAll('input[name="customerSelect"]:checked');
+            if (selected.length === 0) return;
+            
+            const selectedCustomers = [];
+            selected.forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                const customerName = row.querySelector('td:nth-child(2)').textContent.trim();
+                const customer = getFilteredCustomers().find(c => c.name === customerName);
+                if (customer) selectedCustomers.push(customer);
+            });
+            
+            if (selectedCustomers.length > 0) {
+                exportCustomerList(selectedCustomers, 'selected');
+            }
+        }
+
+        // Column customization
+        function toggleColumnCustomization() {
+            const panel = document.getElementById('columnCustomization');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function updateRecordCount() {
+            const customers = getFilteredCustomers();
+            document.getElementById('recordCount').textContent = customers.length;
         }
         
         function loadAnalyticsView() {
