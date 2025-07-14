@@ -2539,24 +2539,36 @@
                 
                 // Optimized popup display with shorter delays
                 hoverTimeout = setTimeout(() => {
-                    if (markers.hasLayer(marker)) {
-                        // Ensure zoom is high enough to uncluster markers
-                        const currentZoom = map.getZoom();
-                        if (currentZoom < 13) {
-                            map.setView([lat, lng], 13, { animate: false });
-                        }
+                    console.log('Attempting popup for marker:', marker);
+                    console.log('Marker in cluster?', markers.hasLayer(marker));
+                    console.log('Current zoom:', map.getZoom());
+                    
+                    // Force zoom to 15 to ensure unclustering
+                    map.setView([lat, lng], 15, { animate: false });
+                    
+                    // Wait longer for unclustering to complete
+                    setTimeout(() => {
+                        console.log('Zoom after unclustering:', map.getZoom());
                         
-                        // Quick popup display with fallback methods
-                        setTimeout(() => {
-                            if (marker.getPopup()) {
-                                marker.openPopup();
-                            } else {
-                                // Fallback: try firing click event
-                                marker.fire('click');
-                            }
-                            console.log('Popup attempted for customer at:', lat, lng);
-                        }, isRapidHover ? 80 : 120);
-                    }
+                        // Try multiple approaches to show popup
+                        if (marker.getPopup()) {
+                            console.log('Popup exists, attempting to open');
+                            marker.openPopup();
+                            
+                            // Check if popup actually opened
+                            setTimeout(() => {
+                                if (marker.getPopup().isOpen()) {
+                                    console.log('SUCCESS: Popup is now open');
+                                } else {
+                                    console.log('FAILED: Popup did not open, trying click event');
+                                    marker.fire('click');
+                                }
+                            }, 50);
+                        } else {
+                            console.log('No popup found on marker, trying click event');
+                            marker.fire('click');
+                        }
+                    }, 300);
                 }, isRapidHover ? 200 : 300);
             }
         }
