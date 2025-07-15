@@ -1665,13 +1665,13 @@
             }
             
             const csvContent = [
-                ['Timestamp', 'Email', 'Success', 'IP Address', 'Error Message', 'Session ID'],
+                ['Timestamp', 'Email', 'Success', 'IP Address', 'Authentication Method', 'Session ID'],
                 ...logs.map(log => [
                     log.timestamp,
                     log.email,
                     log.success ? 'Yes' : 'No',
                     log.ipAddress,
-                    log.errorMessage || '',
+                    log.authMethod || 'Google',
                     log.sessionId
                 ])
             ].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
@@ -3179,7 +3179,7 @@
                                         <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">User</th>
                                         <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Status</th>
                                         <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">IP Address</th>
-                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Error</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Authentication Method</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -3205,8 +3205,8 @@
                                                 <td style="padding: 8px; font-family: monospace; color: #666;">
                                                     ${log.ipAddress || 'Unknown'}
                                                 </td>
-                                                <td style="padding: 8px; font-size: 11px; color: #f44336;">
-                                                    ${log.errorMessage || ''}
+                                                <td style="padding: 8px; font-size: 12px; color: #666;">
+                                                    <span style="text-transform: capitalize;">${log.authMethod || 'Google'}</span>
                                                 </td>
                                             </tr>
                                         `;
