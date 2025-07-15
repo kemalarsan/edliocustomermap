@@ -1096,9 +1096,13 @@
             🎧 Support
             <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">6</span>
         </button>
+        <button id="competitorsTab" onclick="showCompetitorsView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative;">
+            ⚔️ Competitors
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">7</span>
+        </button>
         <button id="adminTab" onclick="showAdminView()" class="tab-button" style="background: none; border: none; padding: 8px 16px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s ease; position: relative; display: none;">
             🔐 Admin
-            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">7</span>
+            <span style="position: absolute; top: 2px; right: 4px; font-size: 9px; background: #E53E3E; color: white; border-radius: 3px; padding: 1px 3px;">8</span>
         </button>
     </div>
     
@@ -1147,6 +1151,14 @@
         <h2 style="margin-bottom: 20px; color: #333;">🔐 Admin Dashboard</h2>
         <div id="adminContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <p>Loading admin data...</p>
+        </div>
+    </div>
+
+    <!-- Competitors View Container -->
+    <div id="competitorsView" class="hidden" style="padding: 20px; max-width: 1400px; margin: 0 auto; height: calc(100vh - 300px); overflow-y: auto;">
+        <h2 style="margin-bottom: 20px; color: #333;">⚔️ Competitive Analysis</h2>
+        <div id="competitorsContent" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p>Loading competitor data...</p>
         </div>
     </div>
     
@@ -2828,7 +2840,7 @@
         
         // Helper function to reset all tab styles
         function resetTabStyles() {
-            const tabs = ['mapTab', 'tableTab', 'analyticsTab', 'timelineTab', 'adoptionTab', 'supportTab', 'adminTab'];
+            const tabs = ['mapTab', 'tableTab', 'analyticsTab', 'timelineTab', 'adoptionTab', 'supportTab', 'competitorsTab', 'adminTab'];
             tabs.forEach(tabId => {
                 const tab = document.getElementById(tabId);
                 if (tab) {
@@ -2880,6 +2892,14 @@
             loadSupportContent();
         }
         
+        // Competitors View
+        function showCompetitorsView() {
+            hideAllViews();
+            document.getElementById('competitorsView').classList.remove('hidden');
+            setActiveTab('competitorsTab');
+            loadCompetitorsContent();
+        }
+
         // Admin View (Only for admin users)
         function showAdminView() {
             // Check admin access
@@ -3237,6 +3257,243 @@
             if (diffDays < 7) return `${diffDays}d ago`;
             return `${Math.floor(diffDays / 7)}w ago`;
         }
+
+        // Load competitors content
+        async function loadCompetitorsContent() {
+            const competitorsContent = document.getElementById('competitorsContent');
+            
+            // Show loading state
+            competitorsContent.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>Loading competitor analysis...</h3>
+                    <p>Fetching Apptegy competitive data...</p>
+                </div>
+            `;
+            
+            try {
+                // Fetch competitor data
+                const response = await fetch('/apptegy-competitor-data.json');
+                let competitors = [];
+                
+                if (response.ok) {
+                    competitors = await response.json();
+                } else {
+                    throw new Error('Failed to load competitor data');
+                }
+                
+                // Calculate stats
+                const totalCompetitors = competitors.length;
+                const states = {};
+                const owners = {};
+                
+                competitors.forEach(comp => {
+                    if (comp.state) {
+                        states[comp.state] = (states[comp.state] || 0) + 1;
+                    }
+                    if (comp.owner) {
+                        owners[comp.owner] = (owners[comp.owner] || 0) + 1;
+                    }
+                });
+                
+                const topStates = Object.entries(states)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10);
+                
+                const topOwners = Object.entries(owners)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5);
+                
+                competitorsContent.innerHTML = `
+                    <div style="margin-bottom: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="margin: 0; color: #333;">⚔️ Apptegy Competitive Analysis</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="showCompetitorsOnMap()" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                                    🗺️ View on Map
+                                </button>
+                                <button onclick="exportCompetitorData()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                                    📊 Export CSV
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary Stats -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                                <h4 style="margin: 0 0 10px 0; color: #dc3545;">Total Competitors</h4>
+                                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${totalCompetitors}</div>
+                                <div style="font-size: 12px; color: #666;">Apptegy schools</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                                <h4 style="margin: 0 0 10px 0; color: #fd7e14;">States</h4>
+                                <div style="font-size: 24px; font-weight: bold; color: #fd7e14;">${Object.keys(states).length}</div>
+                                <div style="font-size: 12px; color: #666;">Covered states</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                                <h4 style="margin: 0 0 10px 0; color: #6610f2;">Opportunity</h4>
+                                <div style="font-size: 24px; font-weight: bold; color: #6610f2;">High</div>
+                                <div style="font-size: 12px; color: #666;">Sales potential</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Top States -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                                <h4 style="margin: 0 0 15px 0; color: #333;">Top States by Apptegy Presence</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${topStates.map(([state, count]) => `
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                            <span style="font-weight: 500;">${state}</span>
+                                            <span style="color: #dc3545; font-weight: bold;">${count} schools</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                                <h4 style="margin: 0 0 15px 0; color: #333;">Top HubSpot Owners</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${topOwners.map(([owner, count]) => `
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                            <span style="font-weight: 500;">${owner}</span>
+                                            <span style="color: #6610f2; font-weight: bold;">${count} accounts</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Competitors -->
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 15px 0; color: #333;">Recent Competitor Schools (First 20)</h4>
+                            <div style="max-height: 400px; overflow-y: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                    <thead>
+                                        <tr style="background: #e9ecef; position: sticky; top: 0;">
+                                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">School Name</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Location</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Owner</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Domain</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${competitors.slice(0, 20).map(comp => `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-weight: 600;">${comp.name}</td>
+                                                <td style="padding: 8px; color: #666;">${comp.city}, ${comp.state}</td>
+                                                <td style="padding: 8px; color: #666;">${comp.owner}</td>
+                                                <td style="padding: 8px; font-family: monospace; color: #0066cc;">
+                                                    ${comp.domain ? `<a href="https://${comp.domain}" target="_blank">${comp.domain}</a>` : 'N/A'}
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Store competitor data globally for map visualization
+                window.competitorData = competitors;
+                
+            } catch (error) {
+                console.error('Error loading competitor data:', error);
+                competitorsContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545;">
+                        <h3>Error loading competitor data</h3>
+                        <p>Could not load Apptegy competitor information. Please check if the data file exists.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Show competitors on map
+        function showCompetitorsOnMap() {
+            // Switch to map view
+            showMapView();
+            
+            // Add competitor markers to map
+            if (window.competitorData && map) {
+                // Clear existing competitor markers
+                if (window.competitorMarkers) {
+                    window.competitorMarkers.forEach(marker => map.removeLayer(marker));
+                }
+                
+                window.competitorMarkers = [];
+                
+                // Add competitor markers
+                window.competitorData.forEach(competitor => {
+                    const marker = L.marker([competitor.lat, competitor.lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
+                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="12" font-weight="bold">⚔</text>
+                                </svg>
+                            `),
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12],
+                            popupAnchor: [0, -12]
+                        })
+                    });
+                    
+                    // Add popup with competitor info
+                    marker.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h4 style="margin: 0 0 10px 0; color: #dc3545;">${competitor.name}</h4>
+                            <p style="margin: 0 0 5px 0;"><strong>Competitor:</strong> ${competitor.competitor}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${competitor.city}, ${competitor.state}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Owner:</strong> ${competitor.owner}</p>
+                            ${competitor.domain ? `<p style="margin: 0 0 5px 0;"><strong>Domain:</strong> <a href="https://${competitor.domain}" target="_blank">${competitor.domain}</a></p>` : ''}
+                            <p style="margin: 0; color: #666; font-size: 12px;">Created: ${competitor.createDate}</p>
+                        </div>
+                    `);
+                    
+                    marker.addTo(map);
+                    window.competitorMarkers.push(marker);
+                });
+                
+                // Fit map to show all competitors
+                if (window.competitorMarkers.length > 0) {
+                    const group = new L.featureGroup(window.competitorMarkers);
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+            }
+        }
+
+        // Export competitor data
+        function exportCompetitorData() {
+            if (!window.competitorData || window.competitorData.length === 0) {
+                alert('No competitor data to export.');
+                return;
+            }
+            
+            const csvContent = [
+                ['School Name', 'Competitor', 'City', 'State', 'Owner', 'Domain', 'Create Date', 'Latitude', 'Longitude'],
+                ...window.competitorData.map(comp => [
+                    comp.name,
+                    comp.competitor,
+                    comp.city,
+                    comp.state,
+                    comp.owner,
+                    comp.domain,
+                    comp.createDate,
+                    comp.lat,
+                    comp.lng
+                ])
+            ].map(row => row.map(field => `"${field || ''}"`).join(',')).join('\\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `apptegy-competitors-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
         
         // Keyboard shortcuts for tab navigation (1-2 for now)
         document.addEventListener('keydown', function(event) {
@@ -3278,6 +3535,10 @@
                 showSupportView();
                 console.log('Keyboard shortcut: Switched to Support view');
             } else if (key === '7') {
+                event.preventDefault();
+                showCompetitorsView();
+                console.log('Keyboard shortcut: Switched to Competitors view');
+            } else if (key === '8') {
                 // Only allow admin access
                 if (currentUser && currentUser.isAdmin) {
                     event.preventDefault();
