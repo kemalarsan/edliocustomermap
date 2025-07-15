@@ -1322,6 +1322,9 @@
                         <div style="font-size: 11px; color: #1976d2; font-weight: 600; margin-bottom: 5px;">🎯 COMPETITIVE MODE ACTIVE</div>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                        <button onclick="toggleCompetitorOverlay()" id="competitorOverlayBtn" class="export-btn" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            ⚔️ Show Apptegy
+                        </button>
                         <button onclick="showCSVUpload()" class="export-btn" style="background: #9c27b0; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             📤 Upload Competitor Data
                         </button>
@@ -3408,57 +3411,119 @@
             }
         }
 
-        // Show competitors on map
+        // Global state for competitor overlay
+        window.competitorOverlayVisible = false;
+
+        // Toggle competitor overlay on map
+        function toggleCompetitorOverlay() {
+            const btn = document.getElementById('competitorOverlayBtn');
+            
+            if (window.competitorOverlayVisible) {
+                // Hide competitors
+                hideCompetitorOverlay();
+                btn.innerHTML = '⚔️ Show Apptegy';
+                btn.style.background = '#dc3545';
+            } else {
+                // Show competitors
+                showCompetitorOverlay();
+                btn.innerHTML = '👁️ Hide Apptegy';
+                btn.style.background = '#28a745';
+            }
+        }
+
+        // Show competitor overlay
+        function showCompetitorOverlay() {
+            // Load competitor data if not already loaded
+            if (!window.competitorData) {
+                fetch('/apptegy-competitor-data.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        window.competitorData = data;
+                        addCompetitorMarkersToMap();
+                    })
+                    .catch(error => {
+                        console.error('Error loading competitor data:', error);
+                        alert('Failed to load competitor data');
+                    });
+            } else {
+                addCompetitorMarkersToMap();
+            }
+        }
+
+        // Hide competitor overlay
+        function hideCompetitorOverlay() {
+            if (window.competitorMarkers) {
+                window.competitorMarkers.forEach(marker => map.removeLayer(marker));
+                window.competitorMarkers = [];
+            }
+            window.competitorOverlayVisible = false;
+        }
+
+        // Add competitor markers to current map view
+        function addCompetitorMarkersToMap() {
+            if (!window.competitorData || !map) return;
+            
+            // Clear existing competitor markers
+            if (window.competitorMarkers) {
+                window.competitorMarkers.forEach(marker => map.removeLayer(marker));
+            }
+            
+            window.competitorMarkers = [];
+            
+            // Add competitor markers
+            window.competitorData.forEach(competitor => {
+                const marker = L.marker([competitor.lat, competitor.lng], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                                <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
+                                <text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">⚔</text>
+                            </svg>
+                        `),
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10],
+                        popupAnchor: [0, -10]
+                    })
+                });
+                
+                // Add popup with competitor info
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <h4 style="margin: 0 0 10px 0; color: #dc3545;">${competitor.name}</h4>
+                        <p style="margin: 0 0 5px 0;"><strong>Competitor:</strong> ${competitor.competitor}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${competitor.city}, ${competitor.state}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Owner:</strong> ${competitor.owner}</p>
+                        ${competitor.domain ? `<p style="margin: 0 0 5px 0;"><strong>Domain:</strong> <a href="https://${competitor.domain}" target="_blank">${competitor.domain}</a></p>` : ''}
+                        <p style="margin: 0; color: #666; font-size: 12px;">Created: ${competitor.createDate}</p>
+                    </div>
+                `);
+                
+                marker.addTo(map);
+                window.competitorMarkers.push(marker);
+            });
+            
+            window.competitorOverlayVisible = true;
+        }
+
+        // Show competitors on map (from competitors view)
         function showCompetitorsOnMap() {
             // Switch to map view
             showMapView();
             
-            // Add competitor markers to map
-            if (window.competitorData && map) {
-                // Clear existing competitor markers
-                if (window.competitorMarkers) {
-                    window.competitorMarkers.forEach(marker => map.removeLayer(marker));
-                }
-                
-                window.competitorMarkers = [];
-                
-                // Add competitor markers
-                window.competitorData.forEach(competitor => {
-                    const marker = L.marker([competitor.lat, competitor.lng], {
-                        icon: L.icon({
-                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                    <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
-                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="12" font-weight="bold">⚔</text>
-                                </svg>
-                            `),
-                            iconSize: [24, 24],
-                            iconAnchor: [12, 12],
-                            popupAnchor: [0, -12]
-                        })
-                    });
-                    
-                    // Add popup with competitor info
-                    marker.bindPopup(`
-                        <div style="min-width: 200px;">
-                            <h4 style="margin: 0 0 10px 0; color: #dc3545;">${competitor.name}</h4>
-                            <p style="margin: 0 0 5px 0;"><strong>Competitor:</strong> ${competitor.competitor}</p>
-                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${competitor.city}, ${competitor.state}</p>
-                            <p style="margin: 0 0 5px 0;"><strong>Owner:</strong> ${competitor.owner}</p>
-                            ${competitor.domain ? `<p style="margin: 0 0 5px 0;"><strong>Domain:</strong> <a href="https://${competitor.domain}" target="_blank">${competitor.domain}</a></p>` : ''}
-                            <p style="margin: 0; color: #666; font-size: 12px;">Created: ${competitor.createDate}</p>
-                        </div>
-                    `);
-                    
-                    marker.addTo(map);
-                    window.competitorMarkers.push(marker);
-                });
-                
-                // Fit map to show all competitors
-                if (window.competitorMarkers.length > 0) {
-                    const group = new L.featureGroup(window.competitorMarkers);
-                    map.fitBounds(group.getBounds().pad(0.1));
-                }
+            // Show competitor overlay
+            showCompetitorOverlay();
+            
+            // Update button state
+            const btn = document.getElementById('competitorOverlayBtn');
+            if (btn) {
+                btn.innerHTML = '👁️ Hide Apptegy';
+                btn.style.background = '#28a745';
+            }
+            
+            // Fit map to show all competitors
+            if (window.competitorMarkers && window.competitorMarkers.length > 0) {
+                const group = new L.featureGroup(window.competitorMarkers);
+                map.fitBounds(group.getBounds().pad(0.1));
             }
         }
 
