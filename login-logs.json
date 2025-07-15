@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2025-01-15T09:30:00Z",
+    "email": "juan@edlio.com",
+    "success": true,
+    "ipAddress": "192.168.1.105",
+    "authMethod": "google",
+    "sessionId": "session_juan_demo_001"
+  },
+  {
+    "timestamp": "2025-01-15T10:15:00Z",
+    "email": "sarah@edlio.com",
+    "success": true,
+    "ipAddress": "10.0.0.23",
+    "authMethod": "google",
+    "sessionId": "session_sarah_demo_001"
+  },
+  {
+    "timestamp": "2025-01-15T11:00:00Z",
+    "email": "mike@edlio.com",
+    "success": true,
+    "ipAddress": "172.16.0.45",
+    "authMethod": "google",
+    "sessionId": "session_mike_demo_001"
+  }
+]
