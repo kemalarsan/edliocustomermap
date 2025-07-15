@@ -1,7 +1,7 @@
-# Edlio Customer Map - Stable Features (v3.0-stable)
+# Edlio Customer Map - Stable Features (v3.4-json-shared-logging)
 
 ## Current Stable State
-This document describes the features in the v3.0-stable release.
+This document describes the features in the v3.4-json-shared-logging release.
 
 ### Core Features ✅
 
@@ -26,32 +26,48 @@ This document describes the features in the v3.0-stable release.
      - Renewal Risk Analysis
    - Hidden by default, activated with URL parameter
 
-4. **Complete 6-View Navigation System** (?mode=advanced)
-   - **🗺️ Map View (1)**: Interactive customer map with clustering
+4. **Complete 7-View Navigation System** (?mode=advanced)
+   - **🗺️ Map View (1)**: Interactive customer map with bidirectional hover
    - **📊 Table View (2)**: Customer table showing first 50 records
    - **📈 Analytics View (3)**: Revenue metrics and state breakdowns
    - **📅 Timeline View (4)**: Contract renewals and at-risk accounts
    - **🎯 Adoption View (5)**: Product mix analysis and upsell opportunities
    - **🎧 Support View (6)**: Technical support metrics and issue tracking
-   - Full keyboard shortcuts (Press 1-6 to switch views)
+   - **🔐 Admin View (7)**: Shared login activity dashboard (ali@edlio.com only)
+   - Full keyboard shortcuts (Press 1-7 to switch views)
    - Tab-based interface with visual indicators
    - All views respect current filter state
 
-5. **Search & Filter Capabilities**
+5. **🆕 Bidirectional Hover System**
+   - **Sidebar → Map**: Hover over school names to center map and show info
+   - **Map → Info**: Hover over markers to show school details (no click needed)
+   - **Visual Connection**: Pulsing highlight circle + pointer arrow
+   - **Smart Positioning**: Auto-adjusts overlay placement near screen edges
+   - **Performance Optimized**: Adaptive timing for smooth rapid hovering
+
+6. **🆕 Simple JSON File Shared Logging**
+   - **Zero Setup**: No databases, no API keys, no external services
+   - **Git-Based**: login-logs.json file tracked in repository
+   - **Team Visibility**: Admin dashboard shows all @edlio.com logins
+   - **Manual Updates**: Simple JSON file editing for new entries
+   - **Export Ready**: CSV export includes authentication method
+
+7. **Search & Filter Capabilities**
    - Search by school name
    - Filter by school type (Charter, District, Private, CMO, ESC)
    - Filter by products (CMS, Mobile App, Mass Comm, Payments)
    - Geographic search by ZIP code with radius
 
-6. **Export Functions**
+8. **Export Functions**
    - Export current view customers to CSV
    - Export all filtered customers to CSV
-   - Login activity export for admins
+   - Login activity export for admins (includes Authentication Method column)
 
 ### Stable Architecture
-- Single index.html file
-- External data.js with 2348 customer records
-- No complex state management
+- Single index.html file (3,400+ lines)
+- External data.js with 2,348 customer records
+- Simple login-logs.json for shared logging
+- No complex state management or external dependencies
 - Clean separation of concerns
 
 ### Known Working Features
@@ -60,11 +76,15 @@ This document describes the features in the v3.0-stable release.
 - ✅ All filters work correctly
 - ✅ Export functions operate as expected
 - ✅ Metrics dashboard displays with advanced mode
-- ✅ All 6 navigation tabs function properly
-- ✅ Keyboard shortcuts (1-6) work seamlessly
+- ✅ All 7 navigation tabs function properly
+- ✅ Keyboard shortcuts (1-7) work seamlessly
 - ✅ View switching maintains filter state
 - ✅ Real-time data calculations in all views
 - ✅ Responsive design works on all screen sizes
+- ✅ **Bidirectional hover system works reliably**
+- ✅ **Admin dashboard shows shared login activity**
+- ✅ **JSON file logging loads and displays correctly**
+- ✅ **Admin dashboard scrolls properly**
 
 ### Deployment
 - Hosted on Vercel
