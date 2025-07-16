@@ -43,4 +43,4 @@ node_modules/
 .env.development.local
 
 # Vercel
-.vercel
+.vercelgeocoding_progress.json

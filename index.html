@@ -3275,7 +3275,7 @@
             
             try {
                 // Fetch competitor data
-                const response = await fetch('/apptegy-competitor-data.json');
+                const response = await fetch('/apptegy-geocoded-current.json');
                 let competitors = [];
                 
                 if (response.ok) {
@@ -3435,7 +3435,7 @@
         function showCompetitorOverlay() {
             // Load competitor data if not already loaded
             if (!window.competitorData) {
-                fetch('/apptegy-competitor-data.json')
+                fetch('/apptegy-geocoded-current.json')
                     .then(response => response.json())
                     .then(data => {
                         window.competitorData = data;
