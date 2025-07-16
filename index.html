@@ -1325,6 +1325,9 @@
                         <button onclick="toggleCompetitorOverlay()" id="competitorOverlayBtn" class="export-btn" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             ⚔️ Show Apptegy
                         </button>
+                        <button onclick="showProximityAnalysis()" class="export-btn" style="background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            🎯 Proximity Alert
+                        </button>
                         <button onclick="showCSVUpload()" class="export-btn" style="background: #9c27b0; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             📤 Upload Competitor Data
                         </button>
@@ -3527,6 +3530,236 @@
             }
         }
 
+        // Show proximity analysis - customers with nearby competitors
+        async function showProximityAnalysis() {
+            if (!window.competitorData) {
+                // Load competitor data first
+                try {
+                    const response = await fetch('/apptegy-geocoded-current.json');
+                    window.competitorData = await response.json();
+                } catch (error) {
+                    alert('Failed to load competitor data');
+                    return;
+                }
+            }
+            
+            const proximityRadius = 5; // miles
+            const customersAtRisk = new Map();
+            
+            // Check each customer against competitors
+            if (map && window.markers) {
+                window.markers.forEach((marker, customerKey) => {
+                    const customer = window.customerData.get(customerKey);
+                    if (!customer) return;
+                    
+                    let nearbyCompetitors = 0;
+                    let closestDistance = Infinity;
+                    let closestCompetitor = null;
+                    
+                    // Check distance to each competitor
+                    window.competitorData.forEach(competitor => {
+                        const distance = calculateDistance(
+                            customer.lat, customer.lng,
+                            competitor.lat, competitor.lng
+                        );
+                        
+                        if (distance <= proximityRadius) {
+                            nearbyCompetitors++;
+                            if (distance < closestDistance) {
+                                closestDistance = distance;
+                                closestCompetitor = competitor;
+                            }
+                        }
+                    });
+                    
+                    if (nearbyCompetitors > 0) {
+                        customersAtRisk.set(customerKey, {
+                            customer: customer,
+                            nearbyCompetitors: nearbyCompetitors,
+                            closestDistance: closestDistance,
+                            closestCompetitor: closestCompetitor
+                        });
+                    }
+                });
+            }
+            
+            // Show results
+            showProximityResults(customersAtRisk, proximityRadius);
+        }
+        
+        // Calculate distance between two points in miles
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 3959; // Earth's radius in miles
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        function toRad(deg) {
+            return deg * (Math.PI/180);
+        }
+        
+        // Show proximity analysis results
+        function showProximityResults(customersAtRisk, radius) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            const totalCustomers = window.customerData ? window.customerData.size : 0;
+            const atRiskCount = customersAtRisk.size;
+            const riskPercentage = totalCustomers > 0 ? ((atRiskCount / totalCustomers) * 100).toFixed(1) : 0;
+            
+            // Sort by closest competitor distance
+            const sortedRisks = Array.from(customersAtRisk.values())
+                .sort((a, b) => a.closestDistance - b.closestDistance);
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #ff9800;">🎯 Proximity Alert Analysis</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff6f00;">⚠️ Competitive Risk Summary</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #ff9800;">${atRiskCount}</div>
+                            <div style="font-size: 12px; color: #666;">Customers at Risk</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${riskPercentage}%</div>
+                            <div style="font-size: 12px; color: #666;">of Total Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #6610f2;">${radius} mi</div>
+                            <div style="font-size: 12px; color: #666;">Proximity Radius</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px 0; color: #333;">🔥 Highest Risk Customers (Closest Competitors)</h3>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Customer</th>
+                                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Location</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Distance</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;"># Nearby</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedRisks.slice(0, 20).map(risk => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 8px; font-weight: 600; color: #333;">
+                                        ${risk.customer.name}
+                                        <div style="font-size: 11px; color: #666;">${risk.customer.type}</div>
+                                    </td>
+                                    <td style="padding: 8px; color: #666;">
+                                        ${risk.customer.city}, ${risk.customer.state}
+                                    </td>
+                                    <td style="padding: 8px; text-align: center; font-weight: bold; color: ${risk.closestDistance < 1 ? '#dc3545' : risk.closestDistance < 3 ? '#ff9800' : '#ffc107'};">
+                                        ${risk.closestDistance.toFixed(1)} mi
+                                    </td>
+                                    <td style="padding: 8px; text-align: center; font-weight: bold; color: #dc3545;">
+                                        ${risk.nearbyCompetitors}
+                                    </td>
+                                    <td style="padding: 8px; text-align: center;">
+                                        <button onclick="focusOnCustomer('${risk.customer.lat}_${risk.customer.lng}')" style="background: #2196f3; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="exportProximityAnalysis()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        📊 Export Full Report
+                    </button>
+                    <button onclick="highlightAtRiskCustomers()" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        🔍 Highlight on Map
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store results for export
+            window.proximityAnalysisResults = sortedRisks;
+        }
+        
+        // Focus on a specific customer
+        function focusOnCustomer(customerKey) {
+            // Close the modal
+            const modals = document.querySelectorAll('div[style*="position: fixed"]');
+            modals.forEach(modal => modal.remove());
+            
+            // Show map view
+            showMapView();
+            
+            // Center on customer
+            const parts = customerKey.split('_');
+            const lat = parseFloat(parts[0]);
+            const lng = parseFloat(parts[1]);
+            map.setView([lat, lng], 15);
+            
+            // Show competitor overlay
+            if (!window.competitorOverlayVisible) {
+                toggleCompetitorOverlay();
+            }
+        }
+        
+        // Export proximity analysis
+        function exportProximityAnalysis() {
+            if (!window.proximityAnalysisResults) return;
+            
+            const csvContent = [
+                ['Customer Name', 'Type', 'City', 'State', 'Products', 'Closest Competitor Distance (mi)', 'Nearby Competitors Count', 'Closest Competitor Name', 'Risk Level'],
+                ...window.proximityAnalysisResults.map(risk => [
+                    risk.customer.name,
+                    risk.customer.type,
+                    risk.customer.city,
+                    risk.customer.state,
+                    risk.customer.products.join('; '),
+                    risk.closestDistance.toFixed(2),
+                    risk.nearbyCompetitors,
+                    risk.closestCompetitor.name,
+                    risk.closestDistance < 1 ? 'Critical' : risk.closestDistance < 3 ? 'High' : 'Medium'
+                ])
+            ].map(row => row.map(field => `"${field || ''}"`).join(',')).join('\\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proximity-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
         // Export competitor data
         function exportCompetitorData() {
             if (!window.competitorData || window.competitorData.length === 0) {
