@@ -3896,13 +3896,15 @@
                     const marker = L.marker([competitor.lat, competitor.lng], {
                         icon: L.icon({
                             iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                     <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
-                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">⚔</text>
+                                    <polygon points="8,10 16,10 12,6" fill="white"/>
+                                    <rect x="11" y="10" width="2" height="8" fill="white"/>
+                                    <rect x="9" y="17" width="6" height="1" fill="white"/>
                                 </svg>
                             `),
-                            iconSize: [20, 20],
-                            iconAnchor: [10, 10]
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
                         })
                     });
                     
@@ -3923,13 +3925,15 @@
                     const marker = L.marker([customer.lat, customer.lng], {
                         icon: L.icon({
                             iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                     <circle cx="12" cy="12" r="10" fill="#2196f3" stroke="#fff" stroke-width="2"/>
-                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">🏫</text>
+                                    <rect x="7" y="8" width="10" height="8" fill="white"/>
+                                    <polygon points="7,8 12,4 17,8" fill="white"/>
+                                    <rect x="10" y="11" width="4" height="3" fill="#2196f3"/>
                                 </svg>
                             `),
-                            iconSize: [20, 20],
-                            iconAnchor: [10, 10]
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
                         })
                     });
                     
