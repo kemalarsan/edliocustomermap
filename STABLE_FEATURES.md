@@ -1,7 +1,7 @@
-# Edlio Customer Map - Stable Features (v3.4-json-shared-logging)
+# Edlio Customer Map - Stable Features (v3.5-competitive-intelligence)
 
 ## Current Stable State
-This document describes the features in the v3.4-json-shared-logging release.
+This document describes the features in the v3.5-competitive-intelligence release with comprehensive Apptegy competitive analysis.
 
 ### Core Features ✅
 
@@ -52,13 +52,24 @@ This document describes the features in the v3.4-json-shared-logging release.
    - **Manual Updates**: Simple JSON file editing for new entries
    - **Export Ready**: CSV export includes authentication method
 
-7. **Search & Filter Capabilities**
+7. **🔥 Comprehensive Competitive Intelligence System**
+   - **2,301 Apptegy Competitor Locations** mapped (expanding to ~6,000)
+   - **Map Overlay Toggle**: Show/hide red competitor markers alongside blue customers
+   - **Proximity Analysis**: Identify customers within 5 miles of competitors
+   - **State Drill-Down**: Click state names for detailed competitive analysis
+   - **Dual View Modals**: Map + table views for state-specific insights
+   - **Market Share Calculations**: Competitive positioning by geography
+   - **Risk Assessment**: Critical/High/Medium threat levels for customers
+   - **Export Capabilities**: CSV reports for sales team action
+   - **Background Geocoding**: Continuous expansion via automated agent
+
+8. **Search & Filter Capabilities**
    - Search by school name
    - Filter by school type (Charter, District, Private, CMO, ESC)
    - Filter by products (CMS, Mobile App, Mass Comm, Payments)
    - Geographic search by ZIP code with radius
 
-8. **Export Functions**
+9. **Export Functions**
    - Export current view customers to CSV
    - Export all filtered customers to CSV
    - Login activity export for admins (includes Authentication Method column)
