@@ -1,7 +1,13 @@
-# Edlio Customer Map - Stable Features (v3.5-competitive-intelligence)
+# Edlio Customer Map - Stable Features (v3.6-competitive-stable)
 
-## Current Stable State
-This document describes the features in the v3.5-competitive-intelligence release with comprehensive Apptegy competitive analysis.
+## Current Stable State 🎯
+This document describes the features in the v3.6-competitive-stable release with fully functional competitive intelligence system and critical bug fixes.
+
+## 🔧 Critical Fixes in v3.6
+- ✅ **State Drill-Down Map Rendering**: Fixed Apptegy competitor markers not showing in state modals (replaced emoji SVGs with geometric shapes)
+- ✅ **Main Map Visibility**: Fixed blank map after authentication (proper Leaflet initialization timing with `invalidateSize()`)
+- ✅ **Error Handling**: Added container validation and error logging for map initialization
+- ✅ **Production Verified**: All fixes tested and deployed to https://edliomap.edlio.com
 
 ### Core Features ✅
 
