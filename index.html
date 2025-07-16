@@ -3348,8 +3348,11 @@
                                 <h4 style="margin: 0 0 15px 0; color: #333;">Top States by Apptegy Presence</h4>
                                 <div style="max-height: 300px; overflow-y: auto;">
                                     ${topStates.map(([state, count]) => `
-                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
-                                            <span style="font-weight: 500;">${state}</span>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;" 
+                                             onclick="drillDownToState('${state}')" 
+                                             onmouseover="this.style.background='#f0f0f0'" 
+                                             onmouseout="this.style.background='transparent'">
+                                            <span style="font-weight: 500; color: #2196f3; text-decoration: underline;">${state}</span>
                                             <span style="color: #dc3545; font-weight: bold;">${count} schools</span>
                                         </div>
                                     `).join('')}
@@ -3727,6 +3730,355 @@
             // Show competitor overlay
             if (!window.competitorOverlayVisible) {
                 toggleCompetitorOverlay();
+            }
+        }
+        
+        // Drill down to specific state analysis
+        function drillDownToState(stateName) {
+            if (!window.competitorData) return;
+            
+            // Filter competitors by state
+            const stateCompetitors = window.competitorData.filter(comp => comp.state === stateName);
+            
+            // Filter customers by state
+            const stateCustomers = [];
+            if (window.customerData) {
+                window.customerData.forEach(customer => {
+                    if (customer.state === stateName) {
+                        stateCustomers.push(customer);
+                    }
+                });
+            }
+            
+            showStateDrillDown(stateName, stateCompetitors, stateCustomers);
+        }
+        
+        // Show state drill-down modal
+        function showStateDrillDown(stateName, competitors, customers) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 5%;
+                left: 5%;
+                width: 90%;
+                height: 90%;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            `;
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+                    <h2 style="margin: 0; color: #333;">🏛️ ${stateName} Competitive Analysis</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="display: flex; gap: 10px; padding: 0 20px; background: #f8f9fa; border-bottom: 1px solid #eee;">
+                    <button onclick="showStateTab('map', '${stateName}')" id="stateMapTab" style="background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 6px 6px 0 0; cursor: pointer;">
+                        🗺️ Map View
+                    </button>
+                    <button onclick="showStateTab('table', '${stateName}')" id="stateTableTab" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 6px 6px 0 0; cursor: pointer;">
+                        📊 Table View
+                    </button>
+                </div>
+                
+                <div style="padding: 20px; background: #e3f2fd; border-bottom: 1px solid #ddd;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #dc3545;">${competitors.length}</div>
+                            <div style="font-size: 12px; color: #666;">Apptegy Schools</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #2196f3;">${customers.length}</div>
+                            <div style="font-size: 12px; color: #666;">Edlio Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #ff9800;">${calculateStateRisk(competitors, customers)}</div>
+                            <div style="font-size: 12px; color: #666;">At Risk Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #4caf50;">${((customers.length / (competitors.length + customers.length)) * 100).toFixed(0)}%</div>
+                            <div style="font-size: 12px; color: #666;">Market Share</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="stateContentArea" style="flex: 1; overflow: hidden;">
+                    <!-- Content will be loaded here -->
+                </div>
+                
+                <div style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px;">
+                    <button onclick="exportStateAnalysis('${stateName}')" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        📊 Export ${stateName} Analysis
+                    </button>
+                    <button onclick="focusMapOnState('${stateName}')" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        🎯 Focus Main Map
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store state data for export
+            window.currentStateData = {
+                state: stateName,
+                competitors: competitors,
+                customers: customers
+            };
+            
+            // Default to map view
+            showStateTab('map', stateName);
+        }
+        
+        // Calculate at-risk customers for a state
+        function calculateStateRisk(competitors, customers) {
+            let atRisk = 0;
+            const proximityRadius = 5; // miles
+            
+            customers.forEach(customer => {
+                const hasNearbyCompetitor = competitors.some(competitor => {
+                    const distance = calculateDistance(
+                        customer.lat, customer.lng,
+                        competitor.lat, competitor.lng
+                    );
+                    return distance <= proximityRadius;
+                });
+                
+                if (hasNearbyCompetitor) {
+                    atRisk++;
+                }
+            });
+            
+            return atRisk;
+        }
+        
+        // Show state tab content
+        function showStateTab(tabType, stateName) {
+            // Update tab styles
+            document.getElementById('stateMapTab').style.background = tabType === 'map' ? '#2196f3' : '#666';
+            document.getElementById('stateTableTab').style.background = tabType === 'table' ? '#2196f3' : '#666';
+            
+            const contentArea = document.getElementById('stateContentArea');
+            
+            if (tabType === 'map') {
+                showStateMapView(contentArea, stateName);
+            } else {
+                showStateTableView(contentArea, stateName);
+            }
+        }
+        
+        // Show state map view
+        function showStateMapView(container, stateName) {
+            container.innerHTML = `
+                <div style="height: 100%; position: relative;">
+                    <div id="stateMap" style="height: 100%; width: 100%;"></div>
+                </div>
+            `;
+            
+            // Initialize map for this state
+            setTimeout(() => {
+                const stateMap = L.map('stateMap').setView([39.8283, -98.5795], 4);
+                
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(stateMap);
+                
+                const { competitors, customers } = window.currentStateData;
+                const allMarkers = [];
+                
+                // Add competitor markers (red)
+                competitors.forEach(competitor => {
+                    const marker = L.marker([competitor.lat, competitor.lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                                    <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
+                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">⚔</text>
+                                </svg>
+                            `),
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
+                        })
+                    });
+                    
+                    marker.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h4 style="margin: 0 0 10px 0; color: #dc3545;">${competitor.name}</h4>
+                            <p style="margin: 0 0 5px 0;"><strong>Competitor:</strong> Apptegy</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${competitor.city}, ${competitor.state}</p>
+                        </div>
+                    `);
+                    
+                    marker.addTo(stateMap);
+                    allMarkers.push(marker);
+                });
+                
+                // Add customer markers (blue)
+                customers.forEach(customer => {
+                    const marker = L.marker([customer.lat, customer.lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                                    <circle cx="12" cy="12" r="10" fill="#2196f3" stroke="#fff" stroke-width="2"/>
+                                    <text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">🏫</text>
+                                </svg>
+                            `),
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
+                        })
+                    });
+                    
+                    marker.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2196f3;">${customer.name}</h4>
+                            <p style="margin: 0 0 5px 0;"><strong>Type:</strong> ${customer.type}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${customer.city}, ${customer.state}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Products:</strong> ${customer.products.join(', ')}</p>
+                        </div>
+                    `);
+                    
+                    marker.addTo(stateMap);
+                    allMarkers.push(marker);
+                });
+                
+                // Fit map to show all markers
+                if (allMarkers.length > 0) {
+                    const group = new L.featureGroup(allMarkers);
+                    stateMap.fitBounds(group.getBounds().pad(0.1));
+                }
+            }, 100);
+        }
+        
+        // Show state table view
+        function showStateTableView(container, stateName) {
+            const { competitors, customers } = window.currentStateData;
+            
+            container.innerHTML = `
+                <div style="height: 100%; overflow-y: auto; padding: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%;">
+                        <div>
+                            <h3 style="margin: 0 0 15px 0; color: #dc3545;">⚔️ Apptegy Competitors (${competitors.length})</h3>
+                            <div style="max-height: calc(100% - 40px); overflow-y: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">School Name</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">City</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Domain</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${competitors.map(comp => `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-weight: 500;">${comp.name}</td>
+                                                <td style="padding: 8px; color: #666;">${comp.city}</td>
+                                                <td style="padding: 8px; font-family: monospace; font-size: 11px;">
+                                                    ${comp.domain ? `<a href="https://${comp.domain}" target="_blank">${comp.domain}</a>` : 'N/A'}
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 style="margin: 0 0 15px 0; color: #2196f3;">🏫 Edlio Customers (${customers.length})</h3>
+                            <div style="max-height: calc(100% - 40px); overflow-y: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Customer Name</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Type</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">City</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Products</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${customers.map(customer => `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-weight: 500;">${customer.name}</td>
+                                                <td style="padding: 8px; color: #666;">${customer.type}</td>
+                                                <td style="padding: 8px; color: #666;">${customer.city}</td>
+                                                <td style="padding: 8px; font-size: 11px;">${customer.products.join(', ')}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Export state analysis
+        function exportStateAnalysis(stateName) {
+            if (!window.currentStateData) return;
+            
+            const { competitors, customers } = window.currentStateData;
+            
+            const csvContent = [
+                ['Type', 'Name', 'City', 'State', 'Domain/Products', 'Latitude', 'Longitude'],
+                ...competitors.map(comp => [
+                    'Apptegy Competitor',
+                    comp.name,
+                    comp.city,
+                    comp.state,
+                    comp.domain || 'N/A',
+                    comp.lat,
+                    comp.lng
+                ]),
+                ...customers.map(customer => [
+                    'Edlio Customer',
+                    customer.name,
+                    customer.city,
+                    customer.state,
+                    customer.products.join('; '),
+                    customer.lat,
+                    customer.lng
+                ])
+            ].map(row => row.map(field => `"${field || ''}"`).join(',')).join('\\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${stateName.replace(/\s+/g, '-')}-competitive-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Focus main map on state
+        function focusMapOnState(stateName) {
+            // Close the modal
+            const modals = document.querySelectorAll('div[style*="position: fixed"]');
+            modals.forEach(modal => modal.remove());
+            
+            // Switch to map view
+            showMapView();
+            
+            // Show competitor overlay if not visible
+            if (!window.competitorOverlayVisible) {
+                toggleCompetitorOverlay();
+            }
+            
+            // Focus on state bounds
+            if (window.currentStateData) {
+                const { competitors, customers } = window.currentStateData;
+                const allLocations = [...competitors, ...customers];
+                
+                if (allLocations.length > 0) {
+                    const bounds = L.latLngBounds(allLocations.map(loc => [loc.lat, loc.lng]));
+                    map.fitBounds(bounds.pad(0.1));
+                }
             }
         }
         
