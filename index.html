@@ -1328,6 +1328,9 @@
                         <button onclick="showProximityAnalysis()" class="export-btn" style="background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             🎯 Proximity Alert
                         </button>
+                        <button onclick="showEnhancedProximityAnalysis()" class="export-btn" style="background: #e91e63; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                            🔬 Enhanced Intelligence
+                        </button>
                         <button onclick="showCSVUpload()" class="export-btn" style="background: #9c27b0; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                             📤 Upload Competitor Data
                         </button>
@@ -3625,6 +3628,306 @@
         
         function toRad(deg) {
             return deg * (Math.PI/180);
+        }
+        
+        // === DOMAIN ANALYSIS & COMPETITIVE INTELLIGENCE UTILITIES ===
+        
+        // Extract clean domain from URL
+        function extractDomain(url) {
+            try {
+                if (!url) return null;
+                const cleanUrl = url.startsWith('http') ? url : 'https://' + url;
+                return new URL(cleanUrl).hostname.replace('www.', '').toLowerCase();
+            } catch (error) {
+                console.warn('Invalid URL:', url);
+                return null;
+            }
+        }
+        
+        // Competitive Intelligence Analyzer
+        class CompetitiveIntelligenceAnalyzer {
+            constructor() {
+                this.competitorPatterns = {
+                    apptegy: {
+                        domains: ['apptegy.com', 'apptegy.us'],
+                        indicators: ['mobile-app', 'communications', 'push-notifications'],
+                        riskWeight: 0.8
+                    },
+                    schoolmessenger: {
+                        domains: ['schoolmessenger.com', 'blackboard.com'],
+                        indicators: ['messenger', 'automated-calling', 'emergency-alerts'],
+                        riskWeight: 0.7
+                    },
+                    blackboard: {
+                        domains: ['blackboard.com', 'myschoolapp.com'],
+                        indicators: ['learning', 'portal', 'gradebook'],
+                        riskWeight: 0.6
+                    }
+                };
+            }
+            
+            // Analyze customer domain for competitive risk
+            analyzeCustomerDomain(customer) {
+                const domain = extractDomain(customer.url);
+                if (!domain) return null;
+                
+                return {
+                    customer: customer,
+                    domain: domain,
+                    competitorServices: this.detectCompetitorServices(domain),
+                    riskScore: this.calculateDomainRisk(domain),
+                    opportunities: this.identifyOpportunities(customer)
+                };
+            }
+            
+            // Detect competitor services on customer domain
+            detectCompetitorServices(domain) {
+                const services = [];
+                for (const [competitor, config] of Object.entries(this.competitorPatterns)) {
+                    if (config.domains.some(d => domain.includes(d))) {
+                        services.push({
+                            competitor: competitor,
+                            confidence: 0.9,
+                            detected: 'domain_match'
+                        });
+                    }
+                }
+                return services;
+            }
+            
+            // Calculate domain-based competitive risk
+            calculateDomainRisk(domain) {
+                let riskScore = 0;
+                for (const [competitor, config] of Object.entries(this.competitorPatterns)) {
+                    if (config.domains.some(d => domain.includes(d))) {
+                        riskScore += config.riskWeight;
+                    }
+                }
+                return Math.min(riskScore, 1.0);
+            }
+            
+            // Identify upsell/competitive opportunities
+            identifyOpportunities(customer) {
+                const opportunities = [];
+                const products = customer.products || {};
+                
+                // CMS opportunity
+                if (!products.cms) {
+                    opportunities.push({
+                        product: 'CMS',
+                        priority: 'high',
+                        reason: 'No CMS detected - primary opportunity'
+                    });
+                }
+                
+                // Mobile app opportunity  
+                if (!products.mobile) {
+                    opportunities.push({
+                        product: 'Mobile App',
+                        priority: 'medium',
+                        reason: 'Mobile engagement opportunity'
+                    });
+                }
+                
+                // Mass communications opportunity
+                if (!products.masscomm) {
+                    opportunities.push({
+                        product: 'Mass Communications',
+                        priority: 'medium',
+                        reason: 'Parent engagement platform'
+                    });
+                }
+                
+                return opportunities;
+            }
+        }
+        
+        // Enhanced proximity analysis with domain intelligence
+        async function showEnhancedProximityAnalysis() {
+            if (!window.competitorData) {
+                await loadCompetitorData();
+            }
+            
+            const analyzer = new CompetitiveIntelligenceAnalyzer();
+            const proximityRadius = 5; // miles
+            const enhancedRisks = new Map();
+            
+            // Analyze each customer
+            if (map && window.markers) {
+                window.markers.forEach((marker, customerKey) => {
+                    const customer = window.customerData.get(customerKey);
+                    if (!customer) return;
+                    
+                    // Geographic proximity analysis
+                    let nearbyCompetitors = 0;
+                    let closestDistance = Infinity;
+                    let closestCompetitor = null;
+                    
+                    window.competitorData.forEach(competitor => {
+                        const distance = calculateDistance(
+                            customer.lat, customer.lng,
+                            competitor.lat, competitor.lng
+                        );
+                        
+                        if (distance <= proximityRadius) {
+                            nearbyCompetitors++;
+                            if (distance < closestDistance) {
+                                closestDistance = distance;
+                                closestCompetitor = competitor;
+                            }
+                        }
+                    });
+                    
+                    // Domain-based competitive analysis
+                    const domainAnalysis = analyzer.analyzeCustomerDomain(customer);
+                    
+                    // Calculate enhanced risk score
+                    const geographicRisk = nearbyCompetitors > 0 ? 0.6 : 0;
+                    const domainRisk = domainAnalysis ? domainAnalysis.riskScore * 0.4 : 0;
+                    const totalRisk = geographicRisk + domainRisk;
+                    
+                    if (nearbyCompetitors > 0 || (domainAnalysis && domainAnalysis.riskScore > 0)) {
+                        enhancedRisks.set(customerKey, {
+                            customer: customer,
+                            nearbyCompetitors: nearbyCompetitors,
+                            closestDistance: closestDistance,
+                            closestCompetitor: closestCompetitor,
+                            domainAnalysis: domainAnalysis,
+                            totalRiskScore: totalRisk,
+                            riskCategory: totalRisk > 0.7 ? 'Critical' : totalRisk > 0.4 ? 'High' : 'Medium'
+                        });
+                    }
+                });
+            }
+            
+            showEnhancedProximityResults(enhancedRisks, proximityRadius);
+        }
+        
+        // Show enhanced proximity results with domain intelligence
+        function showEnhancedProximityResults(enhancedRisks, radius) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                max-width: 800px;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            const totalCustomers = window.customerData ? window.customerData.size : 0;
+            const atRiskCount = enhancedRisks.size;
+            const riskPercentage = totalCustomers > 0 ? ((atRiskCount / totalCustomers) * 100).toFixed(1) : 0;
+            
+            // Sort by total risk score
+            const sortedRisks = Array.from(enhancedRisks.values())
+                .sort((a, b) => b.totalRiskScore - a.totalRiskScore);
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #ff9800;">🎯 Enhanced Competitive Intelligence</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff6f00;">⚡ Enhanced Risk Analysis</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #ff9800;">${atRiskCount}</div>
+                            <div style="font-size: 12px; color: #666;">At-Risk Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${riskPercentage}%</div>
+                            <div style="font-size: 12px; color: #666;">Total Portfolio Risk</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #6610f2;">${radius} mi</div>
+                            <div style="font-size: 12px; color: #666;">Geographic Radius</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #28a745;">URL</div>
+                            <div style="font-size: 12px; color: #666;">Domain Analysis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px 0; color: #333;">🔥 Highest Risk Customers (Enhanced Scoring)</h3>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                <th style="padding: 6px; text-align: left; border-bottom: 2px solid #ddd;">Customer</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Risk Level</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Distance</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Domain Risk</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedRisks.slice(0, 20).map(risk => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 6px;">
+                                        <div style="font-weight: 600; color: #333;">${risk.customer.name}</div>
+                                        <div style="font-size: 10px; color: #666;">${risk.customer.city}, ${risk.customer.state}</div>
+                                        ${risk.domainAnalysis && risk.domainAnalysis.domain ? `<div style="font-size: 9px; color: #0066cc; font-family: monospace;">${risk.domainAnalysis.domain}</div>` : ''}
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        <span style="background: ${risk.riskCategory === 'Critical' ? '#dc3545' : risk.riskCategory === 'High' ? '#ff9800' : '#ffc107'}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                                            ${risk.riskCategory}
+                                        </span>
+                                        <div style="font-size: 9px; color: #666; margin-top: 2px;">${(risk.totalRiskScore * 100).toFixed(0)}%</div>
+                                    </td>
+                                    <td style="padding: 6px; text-align: center; color: ${risk.closestDistance < 1 ? '#dc3545' : risk.closestDistance < 3 ? '#ff9800' : '#ffc107'};">
+                                        ${risk.closestDistance < Infinity ? risk.closestDistance.toFixed(1) + ' mi' : 'N/A'}
+                                        ${risk.nearbyCompetitors > 0 ? `<div style="font-size: 9px; color: #666;">${risk.nearbyCompetitors} nearby</div>` : ''}
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        ${risk.domainAnalysis && risk.domainAnalysis.competitorServices.length > 0 ? 
+                                            `<span style="color: #dc3545; font-weight: bold;">⚠️</span><div style="font-size: 9px; color: #666;">Competitor Tech</div>` : 
+                                            `<span style="color: #28a745;">✓</span><div style="font-size: 9px; color: #666;">Clean</div>`
+                                        }
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        <button onclick="focusOnCustomer('${risk.customer.lat}_${risk.customer.lng}')" style="background: #2196f3; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 10px; cursor: pointer;">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="exportEnhancedProximityAnalysis()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                        📊 Export Enhanced Report
+                    </button>
+                    <button onclick="showDomainIntelligence()" style="background: #673ab7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                        🔍 Domain Intelligence
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store enhanced results for export
+            window.enhancedProximityResults = sortedRisks;
+        }
+        
+        // Load competitor data if not already loaded
+        async function loadCompetitorData() {
+            try {
+                const response = await fetch('/apptegy-geocoded-current.json');
+                window.competitorData = await response.json();
+            } catch (error) {
+                console.error('Failed to load competitor data:', error);
+            }
         }
         
         // Show proximity analysis results
