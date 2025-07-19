@@ -1315,9 +1315,6 @@
                     <button onclick="exportLoginActivity()" class="export-btn" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
                         🔐 Login Activity
                     </button>
-                    <button onclick="toggleAdminSection()" class="export-btn" style="background: #E53E3E; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
-                        ⚙️ Data Source
-                    </button>
                 </div>
                 
                 <!-- Competitive Mode Features -->
@@ -1574,37 +1571,6 @@
                     </div>
                 </div>
                 
-                <!-- Admin Section (Initially Hidden) -->
-                <div id="adminSection" class="admin-inline-section hidden" style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #E53E3E;">
-                    <h4 style="margin: 0 0 15px 0; color: #E53E3E;">🔧 Data Source Settings</h4>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
-                            <input type="radio" name="dataSource" value="static" checked onchange="switchDataSource('static')">
-                            <span>📄 Static Data (Current)</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="dataSource" value="hubspot" onchange="switchDataSource('hubspot')">
-                            <span>🔗 HubSpot Live Data</span>
-                        </label>
-                    </div>
-                    
-                    <div id="hubspotConfig" class="hidden" style="margin-bottom: 15px;">
-                        <div style="margin-bottom: 10px;">
-                            <label style="font-size: 12px; font-weight: 600;">API Key:</label>
-                            <input type="password" id="hubspotApiKey" placeholder="Enter HubSpot API Key" style="width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="testHubSpotConnection()" style="background: #28a745; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;">Test</button>
-                            <button onclick="syncHubSpotData()" style="background: #007bff; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;">Sync</button>
-                        </div>
-                    </div>
-                    
-                    <div id="syncStatus" style="font-size: 11px; color: #666;">
-                        <div>📊 Current: Static data (2,348 customers)</div>
-                        <div>🕒 Last sync: Never</div>
-                    </div>
-                </div>
                 <div id="customerListContainer">
                     <div class="loading">Loading customer data...</div>
                 </div>
@@ -3176,6 +3142,42 @@
             }).length;
             
             adminContent.innerHTML = `
+                <!-- HubSpot Data Source Controls -->
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #E53E3E;">
+                    <h3 style="margin: 0 0 20px 0; color: #E53E3E;">🔧 Data Source Management</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; cursor: pointer; font-size: 14px;">
+                            <input type="radio" name="dataSource" value="static" checked onchange="switchDataSource('static')" style="transform: scale(1.2);">
+                            <span>📄 Static Data (Current) - ${window.customers ? window.customers.length : '2,348'} customers</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px;">
+                            <input type="radio" name="dataSource" value="hubspot" onchange="switchDataSource('hubspot')" style="transform: scale(1.2);">
+                            <span>🔗 HubSpot Live Data - Real-time sync</span>
+                        </label>
+                    </div>
+                    
+                    <div id="hubspotConfig" class="hidden" style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #ddd;">
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px;">HubSpot API Key:</label>
+                            <input type="password" id="hubspotApiKey" placeholder="API key auto-configured from environment" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;"
+                                   value="${window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY.substring(0, 15) + '...' : ''}">
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="testHubSpotConnection()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔍 Test Connection</button>
+                            <button onclick="syncHubSpotData()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔄 Sync Now</button>
+                            <button onclick="initializeLiveDataIntegration()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">⚡ Enable Auto-Sync</button>
+                        </div>
+                    </div>
+                    
+                    <div id="syncStatus" style="padding: 12px; background: #e9ecef; border-radius: 6px; font-size: 12px; color: #495057;">
+                        <div style="font-weight: 600; margin-bottom: 5px;">📊 Current Status:</div>
+                        <div id="dataSourceInfo">Using static data from data.js (${window.customers ? window.customers.length : '2,348'} customers)</div>
+                        <div id="lastSyncInfo">🕒 Last sync: Never</div>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3 style="margin: 0; color: #333;">🔐 Login Activity Dashboard</h3>
@@ -4318,9 +4320,34 @@
         let hubSpotAPI = null;
         let currentDataSource = 'static';
         
-        function toggleAdminSection() {
-            const section = document.getElementById('adminSection');
-            section.classList.toggle('hidden');
+        // Initialize live data integration
+        async function initializeLiveDataIntegration() {
+            if (typeof LiveDataIntegration === 'undefined') {
+                alert('❌ Live data integration module not loaded');
+                return;
+            }
+            
+            try {
+                const liveData = new LiveDataIntegration();
+                const mergedData = await liveData.initialize();
+                
+                // Update the map with live data
+                if (mergedData && mergedData.length > 0) {
+                    window.customers = mergedData;
+                    allCustomers = mergedData;
+                    filteredCustomers = mergedData;
+                    
+                    updateSyncStatus();
+                    updateMap();
+                    
+                    alert(`✅ Live data integration enabled! Using ${mergedData.length} customers from HubSpot.`);
+                } else {
+                    alert('⚠️ No data received from HubSpot. Check API configuration.');
+                }
+            } catch (error) {
+                console.error('Live data integration failed:', error);
+                alert(`❌ Failed to initialize live data: ${error.message}`);
+            }
         }
         
         function switchDataSource(source) {
@@ -4411,15 +4438,30 @@
         }
         
         function updateSyncStatus() {
-            const syncStatus = document.getElementById('syncStatus');
             const count = customers ? customers.length : 2348;
             const source = currentDataSource === 'hubspot' ? 'HubSpot' : 'Static';
             const lastSync = hubSpotAPI ? hubSpotAPI.lastSync : null;
             
-            syncStatus.innerHTML = `
-                <div>📊 Current: ${source} data (${count} customers)</div>
-                <div>🕒 Last sync: ${lastSync ? lastSync.toLocaleString() : 'Never'}</div>
-            `;
+            // Update status in admin dashboard if elements exist
+            const dataSourceInfo = document.getElementById('dataSourceInfo');
+            const lastSyncInfo = document.getElementById('lastSyncInfo');
+            
+            if (dataSourceInfo) {
+                dataSourceInfo.textContent = `Using ${source.toLowerCase()} data (${count} customers)`;
+            }
+            
+            if (lastSyncInfo) {
+                lastSyncInfo.textContent = `🕒 Last sync: ${lastSync ? lastSync.toLocaleString() : 'Never'}`;
+            }
+            
+            // Fallback for older sync status element
+            const syncStatus = document.getElementById('syncStatus');
+            if (syncStatus && !dataSourceInfo) {
+                syncStatus.innerHTML = `
+                    <div>📊 Current: ${source} data (${count} customers)</div>
+                    <div>🕒 Last sync: ${lastSync ? lastSync.toLocaleString() : 'Never'}</div>
+                `;
+            }
         }
         
         // Competitive Mode Functions
