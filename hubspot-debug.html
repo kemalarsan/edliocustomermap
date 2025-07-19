@@ -45,6 +45,14 @@
             <li>Under "CRM" section, enable: <strong>Read</strong> permissions for Companies</li>
             <li>Copy the access token (starts with pat-)</li>
         </ol>
+        
+        <h3>⚠️ Common Issues:</h3>
+        <ul>
+            <li><strong>401 Error with valid key</strong>: Try clicking "Rotate" in HubSpot to generate a fresh token</li>
+            <li><strong>Wrong portal</strong>: Make sure you're in the correct HubSpot account/portal</li>
+            <li><strong>Token not activated</strong>: Sometimes it takes 1-2 minutes for a new token to activate</li>
+            <li><strong>Rate limits</strong>: HubSpot has API rate limits, wait a few minutes if getting 429 errors</li>
+        </ul>
     </div>
 
     <script>
@@ -109,8 +117,11 @@
             }
 
             log('Testing Vercel proxy API call...', 'info');
+            log(`Using API key: ${apiKey}`, 'info');
 
             try {
+                // First try with the authorization header
+                log('Test 1: With Authorization header', 'info');
                 const response = await fetch('/api/hubspot?path=/crm/v3/objects/companies&limit=1', {
                     headers: {
                         'Authorization': `Bearer ${apiKey}`,
@@ -124,6 +135,35 @@
                 
                 if (!response.ok) {
                     log(`❌ Proxy Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                    
+                    // Try without Bearer prefix
+                    log('Test 2: Trying without Bearer prefix...', 'info');
+                    const response2 = await fetch('/api/hubspot?path=/crm/v3/objects/companies&limit=1', {
+                        headers: {
+                            'Authorization': apiKey,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const data2 = await response2.json();
+                    log(`Without Bearer - Status: ${response2.status}`, response2.ok ? 'success' : 'error');
+                    if (!response2.ok) {
+                        log(`Error: ${JSON.stringify(data2, null, 2)}`, 'error');
+                    } else {
+                        log(`✅ Success without Bearer! Found ${data2.total || 0} companies`, 'success');
+                    }
+                    
+                    // Also test a different endpoint
+                    log('Test 3: Testing /account-info endpoint...', 'info');
+                    const response3 = await fetch('/api/hubspot?path=/account-info/v3/api-usage/daily/private-apps', {
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    log(`Account info status: ${response3.status}`, response3.ok ? 'success' : 'error');
+                    
                     return;
                 }
 
