@@ -10,8 +10,12 @@
     <!-- Leaflet MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <!-- API Configuration -->
+    <script src="api-config.js"></script>
     <!-- HubSpot API Module -->
     <script src="hubspot-api.js"></script>
+    <!-- Live Data Integration -->
+    <script src="live-data-integration.js"></script>
     <!-- Montserrat Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Google Sign-In -->
@@ -4333,7 +4337,8 @@
         }
         
         function testHubSpotConnection() {
-            const apiKey = document.getElementById('hubspotApiKey').value;
+            const apiKey = document.getElementById('hubspotApiKey').value || 
+                          (window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : '');
             
             if (!apiKey) {
                 alert('Please enter HubSpot API key');

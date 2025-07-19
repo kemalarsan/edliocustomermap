@@ -21,8 +21,14 @@ export default async function handler(req, res) {
         return;
     }
 
-    // Get Authorization header
-    const authHeader = req.headers.authorization;
+    // Get Authorization header or use environment variable
+    let authHeader = req.headers.authorization;
+    
+    // If no auth header provided, check for API key in environment
+    if (!authHeader && process.env.HUBSPOT_API_KEY) {
+        authHeader = `Bearer ${process.env.HUBSPOT_API_KEY}`;
+    }
+    
     if (!authHeader) {
         res.status(401).json({ error: 'Authorization header required' });
         return;

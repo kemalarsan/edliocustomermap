@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Data Integration Demo - Edlio Customer Map</title>
+    
+    <!-- Include required scripts -->
+    <script src="data.js"></script>
+    <script src="hubspot-api.js"></script>
+    <script src="live-data-integration.js"></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #E53E3E;
+            margin-bottom: 20px;
+        }
+        .status-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        .status-connected {
+            color: #48bb78;
+        }
+        .status-disconnected {
+            color: #e53e3e;
+        }
+        .data-preview {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+        }
+        .product-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #e6f3ff;
+            color: #2563eb;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+        .config-panel {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #fbbf24;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #E53E3E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #c53030;
+        }
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #48bb78;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Live Data Integration Demo</h1>
+        
+        <!-- Configuration Panel -->
+        <div class="config-panel">
+            <h3>⚙️ API Configuration</h3>
+            <p>Enter your API keys to enable live data synchronization:</p>
+            
+            <label>HubSpot API Key:</label>
+            <input type="text" id="hubspotKey" placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+            
+            <label>Maxio API Key (Coming Soon):</label>
+            <input type="text" id="maxioKey" placeholder="Coming soon..." disabled>
+            
+            <label>Salesforce (Coming Soon):</label>
+            <input type="text" id="salesforceKey" placeholder="Coming soon..." disabled>
+            
+            <button onclick="saveConfiguration()">Save Configuration</button>
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+        
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <h3>📊 Data Source Status</h3>
+            
+            <div class="status-item">
+                <span><strong>Static Data (data.js)</strong></span>
+                <span class="status-connected">✅ Loaded: <span id="staticCount">0</span> records</span>
+            </div>
+            
+            <div class="status-item">
+                <span><strong>HubSpot</strong> <span class="live-indicator" id="hubspotIndicator" style="display:none"></span></span>
+                <span id="hubspotStatus" class="status-disconnected">❌ Not Connected</span>
+            </div>
+            
+            <div class="status-item">
+                <span><strong>Maxio</strong></span>
+                <span class="status-disconnected">🚧 Coming Soon</span>
+            </div>
+            
+            <div class="status-item">
+                <span><strong>Salesforce</strong></span>
+                <span class="status-disconnected">🚧 Coming Soon</span>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="syncNow()">🔄 Sync Now</button>
+                <button onclick="viewMergedData()">👁️ View Merged Data</button>
+                <span style="margin-left: 20px; color: #666;">
+                    Last sync: <span id="lastSync">Never</span>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Data Preview -->
+        <div class="data-preview">
+            <h3>📋 Customer Data Preview</h3>
+            <div id="dataPreview"></div>
+        </div>
+        
+        <!-- Integration Code Example -->
+        <div style="margin-top: 40px; background: #f7fafc; padding: 20px; border-radius: 6px;">
+            <h3>💻 Integration Example</h3>
+            <pre style="background: #1a202c; color: #e2e8f0; padding: 15px; border-radius: 4px; overflow-x: auto;">
+// Initialize live data integration
+const liveData = new LiveDataIntegration();
+
+// Configure API keys
+liveData.configureAPIs({
+    hubspotAPIKey: 'your-api-key',
+    maxioAPIKey: 'coming-soon',
+    salesforceConfig: { /* coming soon */ }
+});
+
+// Initialize and get merged data
+const customers = await liveData.initialize();
+
+// Use in your map
+customers.forEach(customer => {
+    // Customer now has live data from HubSpot!
+    console.log(customer.name, customer.contractValue, customer.products);
+});
+
+// Check status
+const status = liveData.getStatus();
+console.log('Connected sources:', status);
+</pre>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the demo
+        let liveDataIntegration = null;
+        
+        window.onload = async function() {
+            // Initialize live data integration
+            liveDataIntegration = new LiveDataIntegration();
+            
+            // Load saved configuration
+            const savedKey = localStorage.getItem('hubspot_api_key');
+            if (savedKey) {
+                document.getElementById('hubspotKey').value = savedKey;
+            }
+            
+            // Update static data count
+            document.getElementById('staticCount').textContent = customers.length;
+            
+            // Show initial data preview
+            showDataPreview(customers.slice(0, 5));
+        };
+        
+        // Save API configuration
+        function saveConfiguration() {
+            const hubspotKey = document.getElementById('hubspotKey').value;
+            
+            if (!hubspotKey) {
+                alert('Please enter a HubSpot API key');
+                return;
+            }
+            
+            liveDataIntegration.configureAPIs({
+                hubspotAPIKey: hubspotKey
+            });
+            
+            alert('Configuration saved! Click "Test Connection" to verify.');
+        }
+        
+        // Test API connection
+        async function testConnection() {
+            const hubspotKey = document.getElementById('hubspotKey').value;
+            
+            if (!hubspotKey) {
+                alert('Please enter and save a HubSpot API key first');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/hubspot?path=/crm/v3/objects/companies&limit=1`, {
+                    headers: {
+                        'Authorization': `Bearer ${hubspotKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    document.getElementById('hubspotStatus').innerHTML = 
+                        '<span class="status-connected">✅ Connected</span>';
+                    document.getElementById('hubspotIndicator').style.display = 'inline-block';
+                    alert('✅ HubSpot connection successful!');
+                } else {
+                    throw new Error(`API error: ${response.status}`);
+                }
+            } catch (error) {
+                alert('❌ Connection failed: ' + error.message);
+            }
+        }
+        
+        // Sync data now
+        async function syncNow() {
+            if (!liveDataIntegration.hubspotAPIKey) {
+                alert('Please configure HubSpot API key first');
+                return;
+            }
+            
+            try {
+                const mergedData = await liveDataIntegration.syncNow();
+                
+                // Update status
+                const status = liveDataIntegration.getStatus();
+                document.getElementById('hubspotStatus').innerHTML = 
+                    `<span class="status-connected">✅ Connected - ${status.hubspot.recordCount} records</span>`;
+                document.getElementById('lastSync').textContent = 
+                    new Date(status.hubspot.lastSync).toLocaleString();
+                
+                // Show preview
+                showDataPreview(mergedData.slice(0, 10));
+                
+                alert(`✅ Sync complete! Total records: ${mergedData.length}`);
+            } catch (error) {
+                alert('❌ Sync failed: ' + error.message);
+            }
+        }
+        
+        // View merged data
+        function viewMergedData() {
+            const data = liveDataIntegration.getMergedData();
+            showDataPreview(data.slice(0, 20));
+        }
+        
+        // Show data preview
+        function showDataPreview(data) {
+            if (!data || data.length === 0) {
+                document.getElementById('dataPreview').innerHTML = '<p>No data to display</p>';
+                return;
+            }
+            
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>State</th>
+                            <th>Type</th>
+                            <th>Products</th>
+                            <th>Source</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(customer => `
+                            <tr>
+                                <td>${customer.name}</td>
+                                <td>${customer.state}</td>
+                                <td>${customer.type}</td>
+                                <td>
+                                    ${customer.products.cms ? '<span class="product-tag">CMS</span>' : ''}
+                                    ${customer.products.mobile ? '<span class="product-tag">Mobile</span>' : ''}
+                                    ${customer.products.masscomm ? '<span class="product-tag">MassComm</span>' : ''}
+                                    ${customer.products.payments ? '<span class="product-tag">Payments</span>' : ''}
+                                </td>
+                                <td>${customer.source || 'static'}</td>
+                                <td>${customer.lastUpdated === 'static' ? 'Static' : new Date(customer.lastUpdated).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <p style="margin-top: 10px; color: #666;">Showing ${data.length} of ${liveDataIntegration.getMergedData().length} total records</p>
+            `;
+            
+            document.getElementById('dataPreview').innerHTML = table;
+        }
+    </script>
+</body>
+</html>

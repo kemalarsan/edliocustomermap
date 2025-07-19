@@ -43,4 +43,11 @@ node_modules/
 .env.development.local
 
 # Vercel
-.vercelgeocoding_progress.json
+.vercel
+
+# API Configuration (contains sensitive keys)
+api-config.js
+
+# Local data files
+geocoding_progress.json
+login-logs.json
