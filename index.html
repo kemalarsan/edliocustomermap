@@ -3162,7 +3162,8 @@
                             <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px;">HubSpot API Key:</label>
                             <input type="password" id="hubspotApiKey" placeholder="API key auto-configured from environment" 
                                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;"
-                                   value="${window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY.substring(0, 15) + '...' : ''}">
+                                   value="${window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : ''}"
+                                   data-api-key="${window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : ''}">
                         </div>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                             <button onclick="testHubSpotConnection()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔍 Test Connection</button>
@@ -4364,13 +4365,20 @@
         }
         
         function testHubSpotConnection() {
-            const apiKey = document.getElementById('hubspotApiKey').value || 
-                          (window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : '');
+            // Get API key from input field first, then fall back to config
+            let apiKey = document.getElementById('hubspotApiKey').value.trim();
+            
+            // If field is empty or just shows truncated version, use full key from config
+            if (!apiKey || apiKey.endsWith('...')) {
+                apiKey = window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : '';
+            }
             
             if (!apiKey) {
                 alert('Please enter HubSpot API key');
                 return;
             }
+            
+            console.log('Testing with API key:', apiKey.substring(0, 15) + '...');
             
             hubSpotAPI = new HubSpotAPI(apiKey);
             
