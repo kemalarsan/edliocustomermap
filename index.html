@@ -488,6 +488,13 @@
             transform: scale(1.1);
         }
         
+        /* Animation for live data markers */
+        @keyframes pulse-live {
+            0% { box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
         /* Mobile Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -2134,13 +2141,17 @@
         }
         
         // Create Edlio school marker with clean design
-        function createSchoolMarker(lat, lng, color) {
+        function createSchoolMarker(lat, lng, color, source = 'static') {
+            const isLiveData = source === 'hubspot';
+            const borderStyle = isLiveData ? '3px solid #2ecc71' : '2px solid white';
+            const animation = isLiveData ? 'animation: pulse-live 2s infinite;' : '';
+            
             const iconHtml = `
                 <div style="
                     width: 26px; 
                     height: 26px; 
                     background: ${color}; 
-                    border: 2px solid white; 
+                    border: ${borderStyle}; 
                     border-radius: 6px; 
                     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                     display: flex;
@@ -2148,6 +2159,7 @@
                     justify-content: center;
                     position: relative;
                     overflow: hidden;
+                    ${animation}
                 ">
                     <div style="
                         width: 100%;
@@ -2395,12 +2407,13 @@
                         if (customer.products.payments) productBadges += '<span style="background: #fce4ec; color: #c2185b; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 4px;">Payments</span>';
                     }
                     
-                    const marker = createSchoolMarker(customer.lat, customer.lng, color)
+                    const marker = createSchoolMarker(customer.lat, customer.lng, color, customer.source)
                         .bindPopup(`
                             <div style="min-width: 280px;">
                                 <h3 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">${customer.name}</h3>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>State:</strong> ${customer.state}</p>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>Type:</strong> <span class="type-${normalizeType(customer.type)}">${customer.type}</span></p>
+                                ${customer.source === 'hubspot' ? '<div style="margin: 5px 0;"><span style="background: #2ecc71; color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px;">🔄 LIVE DATA</span></div>' : ''}
                                 ${productBadges ? `<div style="margin: 8px 0;"><strong>Products:</strong><br>${productBadges}</div>` : ''}
                                 <p style="margin: 0 0 10px 0; color: #666;"><strong>Location:</strong> ${customer.lat.toFixed(4)}, ${customer.lng.toFixed(4)}</p>
                                 <a href="${customer.url}" target="_blank" style="color: #0066cc; text-decoration: none; font-weight: bold;">Visit Website →</a>
@@ -4425,24 +4438,42 @@
             });
         }
         
-        function syncHubSpotData() {
-            if (!hubSpotAPI) {
-                alert('Please test connection first');
+        async function syncHubSpotData() {
+            if (typeof LiveDataIntegration === 'undefined') {
+                alert('❌ Live data integration module not loaded');
                 return;
             }
             
             const syncStatus = document.getElementById('syncStatus');
             syncStatus.innerHTML = '<div>🔄 Syncing data from HubSpot...</div>';
             
-            hubSpotAPI.syncData()
-                .then(schools => {
-                    alert(`✅ Synced ${schools.length} schools from HubSpot!`);
+            try {
+                const liveData = new LiveDataIntegration();
+                console.log('🚀 Starting HubSpot sync...');
+                await liveData.syncHubSpotData();
+                const mergedData = liveData.getMergedData();
+                console.log('📊 Merged data length:', mergedData ? mergedData.length : 0);
+                
+                // Update the map with merged data
+                if (mergedData && mergedData.length > 0) {
+                    window.customers = mergedData;
+                    allCustomers = mergedData;
+                    filteredCustomers = mergedData;
+                    currentDataSource = 'hubspot';
+                    
+                    updateMap();
+                    updateSidebar();
                     updateSyncStatus();
-                })
-                .catch(error => {
-                    alert(`❌ Sync failed: ${error.message}`);
-                    updateSyncStatus();
-                });
+                    
+                    alert(`✅ Synced ${liveData.status.hubspot.recordCount} schools from HubSpot! Total customers: ${mergedData.length}`);
+                } else {
+                    alert('⚠️ No data received from HubSpot. Check API configuration.');
+                }
+            } catch (error) {
+                console.error('❌ Sync error details:', error);
+                alert(`❌ Sync failed: ${error.message}`);
+                updateSyncStatus();
+            }
         }
         
         function updateSyncStatus() {

@@ -1,0 +1,33 @@
+Based on manual inspection of the files:
+
+1. CURRENT GEOCODED DATA (apptegy-geocoded-current.json):
+   - This file contains Apptegy competitor data with geocoded locations
+   - Each record includes: recordId, name, competitor, domain, city, state, lat/lng coordinates
+   - Records have additional fields like owner, createDate, products, customerType, etc.
+
+2. BATCH GEOCODED DATA (apptegy-geocoded-batch.json):
+   - Contains metadata showing:
+     * Total results: 5,696 successful geocodes
+     * Total errors: 7,042
+     * Success rate: 44.72%
+     * Processed at: 2025-07-16T04:59:37
+   - Each successful geocode includes detailed location data from OpenStreetMap
+
+3. MERGE PROCESS:
+   - The merge_geocoded_data_v2.py script will:
+     * Load both JSON files
+     * Convert batch records to match current format
+     * Add new records that don't already exist (based on recordId)
+     * Create a backup of the current file
+     * Save the merged data back to apptegy-geocoded-current.json
+
+Due to shell issues, I cannot execute the merge script directly. 
+Please try running these commands manually in your terminal:
+
+cd /Users/aliarsan/edliocustomermap/
+python3 merge_geocoded_data_v2.py
+
+After the merge completes, you can check:
+- File size: ls -lh apptegy-geocoded-current.json
+- Git status: git status
+- Record count: python3 -c "import json; print(len(json.load(open('apptegy-geocoded-current.json'))))"

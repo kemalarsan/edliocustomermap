@@ -18,10 +18,10 @@ class LiveDataIntegration {
             salesforce: { connected: false, lastSync: null, recordCount: 0 }
         };
         
-        // HubSpot API key (should be stored securely in production)
+        // HubSpot API key - will use environment variable through proxy if not provided
         this.hubspotAPIKey = localStorage.getItem('hubspot_api_key') || 
                             (window.API_CONFIG ? window.API_CONFIG.HUBSPOT_API_KEY : '') || 
-                            '';
+                            null; // null means use environment variable
     }
 
     /**
@@ -30,11 +30,8 @@ class LiveDataIntegration {
     async initialize() {
         console.log('🚀 Initializing Live Data Integration...');
         
-        // Initialize HubSpot API if key is available
-        if (this.hubspotAPIKey) {
-            this.hubspotAPI = new HubSpotAPI(this.hubspotAPIKey);
-            await this.syncHubSpotData();
-        }
+        // Always try to sync HubSpot data (will use environment variable if no key)
+        await this.syncHubSpotData();
         
         // Start periodic sync (every 5 minutes)
         this.startPeriodicSync();
@@ -48,27 +45,34 @@ class LiveDataIntegration {
     async syncHubSpotData() {
         try {
             console.log('📊 Syncing HubSpot data...');
+            console.log('🔑 API Key available:', !!this.hubspotAPIKey);
             
             // Fetch companies from HubSpot
             const headers = {
                 'Content-Type': 'application/json'
             };
             
-            // Only add Authorization header if we have an API key
+            // Only add Authorization header if we have an API key (otherwise use environment variable)
             if (this.hubspotAPIKey) {
                 headers['Authorization'] = `Bearer ${this.hubspotAPIKey}`;
             }
+            // If no API key, the proxy will use the environment variable
             
-            const response = await fetch(`/api/hubspot?path=/crm/v3/objects/companies&limit=100&properties=name,domain,address,address2,city,state,zip,country,website,phone,hs_object_id,edlio_products,contract_value,renewal_date`, {
+            const response = await fetch(`/api/hubspot?path=/crm/v3/objects/companies&limit=1000&properties=name,domain,address,address2,city,state,zip,country,website,phone,hs_object_id,edlio_products,contract_value,renewal_date`, {
                 headers
             });
 
+            console.log('📡 HubSpot API Response Status:', response.status);
+
             if (!response.ok) {
-                throw new Error(`HubSpot API error: ${response.status}`);
+                const errorData = await response.json();
+                console.error('❌ HubSpot API Error:', errorData);
+                throw new Error(`HubSpot API error: ${response.status} - ${JSON.stringify(errorData)}`);
             }
 
             const data = await response.json();
             const hubspotCompanies = data.results || [];
+            console.log('📊 HubSpot Companies Retrieved:', hubspotCompanies.length);
             
             // Update status
             this.status.hubspot = {
@@ -93,6 +97,8 @@ class LiveDataIntegration {
      */
     mergeHubSpotData(hubspotCompanies) {
         console.log('🔄 Merging HubSpot data with static data...');
+        console.log('📊 HubSpot companies to merge:', hubspotCompanies.length);
+        console.log('📊 Static data available:', this.staticData.length);
         
         // Create a map of static data by domain/URL for quick lookup
         const staticDataMap = new Map();
@@ -154,6 +160,13 @@ class LiveDataIntegration {
         
         this.mergedData = enrichedData;
         console.log(`✅ Merge complete: ${this.mergedData.length} total customers`);
+    }
+
+    /**
+     * Get the current merged data
+     */
+    getMergedData() {
+        return this.mergedData;
     }
 
     /**

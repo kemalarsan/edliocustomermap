@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edlio Customer Map</title>
+    
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <!-- HubSpot API Module -->
+    <script src="hubspot-api.js"></script>
+    <!-- Montserrat Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #map {
+            flex: 1;
+            height: 100%;
+            background-color: #e0e0e0;
+        }
+        
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .auth-container h1 {
+            color: #E53E3E;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .auth-container p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .g_id_signin {
+            margin: 20px 0;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .user-info.show {
+            display: block;
+        }
+        
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .user-info span {
+            vertical-align: middle;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .logout-btn {
+            background: #E53E3E;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+        
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background-color: white;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.hidden {
+            transform: translateX(100%);
+        }
+        
+        .sidebar h2 {
+            color: #E53E3E;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: #E53E3E;
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #E53E3E;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        
+        .toggle-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .stats h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #E53E3E;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .customer-list {
+            margin-top: 20px;
+        }
+        
+        .customer-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .customer-item:hover {
+            border-color: #E53E3E;
+        }
+        
+        .customer-item.selected {
+            border-color: #E53E3E;
+            background: #fff5f5;
+        }
+        
+        .customer-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .customer-location {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .customer-products {
+            font-size: 11px;
+            color: #888;
+        }
+        
+        .product-tag {
+            display: inline-block;
+            background: #E53E3E;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .clear-filters {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .clear-filters:hover {
+            background: #e9ecef;
+        }
+        
+        .custom-marker {
+            background: #E53E3E;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .leaflet-popup-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .popup-title {
+            font-weight: bold;
+            color: #E53E3E;
+            margin-bottom: 8px;
+        }
+        
+        .popup-info {
+            margin-bottom: 6px;
+        }
+        
+        .popup-products {
+            margin-top: 8px;
+        }
+        
+        .popup-tag {
+            display: inline-block;
+            background: #E53E3E;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .search-result-location {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-container">
+            <h1>🏫 Edlio Customer Map</h1>
+            <p>This tool is exclusively for Edlio team members. Please sign in with your @edlio.com Google account to access the customer map.</p>
+            
+            <div id="g_id_onload"
+                 data-client_id="1045317718639-4d5rq7kv6m4e0q6i8g9i1h8j7k6l5m4n.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        </div>
+    </div>
+    
+    <!-- User info display -->
+    <div id="userInfo" class="user-info">
+        <img id="userPhoto" src="" alt="User photo">
+        <span id="userName"></span>
+        <button class="logout-btn" onclick="signOut()">Sign Out</button>
+    </div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <div id="map"></div>
+        
+        <div class="sidebar" id="sidebar">
+            <h2>Customer Map</h2>
+            
+            <div class="controls">
+                <div class="filter-group">
+                    <label for="stateFilter">State:</label>
+                    <select id="stateFilter">
+                        <option value="">All States</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="typeFilter">Organization Type:</label>
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="district">District</option>
+                        <option value="charter">Charter</option>
+                        <option value="private">Private</option>
+                        <option value="cmo">CMO</option>
+                        <option value="esc">ESC</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="productFilter">Product:</label>
+                    <select id="productFilter">
+                        <option value="">All Products</option>
+                        <option value="cms">CMS</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="payments">Payments</option>
+                    </select>
+                </div>
+                
+                <div class="search-container">
+                    <label for="searchInput">Search:</label>
+                    <input type="text" id="searchInput" placeholder="Search customers...">
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+                
+                <button class="clear-filters" onclick="clearFilters()">Clear All Filters</button>
+            </div>
+            
+            <div class="stats" id="stats">
+                <h3>Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <div class="stat-label">Total Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalStates">0</div>
+                        <div class="stat-label">States</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalDistricts">0</div>
+                        <div class="stat-label">Districts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCharters">0</div>
+                        <div class="stat-label">Charters</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="customer-list" id="customerList">
+                <div class="loading">Loading customers...</div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="toggle-btn" onclick="toggleSidebar()">Toggle Sidebar</button>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="data.js"></script>
+    
+    <script>
+        // Global variables
+        let map, customers = [], filteredCustomers = [], customerMarkers = [], markersLayer;
+        let selectedCustomer = null;
+        
+        // Authentication state
+        let isAuthenticated = false;
+        let currentUser = null;
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            // Don't load data until authenticated
+        });
+        
+        // Google Sign-In callback
+        function handleCredentialResponse(response) {
+            const responsePayload = parseJwt(response.credential);
+            
+            // Verify the user has an @edlio.com email
+            if (!responsePayload.email.endsWith('@edlio.com')) {
+                alert('Please use your @edlio.com email address to access this tool.');
+                return;
+            }
+            
+            // Store user info
+            currentUser = {
+                email: responsePayload.email,
+                name: responsePayload.name,
+                picture: responsePayload.picture
+            };
+            
+            // Update UI
+            document.getElementById('userPhoto').src = currentUser.picture;
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userInfo').classList.add('show');
+            document.getElementById('authOverlay').style.display = 'none';
+            
+            // Mark as authenticated and load data
+            isAuthenticated = true;
+            loadCustomers();
+        }
+        
+        // Helper function to parse JWT
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+        
+        // Sign out function
+        function signOut() {
+            isAuthenticated = false;
+            currentUser = null;
+            document.getElementById('userInfo').classList.remove('show');
+            document.getElementById('authOverlay').style.display = 'flex';
+            
+            // Clear the map
+            if (markersLayer) {
+                map.removeLayer(markersLayer);
+            }
+            
+            // Clear customer data
+            customers = [];
+            filteredCustomers = [];
+            updateCustomerList();
+            updateStats();
+        }
+        
+        // Initialize the map
+        function initializeMap() {
+            map = L.map('map').setView([39.8283, -98.5795], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            markersLayer = L.markerClusterGroup({
+                chunkedLoading: true,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                maxClusterRadius: 50
+            });
+            
+            map.addLayer(markersLayer);
+        }
+        
+        // Load customers data
+        function loadCustomers() {
+            if (!isAuthenticated) return;
+            
+            try {
+                if (typeof customersData !== 'undefined') {
+                    customers = customersData;
+                    filteredCustomers = [...customers];
+                    updateMap();
+                    updateCustomerList();
+                    updateStats();
+                    populateFilters();
+                } else {
+                    document.getElementById('customerList').innerHTML = '<div class="error">Error loading customer data. Please refresh the page.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                document.getElementById('customerList').innerHTML = '<div class="error">Error loading customer data. Please refresh the page.</div>';
+            }
+        }
+        
+        // Update map with filtered customers
+        function updateMap() {
+            if (!isAuthenticated) return;
+            
+            markersLayer.clearLayers();
+            customerMarkers = [];
+            
+            filteredCustomers.forEach(customer => {
+                if (customer.latitude && customer.longitude) {
+                    const marker = L.marker([customer.latitude, customer.longitude], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: getCustomerTypeIcon(customer.type),
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
+                        })
+                    });
+                    
+                    marker.bindPopup(createPopupContent(customer));
+                    marker.on('click', () => selectCustomer(customer));
+                    
+                    customerMarkers.push({ marker, customer });
+                    markersLayer.addLayer(marker);
+                }
+            });
+        }
+        
+        // Get icon for customer type
+        function getCustomerTypeIcon(type) {
+            const icons = {
+                'district': 'D',
+                'charter': 'C',
+                'private': 'P',
+                'cmo': 'M',
+                'esc': 'E'
+            };
+            return icons[type] || '?';
+        }
+        
+        // Create popup content
+        function createPopupContent(customer) {
+            const products = [];
+            if (customer.products) {
+                if (customer.products.cms) products.push('CMS');
+                if (customer.products.mobile) products.push('Mobile');
+                if (customer.products.payments) products.push('Payments');
+            }
+            
+            return `
+                <div class="popup-title">${customer.name}</div>
+                <div class="popup-info"><strong>Location:</strong> ${customer.city}, ${customer.state}</div>
+                <div class="popup-info"><strong>Type:</strong> ${customer.type}</div>
+                ${customer.website ? `<div class="popup-info"><strong>Website:</strong> <a href="${customer.website}" target="_blank">${customer.website}</a></div>` : ''}
+                ${products.length > 0 ? `<div class="popup-products">${products.map(p => `<span class="popup-tag">${p}</span>`).join('')}</div>` : ''}
+            `;
+        }
+        
+        // Select a customer
+        function selectCustomer(customer) {
+            selectedCustomer = customer;
+            updateCustomerList();
+            
+            // Find and highlight the customer marker
+            const customerMarker = customerMarkers.find(cm => cm.customer === customer);
+            if (customerMarker) {
+                map.setView([customer.latitude, customer.longitude], 10);
+                customerMarker.marker.openPopup();
+            }
+        }
+        
+        // Update customer list
+        function updateCustomerList() {
+            const customerList = document.getElementById('customerList');
+            
+            if (filteredCustomers.length === 0) {
+                customerList.innerHTML = '<div class="loading">No customers found matching your filters.</div>';
+                return;
+            }
+            
+            customerList.innerHTML = filteredCustomers.map(customer => {
+                const products = [];
+                if (customer.products) {
+                    if (customer.products.cms) products.push('CMS');
+                    if (customer.products.mobile) products.push('Mobile');
+                    if (customer.products.payments) products.push('Payments');
+                }
+                
+                return `
+                    <div class="customer-item ${selectedCustomer === customer ? 'selected' : ''}" onclick="selectCustomer(${JSON.stringify(customer).replace(/"/g, '&quot;')})">
+                        <div class="customer-name">${customer.name}</div>
+                        <div class="customer-location">${customer.city}, ${customer.state}</div>
+                        <div class="customer-products">
+                            ${products.map(p => `<span class="product-tag">${p}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const totalCustomers = filteredCustomers.length;
+            const states = [...new Set(filteredCustomers.map(c => c.state))].length;
+            const districts = filteredCustomers.filter(c => c.type === 'district').length;
+            const charters = filteredCustomers.filter(c => c.type === 'charter').length;
+            
+            document.getElementById('totalCustomers').textContent = totalCustomers;
+            document.getElementById('totalStates').textContent = states;
+            document.getElementById('totalDistricts').textContent = districts;
+            document.getElementById('totalCharters').textContent = charters;
+        }
+        
+        // Populate filter dropdowns
+        function populateFilters() {
+            const stateFilter = document.getElementById('stateFilter');
+            const states = [...new Set(customers.map(c => c.state))].sort();
+            
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateFilter.appendChild(option);
+            });
+        }
+        
+        // Filter customers
+        function filterCustomers() {
+            const stateFilter = document.getElementById('stateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const productFilter = document.getElementById('productFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredCustomers = customers.filter(customer => {
+                if (stateFilter && customer.state !== stateFilter) return false;
+                if (typeFilter && customer.type !== typeFilter) return false;
+                if (productFilter && customer.products && !customer.products[productFilter]) return false;
+                if (searchTerm && !customer.name.toLowerCase().includes(searchTerm)) return false;
+                return true;
+            });
+            
+            updateMap();
+            updateCustomerList();
+            updateStats();
+            hideSearchResults();
+        }
+        
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('stateFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('productFilter').value = '';
+            document.getElementById('searchInput').value = '';
+            filteredCustomers = [...customers];
+            updateMap();
+            updateCustomerList();
+            updateStats();
+            hideSearchResults();
+        }
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('hidden');
+        }
+        
+        // Search functionality
+        function showSearchResults() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchResults = document.getElementById('searchResults');
+            
+<<<<<<< Updated upstream
+            // Analyze customer domain for competitive risk
+            analyzeCustomerDomain(customer) {
+                const domain = extractDomain(customer.url);
+                if (!domain) return null;
+                
+                return {
+                    customer: customer,
+                    domain: domain,
+                    competitorServices: this.detectCompetitorServices(domain),
+                    riskScore: this.calculateDomainRisk(domain),
+                    opportunities: this.identifyOpportunities(customer)
+                };
+            }
+            
+            // Detect competitor services on customer domain
+            detectCompetitorServices(domain) {
+                const services = [];
+                for (const [competitor, config] of Object.entries(this.competitorPatterns)) {
+                    if (config.domains.some(d => domain.includes(d))) {
+                        services.push({
+                            competitor: competitor,
+                            confidence: 0.9,
+                            detected: 'domain_match'
+                        });
+                    }
+                }
+                return services;
+            }
+            
+            // Calculate domain-based competitive risk
+            calculateDomainRisk(domain) {
+                let riskScore = 0;
+                for (const [competitor, config] of Object.entries(this.competitorPatterns)) {
+                    if (config.domains.some(d => domain.includes(d))) {
+                        riskScore += config.riskWeight;
+                    }
+                }
+                return Math.min(riskScore, 1.0);
+            }
+            
+            // Identify upsell/competitive opportunities
+            identifyOpportunities(customer) {
+                const opportunities = [];
+                const products = customer.products || {};
+                
+                // CMS opportunity
+                if (!products.cms) {
+                    opportunities.push({
+                        product: 'CMS',
+                        priority: 'high',
+                        reason: 'No CMS detected - primary opportunity'
+                    });
+                }
+                
+                // Mobile app opportunity  
+                if (!products.mobile) {
+                    opportunities.push({
+                        product: 'Mobile App',
+                        priority: 'medium',
+                        reason: 'Mobile engagement opportunity'
+                    });
+                }
+                
+                // Mass communications opportunity
+                if (!products.masscomm) {
+                    opportunities.push({
+                        product: 'Mass Communications',
+                        priority: 'medium',
+                        reason: 'Parent engagement platform'
+                    });
+                }
+                
+                return opportunities;
+            }
+        }
+        
+        // Enhanced proximity analysis with domain intelligence
+        async function showEnhancedProximityAnalysis() {
+            if (!window.competitorData) {
+                await loadCompetitorData();
+            }
+            
+            const analyzer = new CompetitiveIntelligenceAnalyzer();
+            const proximityRadius = 5; // miles
+            const enhancedRisks = new Map();
+            
+            // Analyze each customer
+            if (map && window.markers) {
+                window.markers.forEach((marker, customerKey) => {
+                    const customer = window.customerData.get(customerKey);
+                    if (!customer) return;
+                    
+                    // Geographic proximity analysis
+                    let nearbyCompetitors = 0;
+                    let closestDistance = Infinity;
+                    let closestCompetitor = null;
+                    
+                    window.competitorData.forEach(competitor => {
+                        const distance = calculateDistance(
+                            customer.lat, customer.lng,
+                            competitor.lat, competitor.lng
+                        );
+                        
+                        if (distance <= proximityRadius) {
+                            nearbyCompetitors++;
+                            if (distance < closestDistance) {
+                                closestDistance = distance;
+                                closestCompetitor = competitor;
+                            }
+                        }
+                    });
+                    
+                    // Domain-based competitive analysis
+                    const domainAnalysis = analyzer.analyzeCustomerDomain(customer);
+                    
+                    // Calculate enhanced risk score
+                    const geographicRisk = nearbyCompetitors > 0 ? 0.6 : 0;
+                    const domainRisk = domainAnalysis ? domainAnalysis.riskScore * 0.4 : 0;
+                    const totalRisk = geographicRisk + domainRisk;
+                    
+                    if (nearbyCompetitors > 0 || (domainAnalysis && domainAnalysis.riskScore > 0)) {
+                        enhancedRisks.set(customerKey, {
+                            customer: customer,
+                            nearbyCompetitors: nearbyCompetitors,
+                            closestDistance: closestDistance,
+                            closestCompetitor: closestCompetitor,
+                            domainAnalysis: domainAnalysis,
+                            totalRiskScore: totalRisk,
+                            riskCategory: totalRisk > 0.7 ? 'Critical' : totalRisk > 0.4 ? 'High' : 'Medium'
+                        });
+                    }
+                });
+            }
+            
+            showEnhancedProximityResults(enhancedRisks, proximityRadius);
+        }
+        
+        // Show enhanced proximity results with domain intelligence
+        function showEnhancedProximityResults(enhancedRisks, radius) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                max-width: 800px;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            const totalCustomers = window.customerData ? window.customerData.size : 0;
+            const atRiskCount = enhancedRisks.size;
+            const riskPercentage = totalCustomers > 0 ? ((atRiskCount / totalCustomers) * 100).toFixed(1) : 0;
+            
+            // Sort by total risk score
+            const sortedRisks = Array.from(enhancedRisks.values())
+                .sort((a, b) => b.totalRiskScore - a.totalRiskScore);
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #ff9800;">🎯 Enhanced Competitive Intelligence</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff6f00;">⚡ Enhanced Risk Analysis</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #ff9800;">${atRiskCount}</div>
+                            <div style="font-size: 12px; color: #666;">At-Risk Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${riskPercentage}%</div>
+                            <div style="font-size: 12px; color: #666;">Total Portfolio Risk</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #6610f2;">${radius} mi</div>
+                            <div style="font-size: 12px; color: #666;">Geographic Radius</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #28a745;">URL</div>
+                            <div style="font-size: 12px; color: #666;">Domain Analysis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px 0; color: #333;">🔥 Highest Risk Customers (Enhanced Scoring)</h3>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                <th style="padding: 6px; text-align: left; border-bottom: 2px solid #ddd;">Customer</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Risk Level</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Distance</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Domain Risk</th>
+                                <th style="padding: 6px; text-align: center; border-bottom: 2px solid #ddd;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedRisks.slice(0, 20).map(risk => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 6px;">
+                                        <div style="font-weight: 600; color: #333;">${risk.customer.name}</div>
+                                        <div style="font-size: 10px; color: #666;">${risk.customer.city}, ${risk.customer.state}</div>
+                                        ${risk.domainAnalysis && risk.domainAnalysis.domain ? `<div style="font-size: 9px; color: #0066cc; font-family: monospace;">${risk.domainAnalysis.domain}</div>` : ''}
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        <span style="background: ${risk.riskCategory === 'Critical' ? '#dc3545' : risk.riskCategory === 'High' ? '#ff9800' : '#ffc107'}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                                            ${risk.riskCategory}
+                                        </span>
+                                        <div style="font-size: 9px; color: #666; margin-top: 2px;">${(risk.totalRiskScore * 100).toFixed(0)}%</div>
+                                    </td>
+                                    <td style="padding: 6px; text-align: center; color: ${risk.closestDistance < 1 ? '#dc3545' : risk.closestDistance < 3 ? '#ff9800' : '#ffc107'};">
+                                        ${risk.closestDistance < Infinity ? risk.closestDistance.toFixed(1) + ' mi' : 'N/A'}
+                                        ${risk.nearbyCompetitors > 0 ? `<div style="font-size: 9px; color: #666;">${risk.nearbyCompetitors} nearby</div>` : ''}
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        ${risk.domainAnalysis && risk.domainAnalysis.competitorServices.length > 0 ? 
+                                            `<span style="color: #dc3545; font-weight: bold;">⚠️</span><div style="font-size: 9px; color: #666;">Competitor Tech</div>` : 
+                                            `<span style="color: #28a745;">✓</span><div style="font-size: 9px; color: #666;">Clean</div>`
+                                        }
+                                    </td>
+                                    <td style="padding: 6px; text-align: center;">
+                                        <button onclick="focusOnCustomer('${risk.customer.lat}_${risk.customer.lng}')" style="background: #2196f3; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 10px; cursor: pointer;">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="exportEnhancedProximityAnalysis()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                        📊 Export Enhanced Report
+                    </button>
+                    <button onclick="showDomainIntelligence()" style="background: #673ab7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                        🔍 Domain Intelligence
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store enhanced results for export
+            window.enhancedProximityResults = sortedRisks;
+        }
+        
+        // Load competitor data if not already loaded
+        async function loadCompetitorData() {
+            try {
+                const response = await fetch('/apptegy-geocoded-current.json');
+                window.competitorData = await response.json();
+            } catch (error) {
+                console.error('Failed to load competitor data:', error);
+            }
+        }
+        
+        // Show proximity analysis results
+        function showProximityResults(customersAtRisk, radius) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            const totalCustomers = window.customerData ? window.customerData.size : 0;
+            const atRiskCount = customersAtRisk.size;
+            const riskPercentage = totalCustomers > 0 ? ((atRiskCount / totalCustomers) * 100).toFixed(1) : 0;
+            
+            // Sort by closest competitor distance
+            const sortedRisks = Array.from(customersAtRisk.values())
+                .sort((a, b) => a.closestDistance - b.closestDistance);
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #ff9800;">🎯 Proximity Alert Analysis</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff6f00;">⚠️ Competitive Risk Summary</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #ff9800;">${atRiskCount}</div>
+                            <div style="font-size: 12px; color: #666;">Customers at Risk</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${riskPercentage}%</div>
+                            <div style="font-size: 12px; color: #666;">of Total Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: bold; color: #6610f2;">${radius} mi</div>
+                            <div style="font-size: 12px; color: #666;">Proximity Radius</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px 0; color: #333;">🔥 Highest Risk Customers (Closest Competitors)</h3>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Customer</th>
+                                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd;">Location</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Distance</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;"># Nearby</th>
+                                <th style="padding: 8px; text-align: center; border-bottom: 2px solid #ddd;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedRisks.slice(0, 20).map(risk => `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 8px; font-weight: 600; color: #333;">
+                                        ${risk.customer.name}
+                                        <div style="font-size: 11px; color: #666;">${risk.customer.type}</div>
+                                    </td>
+                                    <td style="padding: 8px; color: #666;">
+                                        ${risk.customer.city}, ${risk.customer.state}
+                                    </td>
+                                    <td style="padding: 8px; text-align: center; font-weight: bold; color: ${risk.closestDistance < 1 ? '#dc3545' : risk.closestDistance < 3 ? '#ff9800' : '#ffc107'};">
+                                        ${risk.closestDistance.toFixed(1)} mi
+                                    </td>
+                                    <td style="padding: 8px; text-align: center; font-weight: bold; color: #dc3545;">
+                                        ${risk.nearbyCompetitors}
+                                    </td>
+                                    <td style="padding: 8px; text-align: center;">
+                                        <button onclick="focusOnCustomer('${risk.customer.lat}_${risk.customer.lng}')" style="background: #2196f3; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="exportProximityAnalysis()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        📊 Export Full Report
+                    </button>
+                    <button onclick="highlightAtRiskCustomers()" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        🔍 Highlight on Map
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store results for export
+            window.proximityAnalysisResults = sortedRisks;
+        }
+        
+        // Focus on a specific customer
+        function focusOnCustomer(customerKey) {
+            // Close the modal
+            const modals = document.querySelectorAll('div[style*="position: fixed"]');
+            modals.forEach(modal => modal.remove());
+            
+            // Show map view
+            showMapView();
+            
+            // Center on customer
+            const parts = customerKey.split('_');
+            const lat = parseFloat(parts[0]);
+            const lng = parseFloat(parts[1]);
+            map.setView([lat, lng], 15);
+            
+            // Show competitor overlay
+            if (!window.competitorOverlayVisible) {
+                toggleCompetitorOverlay();
+            }
+        }
+        
+        // Drill down to specific state analysis
+        function drillDownToState(stateName) {
+            if (!window.competitorData) return;
+            
+            // Filter competitors by state
+            const stateCompetitors = window.competitorData.filter(comp => comp.state === stateName);
+            
+            // Filter customers by state
+            const stateCustomers = [];
+            if (window.customerData) {
+                window.customerData.forEach(customer => {
+                    if (customer.state === stateName) {
+                        stateCustomers.push(customer);
+                    }
+                });
+            }
+            
+            showStateDrillDown(stateName, stateCompetitors, stateCustomers);
+        }
+        
+        // Show state drill-down modal
+        function showStateDrillDown(stateName, competitors, customers) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 5%;
+                left: 5%;
+                width: 90%;
+                height: 90%;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            `;
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+                    <h2 style="margin: 0; color: #333;">🏛️ ${stateName} Competitive Analysis</h2>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="display: flex; gap: 10px; padding: 0 20px; background: #f8f9fa; border-bottom: 1px solid #eee;">
+                    <button onclick="showStateTab('map', '${stateName}')" id="stateMapTab" style="background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 6px 6px 0 0; cursor: pointer;">
+                        🗺️ Map View
+                    </button>
+                    <button onclick="showStateTab('table', '${stateName}')" id="stateTableTab" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 6px 6px 0 0; cursor: pointer;">
+                        📊 Table View
+                    </button>
+                </div>
+                
+                <div style="padding: 20px; background: #e3f2fd; border-bottom: 1px solid #ddd;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #dc3545;">${competitors.length}</div>
+                            <div style="font-size: 12px; color: #666;">Apptegy Schools</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #2196f3;">${customers.length}</div>
+                            <div style="font-size: 12px; color: #666;">Edlio Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #ff9800;">${calculateStateRisk(competitors, customers)}</div>
+                            <div style="font-size: 12px; color: #666;">At Risk Customers</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: bold; color: #4caf50;">${((customers.length / (competitors.length + customers.length)) * 100).toFixed(0)}%</div>
+                            <div style="font-size: 12px; color: #666;">Market Share</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="stateContentArea" style="flex: 1; overflow: hidden;">
+                    <!-- Content will be loaded here -->
+                </div>
+                
+                <div style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px;">
+                    <button onclick="exportStateAnalysis('${stateName}')" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        📊 Export ${stateName} Analysis
+                    </button>
+                    <button onclick="focusMapOnState('${stateName}')" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                        🎯 Focus Main Map
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store state data for export
+            window.currentStateData = {
+                state: stateName,
+                competitors: competitors,
+                customers: customers
+            };
+            
+            // Default to map view
+            showStateTab('map', stateName);
+        }
+        
+        // Calculate at-risk customers for a state
+        function calculateStateRisk(competitors, customers) {
+            let atRisk = 0;
+            const proximityRadius = 5; // miles
+            
+            customers.forEach(customer => {
+                const hasNearbyCompetitor = competitors.some(competitor => {
+                    const distance = calculateDistance(
+                        customer.lat, customer.lng,
+                        competitor.lat, competitor.lng
+                    );
+                    return distance <= proximityRadius;
+                });
+                
+                if (hasNearbyCompetitor) {
+                    atRisk++;
+                }
+            });
+            
+            return atRisk;
+        }
+        
+        // Show state tab content
+        function showStateTab(tabType, stateName) {
+            // Update tab styles
+            document.getElementById('stateMapTab').style.background = tabType === 'map' ? '#2196f3' : '#666';
+            document.getElementById('stateTableTab').style.background = tabType === 'table' ? '#2196f3' : '#666';
+            
+            const contentArea = document.getElementById('stateContentArea');
+            
+            if (tabType === 'map') {
+                showStateMapView(contentArea, stateName);
+            } else {
+                showStateTableView(contentArea, stateName);
+            }
+        }
+        
+        // Show state map view
+        function showStateMapView(container, stateName) {
+            container.innerHTML = `
+                <div style="height: 100%; position: relative;">
+                    <div id="stateMap" style="height: 100%; width: 100%;"></div>
+                </div>
+            `;
+            
+            // Initialize map for this state
+            setTimeout(() => {
+                const stateMap = L.map('stateMap').setView([39.8283, -98.5795], 4);
+                
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(stateMap);
+                
+                const { competitors, customers } = window.currentStateData;
+                const allMarkers = [];
+                
+                // Add competitor markers (red)
+                competitors.forEach(competitor => {
+                    const marker = L.marker([competitor.lat, competitor.lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
+                                    <polygon points="8,10 16,10 12,6" fill="white"/>
+                                    <rect x="11" y="10" width="2" height="8" fill="white"/>
+                                    <rect x="9" y="17" width="6" height="1" fill="white"/>
+                                </svg>
+                            `),
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    });
+                    
+                    marker.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h4 style="margin: 0 0 10px 0; color: #dc3545;">${competitor.name}</h4>
+                            <p style="margin: 0 0 5px 0;"><strong>Competitor:</strong> Apptegy</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${competitor.city}, ${competitor.state}</p>
+                        </div>
+                    `);
+                    
+                    marker.addTo(stateMap);
+                    allMarkers.push(marker);
+                });
+                
+                // Add customer markers (blue)
+                customers.forEach(customer => {
+                    const marker = L.marker([customer.lat, customer.lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <circle cx="12" cy="12" r="10" fill="#2196f3" stroke="#fff" stroke-width="2"/>
+                                    <rect x="7" y="8" width="10" height="8" fill="white"/>
+                                    <polygon points="7,8 12,4 17,8" fill="white"/>
+                                    <rect x="10" y="11" width="4" height="3" fill="#2196f3"/>
+                                </svg>
+                            `),
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    });
+                    
+                    marker.bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2196f3;">${customer.name}</h4>
+                            <p style="margin: 0 0 5px 0;"><strong>Type:</strong> ${customer.type}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Location:</strong> ${customer.city}, ${customer.state}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Products:</strong> ${customer.products.join(', ')}</p>
+                        </div>
+                    `);
+                    
+                    marker.addTo(stateMap);
+                    allMarkers.push(marker);
+                });
+                
+                // Fit map to show all markers
+                if (allMarkers.length > 0) {
+                    const group = new L.featureGroup(allMarkers);
+                    stateMap.fitBounds(group.getBounds().pad(0.1));
+                }
+            }, 100);
+        }
+        
+        // Show state table view
+        function showStateTableView(container, stateName) {
+            const { competitors, customers } = window.currentStateData;
+            
+            container.innerHTML = `
+                <div style="height: 100%; overflow-y: auto; padding: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%;">
+                        <div>
+                            <h3 style="margin: 0 0 15px 0; color: #dc3545;">⚔️ Apptegy Competitors (${competitors.length})</h3>
+                            <div style="max-height: calc(100% - 40px); overflow-y: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">School Name</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">City</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Domain</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${competitors.map(comp => `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-weight: 500;">${comp.name}</td>
+                                                <td style="padding: 8px; color: #666;">${comp.city}</td>
+                                                <td style="padding: 8px; font-family: monospace; font-size: 11px;">
+                                                    ${comp.domain ? `<a href="https://${comp.domain}" target="_blank">${comp.domain}</a>` : 'N/A'}
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 style="margin: 0 0 15px 0; color: #2196f3;">🏫 Edlio Customers (${customers.length})</h3>
+                            <div style="max-height: calc(100% - 40px); overflow-y: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Customer Name</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Type</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">City</th>
+                                            <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Products</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${customers.map(customer => `
+                                            <tr style="border-bottom: 1px solid #eee;">
+                                                <td style="padding: 8px; font-weight: 500;">${customer.name}</td>
+                                                <td style="padding: 8px; color: #666;">${customer.type}</td>
+                                                <td style="padding: 8px; color: #666;">${customer.city}</td>
+                                                <td style="padding: 8px; font-size: 11px;">${customer.products.join(', ')}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Export state analysis
+        function exportStateAnalysis(stateName) {
+            if (!window.currentStateData) return;
+            
+            const { competitors, customers } = window.currentStateData;
+            
+            const csvContent = [
+                ['Type', 'Name', 'City', 'State', 'Domain/Products', 'Latitude', 'Longitude'],
+                ...competitors.map(comp => [
+                    'Apptegy Competitor',
+                    comp.name,
+                    comp.city,
+                    comp.state,
+                    comp.domain || 'N/A',
+                    comp.lat,
+                    comp.lng
+                ]),
+                ...customers.map(customer => [
+                    'Edlio Customer',
+                    customer.name,
+                    customer.city,
+                    customer.state,
+                    customer.products.join('; '),
+                    customer.lat,
+                    customer.lng
+                ])
+            ].map(row => row.map(field => `"${field || ''}"`).join(',')).join('\\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${stateName.replace(/\s+/g, '-')}-competitive-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Focus main map on state
+        function focusMapOnState(stateName) {
+            // Close the modal
+            const modals = document.querySelectorAll('div[style*="position: fixed"]');
+            modals.forEach(modal => modal.remove());
+            
+            // Switch to map view
+            showMapView();
+            
+            // Show competitor overlay if not visible
+            if (!window.competitorOverlayVisible) {
+                toggleCompetitorOverlay();
+            }
+            
+            // Focus on state bounds
+            if (window.currentStateData) {
+                const { competitors, customers } = window.currentStateData;
+                const allLocations = [...competitors, ...customers];
+                
+                if (allLocations.length > 0) {
+                    const bounds = L.latLngBounds(allLocations.map(loc => [loc.lat, loc.lng]));
+                    map.fitBounds(bounds.pad(0.1));
+                }
+            }
+        }
+        
+        // Export proximity analysis
+        function exportProximityAnalysis() {
+            if (!window.proximityAnalysisResults) return;
+            
+            const csvContent = [
+                ['Customer Name', 'Type', 'City', 'State', 'Products', 'Closest Competitor Distance (mi)', 'Nearby Competitors Count', 'Closest Competitor Name', 'Risk Level'],
+                ...window.proximityAnalysisResults.map(risk => [
+                    risk.customer.name,
+                    risk.customer.type,
+                    risk.customer.city,
+                    risk.customer.state,
+                    risk.customer.products.join('; '),
+                    risk.closestDistance.toFixed(2),
+                    risk.nearbyCompetitors,
+                    risk.closestCompetitor.name,
+                    risk.closestDistance < 1 ? 'Critical' : risk.closestDistance < 3 ? 'High' : 'Medium'
+                ])
+            ].map(row => row.map(field => `"${field || ''}"`).join(',')).join('\\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proximity-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Export competitor data
+        function exportCompetitorData() {
+            if (!window.competitorData || window.competitorData.length === 0) {
+                alert('No competitor data to export.');
+=======
+            if (searchTerm.length < 2) {
+                hideSearchResults();
+>>>>>>> Stashed changes
+                return;
+            }
+            
+            const matches = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm)
+            ).slice(0, 10);
+            
+            if (matches.length === 0) {
+                hideSearchResults();
+                return;
+            }
+            
+            searchResults.innerHTML = matches.map(customer => `
+                <div class="search-result-item" onclick="selectCustomerFromSearch(${JSON.stringify(customer).replace(/"/g, '&quot;')})">
+                    <div class="search-result-name">${customer.name}</div>
+                    <div class="search-result-location">${customer.city}, ${customer.state}</div>
+                </div>
+            `).join('');
+            
+            searchResults.style.display = 'block';
+        }
+        
+        function hideSearchResults() {
+            document.getElementById('searchResults').style.display = 'none';
+        }
+        
+        function selectCustomerFromSearch(customer) {
+            selectCustomer(customer);
+            document.getElementById('searchInput').value = customer.name;
+            hideSearchResults();
+            filterCustomers();
+        }
+        
+        // Event listeners
+        document.getElementById('stateFilter').addEventListener('change', filterCustomers);
+        document.getElementById('typeFilter').addEventListener('change', filterCustomers);
+        document.getElementById('productFilter').addEventListener('change', filterCustomers);
+        document.getElementById('searchInput').addEventListener('input', showSearchResults);
+        document.getElementById('searchInput').addEventListener('blur', () => {
+            setTimeout(hideSearchResults, 200); // Delay to allow click events
+        });
+        
+        // Click outside to hide search results
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                hideSearchResults();
+            }
+        });
+    </script>
+</body>
+</html>

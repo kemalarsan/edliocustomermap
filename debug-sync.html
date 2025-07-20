@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug HubSpot Sync</title>
+</head>
+<body>
+    <h1>Debug HubSpot Sync Issue</h1>
+    <button onclick="debugSync()">Debug Sync Process</button>
+    <pre id="output"></pre>
+
+    <script src="live-data-integration.js"></script>
+    <script>
+        async function debugSync() {
+            const output = document.getElementById('output');
+            output.textContent = 'Starting debug...\n';
+            
+            try {
+                // Test 1: Direct API call
+                output.textContent += '\n1. Testing direct API call...\n';
+                const directResponse = await fetch('/api/hubspot?path=/crm/v3/objects/companies&limit=5');
+                const directData = await directResponse.json();
+                output.textContent += `   Direct API returned: ${directData.results?.length || 0} companies\n`;
+                
+                // Test 2: LiveDataIntegration with mock static data
+                output.textContent += '\n2. Testing LiveDataIntegration...\n';
+                window.customers = [
+                    { name: "Test School", url: "https://test.com", lat: 40.7128, lng: -74.0060, type: "district" }
+                ];
+                
+                const liveData = new LiveDataIntegration();
+                output.textContent += `   Static data loaded: ${liveData.staticData?.length || 0} customers\n`;
+                
+                // Test 3: Sync HubSpot data
+                output.textContent += '\n3. Running HubSpot sync...\n';
+                await liveData.syncHubSpotData();
+                output.textContent += `   HubSpot status: ${JSON.stringify(liveData.status.hubspot)}\n`;
+                
+                // Test 4: Get merged data
+                const mergedData = liveData.getMergedData();
+                output.textContent += `   Merged data: ${mergedData?.length || 0} total customers\n`;
+                
+                if (mergedData && mergedData.length > 0) {
+                    output.textContent += '\n4. Sample merged data:\n';
+                    mergedData.slice(0, 3).forEach((customer, i) => {
+                        output.textContent += `   ${i+1}. ${customer.name} (source: ${customer.source})\n`;
+                    });
+                }
+                
+            } catch (error) {
+                output.textContent += `\nError: ${error.message}\n`;
+                console.error('Debug error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
