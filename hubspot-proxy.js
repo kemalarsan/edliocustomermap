@@ -34,10 +34,22 @@ const server = http.createServer((req, res) => {
     }
 
     const urlParts = url.parse(req.url, true);
-    const apiPath = urlParts.pathname.replace('/api/hubspot', '');
+
+    // Extract the HubSpot API path from query parameters to match the
+    // behavior of the Vercel serverless function
+    const { path: apiPath = '/crm/v3/objects/companies', ...queryParams } = urlParts.query;
+
+    // Build query string from the remaining parameters
+    const queryString = new url.URLSearchParams(queryParams).toString();
     
     // Get Authorization header
-    const authHeader = req.headers.authorization;
+    let authHeader = req.headers.authorization;
+
+    // Allow using an environment variable for local testing
+    if (!authHeader && process.env.HUBSPOT_API_KEY) {
+        authHeader = `Bearer ${process.env.HUBSPOT_API_KEY}`;
+    }
+
     if (!authHeader) {
         res.writeHead(401, corsHeaders);
         res.end(JSON.stringify({ error: 'Authorization header required' }));
@@ -45,7 +57,7 @@ const server = http.createServer((req, res) => {
     }
 
     // Construct HubSpot API URL
-    const hubspotUrl = `https://api.hubapi.com${apiPath}?${urlParts.query || ''}`;
+    const hubspotUrl = `https://api.hubapi.com${apiPath}${queryString ? '?' + queryString : ''}`;
     
     console.log('Proxying request to:', hubspotUrl);
 
