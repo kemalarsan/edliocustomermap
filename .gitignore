@@ -51,3 +51,11 @@ api-config.js
 # Local data files
 geocoding_progress.json
 login-logs.json
+
+# Debug files with API keys
+DEBUG_SUMMARY.md
+test-exact-original.html
+test-raw-api-key.html
+
+# Version control backups
+backups/
