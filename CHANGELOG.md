@@ -3,13 +3,21 @@
 ## Version 3.7 - 2025-08-04
 
 ### Added
-- [Add new features here]
+- HubSpot geocoding integration with real-time address geocoding
+- Unified geocoding service for batch processing data imports
+- Version control system with automated backups and rollback capability
+- Comprehensive pre-deployment testing framework
+- localStorage caching for geocoded addresses
 
 ### Changed
-- [Add changes here]
+- Updated HubSpot sync function to include geocoding with progress tracking
+- Enhanced map display to show geocoded HubSpot customers alongside static data
+- Improved data merging logic for HubSpot and static customer data
 
 ### Fixed
-- [Add bug fixes here]
+- HubSpot data now displays on map with proper coordinates
+- Resolved geocoding rate limiting issues with 1-second delays
+- Fixed HubSpot data overlay problem that prevented customers from appearing on map
 
 ---
 
