@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 3.7.1 - 2025-08-04
+
+### Added
+- [Add new features here]
+
+### Changed
+- [Add changes here]
+
+### Fixed
+- [Add bug fixes here]
+
+---
+
+
 ## Version 3.7 - 2025-08-04
 
 ### Added
