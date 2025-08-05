@@ -1,15 +1,13 @@
 # Changelog
 
-## Version 3.7.1 - 2025-08-04
-
-### Added
-- [Add new features here]
-
-### Changed
-- [Add changes here]
+## Version 3.7.1 - 2025-08-04 (Hotfix)
 
 ### Fixed
-- [Add bug fixes here]
+- HubSpot data now properly updates customer counts and metrics dashboard after sync
+- Map markers now correctly display for geocoded HubSpot customers
+- Fixed issue where total customer count remained at 1993 despite successful HubSpot sync
+- Added missing updateTypeCounts() and updateMetricsDashboard() calls after HubSpot sync
+- Ensured applyFilters() runs to include HubSpot customers in filtered data
 
 ---
 
