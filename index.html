@@ -14,8 +14,11 @@
     <script src="api-config.js"></script>
     <!-- HubSpot API Module -->
     <script src="hubspot-api.js"></script>
+    <!-- HubSpot Geocoding Integration -->
+    <script src="hubspot-geocode-integration.js"></script>
     <!-- Live Data Integration -->
     <script src="live-data-integration.js"></script>
+    <script src="geocode-hubspot.js"></script>
     <!-- Montserrat Font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Google Sign-In -->
@@ -2027,6 +2030,7 @@
         let map;
         let markers;
         let allCustomers = [];
+        window.allCustomers = []; // Make it globally accessible
         let filteredCustomers = [];
         let searchCircle = null;
         let searchCenter = null;
@@ -2449,6 +2453,7 @@
             }
             
             allCustomers = customers;
+            window.allCustomers = customers; // Make globally accessible
             filteredCustomers = customers;
             
             console.log(`Loaded ${allCustomers.length} customers`);
@@ -2783,7 +2788,7 @@
             
             function loadSimpleTable() {
                 const tableContent = document.getElementById('tableContent');
-                const customers = getFilteredCustomers();
+                const customers = filteredCustomers;
                 
                 if (customers.length === 0) {
                     tableContent.innerHTML = '<p>No customers found with current filters.</p>';
@@ -2939,7 +2944,7 @@
         
         // Content loading functions for new views
         function loadAnalyticsContent() {
-            const customers = getFilteredCustomers();
+            const customers = filteredCustomers;
             const analyticsContent = document.getElementById('analyticsContent');
             
             // Calculate basic analytics
@@ -3012,7 +3017,7 @@
         }
         
         function loadAdoptionContent() {
-            const customers = getFilteredCustomers();
+            const customers = filteredCustomers;
             const adoptionContent = document.getElementById('adoptionContent');
             
             // Calculate product adoption
@@ -3181,7 +3186,8 @@
                         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                             <button onclick="testHubSpotConnection()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔍 Test Connection</button>
                             <button onclick="syncHubSpotData()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔄 Sync Now</button>
-                            <button onclick="initializeLiveDataIntegration()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">⚡ Enable Auto-Sync</button>
+                            <button onclick="syncWithGeocoding()" style="background: #9C27B0; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🌍 Sync + Geocode</button>
+                            <button onclick="restoreOriginalData()" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔄 Restore Original</button>
                         </div>
                     </div>
                     
@@ -4349,6 +4355,7 @@
                 if (mergedData && mergedData.length > 0) {
                     window.customers = mergedData;
                     allCustomers = mergedData;
+                    window.allCustomers = mergedData; // Keep global in sync
                     filteredCustomers = mergedData;
                     
                     updateSyncStatus();
@@ -4438,19 +4445,27 @@
             });
         }
         
-        async function syncHubSpotData() {
+        async function syncWithGeocoding() {
             if (typeof LiveDataIntegration === 'undefined') {
                 alert('❌ Live data integration module not loaded');
                 return;
             }
             
             const syncStatus = document.getElementById('syncStatus');
-            syncStatus.innerHTML = '<div>🔄 Syncing data from HubSpot...</div>';
+            syncStatus.innerHTML = '<div>🔄 Syncing data from HubSpot with geocoding...</div>';
             
             try {
                 const liveData = new LiveDataIntegration();
-                console.log('🚀 Starting HubSpot sync...');
-                await liveData.syncHubSpotData();
+                console.log('🚀 Starting HubSpot sync with geocoding...');
+                
+                // Test direct API call first
+                console.log('🔍 Testing direct API call...');
+                const testResponse = await fetch('/api/hubspot?path=/crm/v3/objects/companies&limit=5');
+                const testData = await testResponse.json();
+                console.log('🔍 Direct API test:', testData.results?.length || 0, 'companies');
+                
+                // Sync with geocoding enabled
+                await liveData.syncHubSpotData(true); // Enable geocoding
                 const mergedData = liveData.getMergedData();
                 console.log('📊 Merged data length:', mergedData ? mergedData.length : 0);
                 
@@ -4458,6 +4473,7 @@
                 if (mergedData && mergedData.length > 0) {
                     window.customers = mergedData;
                     allCustomers = mergedData;
+                    window.allCustomers = mergedData; // Keep global in sync
                     filteredCustomers = mergedData;
                     currentDataSource = 'hubspot';
                     
@@ -4465,7 +4481,7 @@
                     updateSidebar();
                     updateSyncStatus();
                     
-                    alert(`✅ Synced ${liveData.status.hubspot.recordCount} schools from HubSpot! Total customers: ${mergedData.length}`);
+                    alert(`✅ Synced ${liveData.status.hubspot.recordCount} schools from HubSpot with geocoding! Total customers: ${mergedData.length}`);
                 } else {
                     alert('⚠️ No data received from HubSpot. Check API configuration.');
                 }
@@ -4473,6 +4489,92 @@
                 console.error('❌ Sync error details:', error);
                 alert(`❌ Sync failed: ${error.message}`);
                 updateSyncStatus();
+            }
+        }
+
+        function restoreOriginalData() {
+            console.log('🔄 Restoring original data...');
+            
+            // Reload from data.js
+            if (typeof customers !== 'undefined' && customers.length > 0) {
+                allCustomers = [...customers];
+                window.allCustomers = [...customers];
+                filteredCustomers = [...customers];
+                window.customers = [...customers];
+                currentDataSource = 'static';
+                
+                updateMap();
+                updateSidebar();
+                updateTypeCounts();
+                updateMetricsDashboard();
+                
+                alert(`✅ Restored ${customers.length} original customers!`);
+            } else {
+                alert('❌ Could not find original data');
+            }
+        }
+
+        async function syncHubSpotData() {
+            if (typeof HubSpotGeocodeIntegration === 'undefined') {
+                alert('❌ HubSpot geocoding module not loaded');
+                return;
+            }
+            
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.innerHTML = '<div style="color: #3B82F6;">🔄 Syncing with HubSpot...</div>';
+            
+            try {
+                // Initialize geocoding integration
+                const geocoder = new HubSpotGeocodeIntegration();
+                console.log('🚀 Starting HubSpot sync with geocoding...');
+                
+                // Fetch HubSpot data
+                const response = await fetch('/api/hubspot?path=/crm/v3/objects/companies&limit=100');
+                
+                if (!response.ok) {
+                    throw new Error(`HubSpot API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const companies = data.results || [];
+                console.log('📊 Fetched', companies.length, 'companies from HubSpot');
+                
+                // Process with geocoding
+                syncStatus.innerHTML = '<div style="color: #3B82F6;">📍 Geocoding HubSpot data...</div>';
+                
+                const geocodedData = await geocoder.processHubSpotData(companies, {
+                    batchSize: 10,
+                    onProgress: (progress) => {
+                        syncStatus.innerHTML = `<div style="color: #3B82F6;">📍 Geocoding: ${progress.geocoded}/${progress.total} (${progress.progress}%)</div>`;
+                    }
+                });
+                
+                // Merge with existing data
+                const existingData = window.customers || customers || [];
+                const mergedData = geocoder.mergeWithExistingData(geocodedData, existingData);
+                
+                // Update global data
+                window.allCustomers = mergedData;
+                window.customers = mergedData;
+                allCustomers = mergedData;
+                filteredCustomers = mergedData;
+                currentDataSource = 'hubspot';
+                
+                // Refresh map with new data
+                updateMap();
+                updateSidebar();
+                updateSyncStatus();
+                
+                const geocodedCount = geocodedData.filter(d => d.geocoded).length;
+                syncStatus.innerHTML = `<div style="color: #10B981;">✅ HubSpot sync complete: ${companies.length} companies, ${geocodedCount} geocoded</div>`;
+                
+                // Show alert with results
+                alert(`✅ Synced ${companies.length} schools from HubSpot!\n${geocodedCount} successfully geocoded\nTotal customers: ${mergedData.length}`);
+                
+            } catch (error) {
+                console.error('❌ HubSpot sync error:', error);
+                syncStatus.innerHTML = `<div style="color: #EF4444;">❌ Sync failed: ${error.message}</div>`;
+                alert(`❌ Sync failed: ${error.message}`);
             }
         }
         
@@ -5651,24 +5753,24 @@
             console.log(`Updating ${metric} metric to view: ${view}`);
             
             // Get filtered customer data
-            const filteredCustomers = getFilteredCustomers();
-            const metrics = calculateMetrics(filteredCustomers);
+            const filteredData = filteredCustomers;
+            const metrics = calculateMetrics(filteredData);
             
             switch(metric) {
                 case 'customers':
-                    updateCustomersView(view, metrics, filteredCustomers);
+                    updateCustomersView(view, metrics, filteredData);
                     break;
                 case 'arr':
-                    updateARRView(view, metrics, filteredCustomers);
+                    updateARRView(view, metrics, filteredData);
                     break;
                 case 'acv':
-                    updateACVView(view, metrics, filteredCustomers);
+                    updateACVView(view, metrics, filteredData);
                     break;
                 case 'types':
-                    updateTypesView(view, metrics, filteredCustomers);
+                    updateTypesView(view, metrics, filteredData);
                     break;
                 case 'renewals':
-                    updateRenewalsView(view, metrics, filteredCustomers);
+                    updateRenewalsView(view, metrics, filteredData);
                     break;
             }
         }
