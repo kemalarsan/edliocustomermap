@@ -6,9 +6,9 @@
 - Error started after moving HubSpot controls to Admin Dashboard
 
 ## ✅ **What We've Verified (Working)**
-- ✅ API key is correct: `pat-na2-46fd1146-5c83-40be-b6f7-043a32442f66`
+- ✅ API key is correct: `pat-na2-[REDACTED]`
 - ✅ Vercel environment variable is set correctly (`/api/test-env` confirms)
-- ✅ Proxy is sending correct auth header (`/api/test-proxy` shows `Bearer pat-na2-46fd1146-5...`)
+- ✅ Proxy is sending correct auth header (`/api/test-proxy` shows `Bearer pat-na2-[REDACTED]...`)
 - ✅ API key format is valid (starts with `pat-na2-`)
 - ✅ HubSpot private app exists with correct permissions
 
