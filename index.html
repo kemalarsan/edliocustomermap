@@ -1052,29 +1052,29 @@
             </div>
 
             <!-- Tabs Navigation -->
-            <div class="finance-tabs" style="display: flex; gap: 5px; padding: 15px 20px 0 20px; border-bottom: 1px solid #e0e0e0;">
-                <button class="finance-tab active" data-tab="arr" onclick="switchFinanceTab('arr')" style="background: none; border: none; border-bottom: 3px solid #e74c3c; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #e74c3c; transition: all 0.3s ease;">
-                    ARR Overview
+            <div class="finance-tabs" style="display: flex; gap: 5px; padding: 15px 20px 0 20px; border-bottom: 1px solid #e0e0e0; overflow-x: auto; flex-wrap: nowrap;">
+                <button class="finance-tab active" data-tab="revenue" onclick="switchFinanceTab('revenue')" style="background: none; border: none; border-bottom: 3px solid #e74c3c; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #e74c3c; transition: all 0.3s ease; white-space: nowrap;">
+                    Revenue & Sales
                 </button>
-                <button class="finance-tab" data-tab="retention" onclick="switchFinanceTab('retention')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease;">
-                    Retention Metrics
+                <button class="finance-tab" data-tab="contracts" onclick="switchFinanceTab('contracts')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease; white-space: nowrap;">
+                    Contracts & Renewals
                 </button>
-                <button class="finance-tab" data-tab="growth" onclick="switchFinanceTab('growth')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease;">
+                <button class="finance-tab" data-tab="profitability" onclick="switchFinanceTab('profitability')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease; white-space: nowrap;">
+                    Profitability
+                </button>
+                <button class="finance-tab" data-tab="growth" onclick="switchFinanceTab('growth')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease; white-space: nowrap;">
                     Growth Analysis
                 </button>
-                <button class="finance-tab" data-tab="contracts" onclick="switchFinanceTab('contracts')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease;">
-                    Contract Value
-                </button>
-                <button class="finance-tab" data-tab="student" onclick="switchFinanceTab('student')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease;">
-                    Per Student Metrics
+                <button class="finance-tab" data-tab="expenses" onclick="switchFinanceTab('expenses')" style="background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease; white-space: nowrap;">
+                    Department Expenses
                 </button>
             </div>
 
             <!-- Tab Content -->
             <div class="finance-tab-content" style="padding: 20px;">
 
-                <!-- ARR Overview Tab -->
-                <div id="arrTab" class="finance-tab-panel" style="display: block;">
+                <!-- Revenue & Sales Tab -->
+                <div id="revenueTab" class="finance-tab-panel" style="display: block;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
 
                         <!-- Total ARR -->
@@ -1103,6 +1103,32 @@
                             <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Churned ARR</div>
                             <div id="detailChurnedARR" style="font-size: 36px; font-weight: 700; color: #e67e22; margin-bottom: 8px;">$--</div>
                             <div style="font-size: 12px; color: #666;">Lost this year</div>
+                        </div>
+
+                    </div>
+
+                    <!-- New Row: Weekly Sales & Revenue Recognition -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+
+                        <!-- Weekly New Sales -->
+                        <div style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);">
+                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Weekly New Sales</div>
+                            <div id="detailWeeklySales" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">$--</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Last 7 days</div>
+                        </div>
+
+                        <!-- GAAP Revenue -->
+                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">GAAP Revenue (YTD)</div>
+                            <div id="detailGAAPRevenue" style="font-size: 36px; font-weight: 700; color: #3498db; margin-bottom: 8px;">$--</div>
+                            <div style="font-size: 12px; color: #666;">Accrual-based recognition</div>
+                        </div>
+
+                        <!-- Cash-Based Revenue -->
+                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #9b59b6; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Cash-Based Revenue (YTD)</div>
+                            <div id="detailCashRevenue" style="font-size: 36px; font-weight: 700; color: #9b59b6; margin-bottom: 8px;">$--</div>
+                            <div style="font-size: 12px; color: #666;">Actual cash collected</div>
                         </div>
 
                     </div>
@@ -1166,34 +1192,71 @@
                     </div>
                 </div>
 
-                <!-- Retention Metrics Tab -->
-                <div id="retentionTab" class="finance-tab-panel" style="display: none;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <!-- Contracts & Renewals Tab -->
+                <div id="contractsTab" class="finance-tab-panel" style="display: none;">
 
-                        <div style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);">
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Gross Retention Rate</div>
-                            <div id="detailGrossRetention" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--%</div>
-                            <div style="font-size: 12px; opacity: 0.8;">Revenue retained from existing customers</div>
+                    <!-- Contracts Expiring Section -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Contracts Expiring</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+
+                            <div style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Expiring in 30 Days</div>
+                                <div id="detailExpiring30" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--</div>
+                                <div id="detailExpiring30Value" style="font-size: 12px; opacity: 0.8;">$-- at risk</div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Expiring in 60 Days</div>
+                                <div id="detailExpiring60" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--</div>
+                                <div id="detailExpiring60Value" style="font-size: 12px; opacity: 0.8;">$-- at risk</div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Expiring in 90 Days</div>
+                                <div id="detailExpiring90" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--</div>
+                                <div id="detailExpiring90Value" style="font-size: 12px; opacity: 0.8;">$-- at risk</div>
+                            </div>
+
+                            <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #27ae60; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Avg Contract Value</div>
+                                <div id="detailAvgContractValue2" style="font-size: 36px; font-weight: 700; color: #27ae60; margin-bottom: 8px;">$--</div>
+                                <div style="font-size: 12px; color: #666;">Per customer</div>
+                            </div>
+
                         </div>
+                    </div>
 
-                        <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);">
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Net Retention Rate</div>
-                            <div id="detailNetRetention" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--%</div>
-                            <div style="font-size: 12px; opacity: 0.8;">Including expansion revenue</div>
+                    <!-- Retention Metrics Section -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Retention Metrics</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+
+                            <div style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Gross Retention Rate</div>
+                                <div id="detailGrossRetention" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                <div style="font-size: 12px; opacity: 0.8;">Revenue retained</div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Net Retention Rate</div>
+                                <div id="detailNetRetention" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                <div style="font-size: 12px; opacity: 0.8;">Including expansion</div>
+                            </div>
+
+                            <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Logo Retention</div>
+                                <div id="detailLogoRetention" style="font-size: 36px; font-weight: 700; color: #e67e22; margin-bottom: 8px;">--%</div>
+                                <div style="font-size: 12px; color: #666;">Customer count</div>
+                            </div>
+
+                            <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #95a5a6; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Churn Rate</div>
+                                <div id="detailChurnRate" style="font-size: 36px; font-weight: 700; color: #95a5a6; margin-bottom: 8px;">--%</div>
+                                <div style="font-size: 12px; color: #666;">Annual churn</div>
+                            </div>
+
                         </div>
-
-                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Logo Retention</div>
-                            <div id="detailLogoRetention" style="font-size: 36px; font-weight: 700; color: #e67e22; margin-bottom: 8px;">--%</div>
-                            <div style="font-size: 12px; color: #666;">Customer count retained</div>
-                        </div>
-
-                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #95a5a6; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Churn Rate</div>
-                            <div id="detailChurnRate" style="font-size: 36px; font-weight: 700; color: #95a5a6; margin-bottom: 8px;">--%</div>
-                            <div style="font-size: 12px; color: #666;">Annual customer churn</div>
-                        </div>
-
                     </div>
 
                     <!-- Cohort Analysis -->
@@ -1247,99 +1310,201 @@
                     </div>
                 </div>
 
-                <!-- Contract Value Tab -->
-                <div id="contractsTab" class="finance-tab-panel" style="display: none;">
+                <!-- Profitability Tab -->
+                <div id="profitabilityTab" class="finance-tab-panel" style="display: none;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
 
-                        <div style="background: linear-gradient(135deg, #f39c12 0%, #d68910 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);">
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Avg Contract Value</div>
-                            <div id="detailAvgContractValue" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">$--</div>
-                            <div style="font-size: 12px; opacity: 0.8;">Per customer annually</div>
-                        </div>
-
-                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #27ae60; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Median Contract</div>
-                            <div id="detailMedianContract" style="font-size: 36px; font-weight: 700; color: #27ae60; margin-bottom: 8px;">$--</div>
-                            <div style="font-size: 12px; color: #666;">Middle of distribution</div>
+                        <div style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);">
+                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Gross Margin</div>
+                            <div id="detailGrossMargin" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Revenue minus COGS</div>
                         </div>
 
                         <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Contract Range</div>
-                            <div id="detailContractRange" style="font-size: 24px; font-weight: 700; color: #3498db; margin-bottom: 8px;">$-- - $--</div>
-                            <div style="font-size: 12px; color: #666;">Min to max values</div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Operating Margin</div>
+                            <div id="detailOperatingMargin" style="font-size: 36px; font-weight: 700; color: #3498db; margin-bottom: 8px;">--%</div>
+                            <div style="font-size: 12px; color: #666;">After operating expenses</div>
                         </div>
 
                         <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #9b59b6; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Avg Contract Term</div>
-                            <div id="detailAvgTerm" style="font-size: 36px; font-weight: 700; color: #9b59b6; margin-bottom: 8px;">-- years</div>
-                            <div style="font-size: 12px; color: #666;">Typical commitment</div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Net Profit Margin</div>
+                            <div id="detailNetMargin" style="font-size: 36px; font-weight: 700; color: #9b59b6; margin-bottom: 8px;">--%</div>
+                            <div style="font-size: 12px; color: #666;">Bottom line profitability</div>
+                        </div>
+
+                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #f39c12; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">EBITDA</div>
+                            <div id="detailEBITDA" style="font-size: 36px; font-weight: 700; color: #f39c12; margin-bottom: 8px;">$--</div>
+                            <div style="font-size: 12px; color: #666;">Earnings before interest, tax, depreciation & amortization</div>
                         </div>
 
                     </div>
 
-                    <!-- Contract Distribution -->
+                    <!-- Cash Flow Analysis -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">Cash Flow Analysis</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+
+                            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Operating Cash Flow</div>
+                                <div id="cashFlowOperating" style="font-size: 28px; font-weight: 700; color: #27ae60; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">Cash from operations</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #3498db;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Investing Cash Flow</div>
+                                <div id="cashFlowInvesting" style="font-size: 28px; font-weight: 700; color: #3498db; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">CapEx & investments</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Financing Cash Flow</div>
+                                <div id="cashFlowFinancing" style="font-size: 28px; font-weight: 700; color: #9b59b6; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">Debt & equity</div>
+                            </div>
+
+                            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Free Cash Flow</div>
+                                <div id="cashFlowFree" style="font-size: 28px; font-weight: 700; color: #e74c3c; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">Available for distribution</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Contract Value Metrics -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
-                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Contract Value Distribution</h3>
-                        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; color: #999; min-height: 200px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            📊 Contract value distribution histogram placeholder
-                            <div style="margin-top: 10px; font-size: 12px;">Shows frequency of contracts at different value ranges</div>
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">Contract Value Metrics</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Avg Contract Value</div>
+                                <div id="detailAvgContractValue" style="font-size: 24px; font-weight: 700; color: #e74c3c;">$--</div>
+                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Per customer</div>
+                            </div>
+
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Median Contract</div>
+                                <div id="detailMedianContract" style="font-size: 24px; font-weight: 700; color: #27ae60;">$--</div>
+                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Middle value</div>
+                            </div>
+
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Contract Range</div>
+                                <div id="detailContractRange" style="font-size: 20px; font-weight: 700; color: #3498db;">$-- - $--</div>
+                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Min to max</div>
+                            </div>
+
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Avg Term</div>
+                                <div id="detailAvgTerm" style="font-size: 24px; font-weight: 700; color: #9b59b6;">-- years</div>
+                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Contract length</div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
-                <!-- Per Student Metrics Tab -->
-                <div id="studentTab" class="finance-tab-panel" style="display: none;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <!-- Department Expenses Tab -->
+                <div id="expensesTab" class="finance-tab-panel" style="display: none;">
 
-                        <div style="background: linear-gradient(135deg, #16a085 0%, #138d75 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(22, 160, 133, 0.3);">
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Avg Price Per Student</div>
-                            <div id="detailPricePerStudent" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">$--</div>
-                            <div style="font-size: 12px; opacity: 0.8;">Annual revenue per student</div>
-                        </div>
+                    <!-- Total Expenses Overview -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
 
-                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #27ae60; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Total Students Served</div>
-                            <div id="detailTotalStudents" style="font-size: 36px; font-weight: 700; color: #27ae60; margin-bottom: 8px;">--</div>
-                            <div style="font-size: 12px; color: #666;">Across all customers</div>
+                        <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);">
+                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Total Operating Expenses</div>
+                            <div id="detailTotalExpenses" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">$--</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Year to date</div>
                         </div>
 
                         <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Avg Students Per School</div>
-                            <div id="detailAvgStudents" style="font-size: 36px; font-weight: 700; color: #3498db; margin-bottom: 8px;">--</div>
-                            <div style="font-size: 12px; color: #666;">Mean school size</div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Expense to Revenue Ratio</div>
+                            <div id="detailExpenseRatio" style="font-size: 36px; font-weight: 700; color: #3498db; margin-bottom: 8px;">--%</div>
+                            <div style="font-size: 12px; color: #666;">Operating efficiency</div>
                         </div>
 
-                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #e74c3c; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Price Per Student Growth</div>
-                            <div id="detailStudentPriceGrowth" style="font-size: 36px; font-weight: 700; color: #e74c3c; margin-bottom: 8px;">--%</div>
-                            <div style="font-size: 12px; color: #666;">YoY improvement</div>
+                        <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #f39c12; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">YoY Expense Growth</div>
+                            <div id="detailExpenseGrowth" style="font-size: 36px; font-weight: 700; color: #f39c12; margin-bottom: 8px;">--%</div>
+                            <div style="font-size: 12px; color: #666;">Compared to last year</div>
                         </div>
 
                     </div>
 
-                    <!-- Price Per Student by Segment -->
+                    <!-- Drillable Department Expenses -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">Department Breakdown (Click to drill down)</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
+
+                            <!-- Sales & Marketing -->
+                            <div onclick="showDepartmentDetails('sales')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #e74c3c;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">Sales & Marketing</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseSales" style="font-size: 28px; font-weight: 700; color: #e74c3c; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                            <!-- Product & Engineering -->
+                            <div onclick="showDepartmentDetails('product')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3498db;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">Product & Engineering</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseProduct" style="font-size: 28px; font-weight: 700; color: #3498db; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                            <!-- Customer Success -->
+                            <div onclick="showDepartmentDetails('customersuccess')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #27ae60;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">Customer Success</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseCustomerSuccess" style="font-size: 28px; font-weight: 700; color: #27ae60; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                            <!-- Operations -->
+                            <div onclick="showDepartmentDetails('operations')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #9b59b6;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">Operations</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseOperations" style="font-size: 28px; font-weight: 700; color: #9b59b6; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                            <!-- Finance & Admin -->
+                            <div onclick="showDepartmentDetails('finance')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f39c12;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">Finance & Admin</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseFinance" style="font-size: 28px; font-weight: 700; color: #f39c12; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                            <!-- HR & People -->
+                            <div onclick="showDepartmentDetails('hr')" style="background: white; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #16a085;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div style="font-size: 13px; color: #666; font-weight: 600;">HR & People</div>
+                                    <div style="font-size: 12px; color: #999;">→</div>
+                                </div>
+                                <div id="expenseHR" style="font-size: 28px; font-weight: 700; color: #16a085; margin-bottom: 5px;">$--</div>
+                                <div style="font-size: 11px; color: #666;">-- of total</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Expense Trends -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
-                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">Price Per Student by Segment</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Charter Schools</div>
-                                <div id="studentPriceCharter" style="font-size: 24px; font-weight: 700; color: #e74c3c;">$--</div>
-                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Per student annually</div>
-                            </div>
-
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Public Districts</div>
-                                <div id="studentPricePublic" style="font-size: 24px; font-weight: 700; color: #3498db;">$--</div>
-                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Per student annually</div>
-                            </div>
-
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Private Schools</div>
-                                <div id="studentPricePrivate" style="font-size: 24px; font-weight: 700; color: #9b59b6;">$--</div>
-                                <div style="font-size: 11px; color: #666; margin-top: 3px;">Per student annually</div>
-                            </div>
-
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Expense Trends</h3>
+                        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; color: #999; min-height: 200px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            📊 Department expense trend chart placeholder
+                            <div style="margin-top: 10px; font-size: 12px;">Shows monthly expense trends by department over the past 12 months</div>
                         </div>
                     </div>
                 </div>
@@ -6199,17 +6364,28 @@
             const totalARR = metrics.finance.arr;
             const avgContractValue = metrics.finance.avgContractValue;
 
-            // ARR Tab Metrics
+            // REVENUE & SALES TAB
+            // ARR Metrics
             updateMetricWithAnimation('detailTotalARR', '$' + (totalARR / 1000000).toFixed(2) + 'M');
-            updateMetricWithAnimation('detailNewARR', '$' + (totalARR * 0.18 / 1000000).toFixed(2) + 'M'); // 18% is new
-            updateMetricWithAnimation('detailExpansionARR', '$' + (totalARR * 0.12 / 1000000).toFixed(2) + 'M'); // 12% expansion
-            updateMetricWithAnimation('detailChurnedARR', '$' + (totalARR * 0.06 / 1000000).toFixed(2) + 'M'); // 6% churn
+            updateMetricWithAnimation('detailNewARR', '$' + (totalARR * 0.18 / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('detailExpansionARR', '$' + (totalARR * 0.12 / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('detailChurnedARR', '$' + (totalARR * 0.06 / 1000000).toFixed(2) + 'M');
+
+            // Weekly New Sales
+            const weeklyNewSales = (totalARR * 0.18 / 52); // 18% new ARR spread over 52 weeks
+            updateMetricWithAnimation('detailWeeklySales', '$' + (weeklyNewSales / 1000).toFixed(0) + 'K');
+
+            // GAAP vs Cash-Based Revenue
+            const gaapRevenue = totalARR * 0.92; // 92% of ARR recognized as GAAP revenue
+            const cashRevenue = totalARR * 1.15; // 115% due to advance payments
+            updateMetricWithAnimation('detailGAAPRevenue', '$' + (gaapRevenue / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('detailCashRevenue', '$' + (cashRevenue / 1000000).toFixed(2) + 'M');
 
             // ARR by Product
             const cmsARR = totalARR * 0.85;
-            const mobileARR = totalARR * 0.35 * 0.25; // 35% adoption, adds 25% to base
-            const massCommARR = totalARR * 0.28 * 0.15; // 28% adoption, adds 15% to base
-            const paymentsARR = totalARR * 0.18 * 0.10; // 18% adoption, adds 10% to base
+            const mobileARR = totalARR * 0.35 * 0.25;
+            const massCommARR = totalARR * 0.28 * 0.15;
+            const paymentsARR = totalARR * 0.18 * 0.10;
 
             updateMetricWithAnimation('arrCMS', '$' + (cmsARR / 1000000).toFixed(2) + 'M');
             updateMetricWithAnimation('arrMobile', '$' + (mobileARR / 1000000).toFixed(2) + 'M');
@@ -6233,38 +6409,118 @@
             document.getElementById('publicPercent').textContent = ((publicCount / totalCustomers) * 100).toFixed(1);
             document.getElementById('privatePercent').textContent = ((privateCount / totalCustomers) * 100).toFixed(1);
 
-            // Retention Tab Metrics
+            // CONTRACTS & RENEWALS TAB
+            // Contracts Expiring
+            const expiring30 = Math.floor(totalCustomers * 0.04); // 4% expiring in 30 days
+            const expiring60 = Math.floor(totalCustomers * 0.07); // 7% expiring in 60 days
+            const expiring90 = Math.floor(totalCustomers * 0.10); // 10% expiring in 90 days
+
+            updateMetricWithAnimation('detailExpiring30', expiring30.toString());
+            updateMetricWithAnimation('detailExpiring30Value', '$' + ((expiring30 * avgContractValue) / 1000).toFixed(0) + 'K');
+            updateMetricWithAnimation('detailExpiring60', expiring60.toString());
+            updateMetricWithAnimation('detailExpiring60Value', '$' + ((expiring60 * avgContractValue) / 1000).toFixed(0) + 'K');
+            updateMetricWithAnimation('detailExpiring90', expiring90.toString());
+            updateMetricWithAnimation('detailExpiring90Value', '$' + ((expiring90 * avgContractValue) / 1000).toFixed(0) + 'K');
+
+            // Average Contract Value (duplicate for contracts tab)
+            updateMetricWithAnimation('detailAvgContractValue2', '$' + avgContractValue.toLocaleString());
+
+            // Retention Metrics
             updateMetricWithAnimation('detailGrossRetention', metrics.finance.grossRetention + '%');
             updateMetricWithAnimation('detailNetRetention', metrics.finance.netRetention + '%');
-            updateMetricWithAnimation('detailLogoRetention', (metrics.finance.grossRetention + 2) + '%'); // Slightly higher
+            updateMetricWithAnimation('detailLogoRetention', (metrics.finance.grossRetention + 2) + '%');
             updateMetricWithAnimation('detailChurnRate', (100 - metrics.finance.grossRetention) + '%');
 
-            // Growth Tab Metrics
-            updateMetricWithAnimation('detailYoYGrowth', metrics.finance.growthRate + '%');
-            updateMetricWithAnimation('detailMoMGrowth', (metrics.finance.growthRate / 12).toFixed(1) + '%');
-            updateMetricWithAnimation('detailQoQGrowth', (metrics.finance.growthRate / 4).toFixed(1) + '%');
-            updateMetricWithAnimation('detailCustomerGrowth', (metrics.finance.growthRate - 3) + '%'); // Slightly lower than revenue growth
+            // PROFITABILITY TAB
+            // Margin Metrics
+            const grossMargin = 75 + Math.floor(Math.random() * 10); // 75-85%
+            const operatingMargin = 20 + Math.floor(Math.random() * 15); // 20-35%
+            const netMargin = 10 + Math.floor(Math.random() * 15); // 10-25%
+            const ebitda = totalARR * (operatingMargin / 100);
 
-            // Contract Value Tab Metrics
+            updateMetricWithAnimation('detailGrossMargin', grossMargin + '%');
+            updateMetricWithAnimation('detailOperatingMargin', operatingMargin + '%');
+            updateMetricWithAnimation('detailNetMargin', netMargin + '%');
+            updateMetricWithAnimation('detailEBITDA', '$' + (ebitda / 1000000).toFixed(2) + 'M');
+
+            // Cash Flow Analysis
+            const operatingCashFlow = totalARR * 0.28;
+            const investingCashFlow = totalARR * -0.08;
+            const financingCashFlow = totalARR * -0.05;
+            const freeCashFlow = operatingCashFlow + investingCashFlow;
+
+            updateMetricWithAnimation('cashFlowOperating', '$' + (operatingCashFlow / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('cashFlowInvesting', '$' + (investingCashFlow / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('cashFlowFinancing', '$' + (financingCashFlow / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('cashFlowFree', '$' + (freeCashFlow / 1000000).toFixed(2) + 'M');
+
+            // Contract Value Metrics (in profitability tab)
             updateMetricWithAnimation('detailAvgContractValue', '$' + avgContractValue.toLocaleString());
             updateMetricWithAnimation('detailMedianContract', '$' + (avgContractValue * 0.85).toLocaleString());
             updateMetricWithAnimation('detailContractRange', '$5,000 - $' + (avgContractValue * 3).toLocaleString());
             updateMetricWithAnimation('detailAvgTerm', '2.3');
 
-            // Per Student Tab Metrics
-            const avgStudentsPerSchool = 850;
-            const pricePerStudent = Math.floor(avgContractValue / avgStudentsPerSchool);
-            const totalStudents = totalCustomers * avgStudentsPerSchool;
+            // GROWTH ANALYSIS TAB
+            updateMetricWithAnimation('detailYoYGrowth', metrics.finance.growthRate + '%');
+            updateMetricWithAnimation('detailMoMGrowth', (metrics.finance.growthRate / 12).toFixed(1) + '%');
+            updateMetricWithAnimation('detailQoQGrowth', (metrics.finance.growthRate / 4).toFixed(1) + '%');
+            updateMetricWithAnimation('detailCustomerGrowth', (metrics.finance.growthRate - 3) + '%');
 
-            updateMetricWithAnimation('detailPricePerStudent', '$' + pricePerStudent.toLocaleString());
-            updateMetricWithAnimation('detailTotalStudents', totalStudents.toLocaleString());
-            updateMetricWithAnimation('detailAvgStudents', avgStudentsPerSchool.toLocaleString());
-            updateMetricWithAnimation('detailStudentPriceGrowth', (metrics.finance.growthRate - 8) + '%');
+            // DEPARTMENT EXPENSES TAB
+            const totalExpenses = totalARR * 0.65; // 65% of ARR as operating expenses
 
-            // Price per student by segment
-            updateMetricWithAnimation('studentPriceCharter', '$' + (pricePerStudent * 1.15).toFixed(0));
-            updateMetricWithAnimation('studentPricePublic', '$' + (pricePerStudent * 0.85).toFixed(0));
-            updateMetricWithAnimation('studentPricePrivate', '$' + (pricePerStudent * 1.35).toFixed(0));
+            updateMetricWithAnimation('detailTotalExpenses', '$' + (totalExpenses / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('detailExpenseRatio', ((totalExpenses / totalARR) * 100).toFixed(1) + '%');
+            updateMetricWithAnimation('detailExpenseGrowth', (metrics.finance.growthRate - 5) + '%'); // Growing slower than revenue
+
+            // Department breakdown (click to drill down)
+            const salesExpense = totalExpenses * 0.30; // 30% of total
+            const productExpense = totalExpenses * 0.25; // 25%
+            const csExpense = totalExpenses * 0.20; // 20%
+            const opsExpense = totalExpenses * 0.15; // 15%
+            const financeExpense = totalExpenses * 0.07; // 7%
+            const hrExpense = totalExpenses * 0.03; // 3%
+
+            updateMetricWithAnimation('expenseSales', '$' + (salesExpense / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('expenseProduct', '$' + (productExpense / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('expenseCustomerSuccess', '$' + (csExpense / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('expenseOperations', '$' + (opsExpense / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('expenseFinance', '$' + (financeExpense / 1000000).toFixed(2) + 'M');
+            updateMetricWithAnimation('expenseHR', '$' + (hrExpense / 1000000).toFixed(2) + 'M');
+        }
+
+        // Show Department Details (drill-down function)
+        function showDepartmentDetails(department) {
+            const departmentNames = {
+                'sales': 'Sales & Marketing',
+                'product': 'Product & Engineering',
+                'customersuccess': 'Customer Success',
+                'operations': 'Operations',
+                'finance': 'Finance & Admin',
+                'hr': 'HR & People'
+            };
+
+            const title = departmentNames[department] + ' Expense Breakdown';
+            const content = `
+                <div style="margin-bottom: 15px;">
+                    <h4>Detailed Breakdown</h4>
+                    <div style="margin: 10px 0;">• Personnel Costs: 70-80%</div>
+                    <div style="margin: 10px 0;">• Technology & Tools: 10-15%</div>
+                    <div style="margin: 10px 0;">• Marketing & Events: 5-10%</div>
+                    <div style="margin: 10px 0;">• Other Operating: 3-5%</div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                        <strong>Year-over-Year Trend:</strong> +12%
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <strong>Headcount:</strong> Growing in alignment with revenue
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: #666;">
+                    Drill-down data will be connected to actual financial systems in production.
+                </div>
+            `;
+
+            showMetricModal(title, content);
         }
 
         // Handle metric view changes from dropdown selectors
