@@ -6,7 +6,7 @@
 class LiveDataIntegration {
     constructor() {
         this.hubspotAPI = null;
-        this.staticData = window.customers || []; // From data.js
+        this.refreshStaticData();
         this.mergedData = [];
         this.lastSync = null;
         this.syncInterval = null;
@@ -42,10 +42,13 @@ class LiveDataIntegration {
     /**
      * Sync data from HubSpot
      */
-    async syncHubSpotData() {
+    async syncHubSpotData(enableGeocoding = false) {
         try {
             console.log('📊 Syncing HubSpot data...');
             console.log('🔑 API Key available:', !!this.hubspotAPIKey);
+            
+            // Refresh static data before merging
+            this.refreshStaticData();
             
             // Fetch companies from HubSpot
             const headers = {
@@ -58,7 +61,13 @@ class LiveDataIntegration {
             }
             // If no API key, the proxy will use the environment variable
             
-            const response = await fetch(`/api/hubspot?path=/crm/v3/objects/companies&limit=1000&properties=name,domain,address,address2,city,state,zip,country,website,phone,hs_object_id,edlio_products,contract_value,renewal_date`, {
+            // Build proper query parameters (HubSpot max limit is 100)
+            const queryParams = new URLSearchParams({
+                path: '/crm/v3/objects/companies',
+                limit: '100' // HubSpot's maximum limit per request
+            });
+            
+            const response = await fetch(`/api/hubspot?${queryParams.toString()}`, {
                 headers
             });
 
@@ -71,8 +80,15 @@ class LiveDataIntegration {
             }
 
             const data = await response.json();
+            console.log('📊 Raw HubSpot response:', JSON.stringify(data).substring(0, 200) + '...');
+            
             const hubspotCompanies = data.results || [];
             console.log('📊 HubSpot Companies Retrieved:', hubspotCompanies.length);
+            
+            // If no results, check if it's an API issue
+            if (hubspotCompanies.length === 0 && data.results === undefined) {
+                console.warn('⚠️ Unexpected HubSpot response format:', data);
+            }
             
             // Update status
             this.status.hubspot = {
@@ -83,8 +99,26 @@ class LiveDataIntegration {
             
             console.log(`✅ HubSpot sync complete: ${hubspotCompanies.length} companies`);
             
-            // Merge with existing data
-            this.mergeHubSpotData(hubspotCompanies);
+            // Geocode companies if enabled
+            if (enableGeocoding && typeof HubSpotGeocoder !== 'undefined') {
+                console.log('🌍 Geocoding HubSpot companies...');
+                const geocoder = new HubSpotGeocoder();
+                
+                // Load cache
+                geocoder.loadGeocodedCache();
+                
+                // Geocode companies that need it
+                const geocodedCompanies = await geocoder.geocodeCompanies(hubspotCompanies);
+                
+                // Save geocoded data
+                geocoder.saveGeocodedData(geocodedCompanies);
+                
+                // Use geocoded data for merging
+                this.mergeHubSpotData(geocodedCompanies);
+            } else {
+                // Merge without geocoding
+                this.mergeHubSpotData(hubspotCompanies);
+            }
             
         } catch (error) {
             console.error('❌ HubSpot sync failed:', error);
@@ -160,6 +194,26 @@ class LiveDataIntegration {
         
         this.mergedData = enrichedData;
         console.log(`✅ Merge complete: ${this.mergedData.length} total customers`);
+        
+        // Debug: Count how many have coordinates and sources
+        const withCoords = this.mergedData.filter(c => c.lat && c.lng);
+        const hubspotData = this.mergedData.filter(c => c.source === 'hubspot');
+        const staticData = this.mergedData.filter(c => c.source === 'static');
+        
+        console.log(`📍 Customers with coordinates: ${withCoords.length}/${this.mergedData.length}`);
+        console.log(`🔄 HubSpot customers: ${hubspotData.length}`);
+        console.log(`📊 Static customers: ${staticData.length}`);
+        console.log(`🔄 HubSpot with coordinates: ${hubspotData.filter(c => c.lat && c.lng).length}`);
+        
+        // If no merged data, fall back to static data with source labels
+        if (this.mergedData.length === 0 && this.staticData.length > 0) {
+            console.log('⚠️ No HubSpot matches, using static data with source labels');
+            this.mergedData = this.staticData.map(customer => ({
+                ...customer,
+                source: 'static',
+                lastUpdated: 'static'
+            }));
+        }
     }
 
     /**
@@ -167,6 +221,24 @@ class LiveDataIntegration {
      */
     getMergedData() {
         return this.mergedData;
+    }
+
+    /**
+     * Refresh static data from global variables
+     */
+    refreshStaticData() {
+        // Try multiple sources for static data
+        this.staticData = window.allCustomers || window.customers || [];
+        
+        // If no data, try loading from the data.js file
+        if (this.staticData.length === 0 && typeof customers !== 'undefined') {
+            this.staticData = customers;
+        }
+        
+        console.log('📊 Static data refreshed:', this.staticData.length, 'customers');
+        console.log('📊 Data sources checked - window.allCustomers:', window.allCustomers?.length || 0, 
+                    ', window.customers:', window.customers?.length || 0,
+                    ', global customers:', typeof customers !== 'undefined' ? customers.length : 0);
     }
 
     /**

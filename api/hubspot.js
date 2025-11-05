@@ -43,6 +43,8 @@ export default async function handler(req, res) {
         const hubspotUrl = `https://api.hubapi.com${path}${queryString ? '?' + queryString : ''}`;
         
         console.log('Proxying request to:', hubspotUrl);
+        console.log('Query params:', queryParams);
+        console.log('Path:', path);
 
         // Make request to HubSpot API
         const response = await fetch(hubspotUrl, {
@@ -57,9 +59,11 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (!response.ok) {
+            console.error('HubSpot API Error:', response.status, data);
             res.status(response.status).json({ 
                 error: 'HubSpot API error', 
-                details: data 
+                details: data,
+                url: hubspotUrl 
             });
             return;
         }

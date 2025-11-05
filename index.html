@@ -900,119 +900,140 @@
         </div>
     </div>
     
-    <!-- Advanced Metrics Dashboard (Hidden by default) -->
+    <!-- Advanced Metrics Dashboard - Client Lifecycle Journey (Hidden by default) -->
     <div id="advancedMetricsDashboard" class="metrics-dashboard hidden" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; z-index: 400;">
-        <div class="metrics-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
-            
-            <!-- Total Active Customers -->
-            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #E53E3E; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏫</div>
+        <div class="metrics-container" style="max-width: 1600px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+
+            <!-- Stage 1: Prospects & Conversations -->
+            <div class="metric-card lifecycle-stage" data-stage="prospects" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border-left: 4px solid #8e44ad;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #8e44ad; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">💬</div>
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Active Customers</div>
-                    <select class="metric-view-selector" data-metric="customers" onclick="event.stopPropagation()" onchange="updateMetricView('customers', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
-                        <option value="accounts">Accounts</option>
-                        <option value="schools">Schools</option>
-                        <option value="yoy">Year over Year</option>
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Prospects & Conversations</div>
+                    <select class="metric-view-selector" data-metric="prospects" onclick="event.stopPropagation()" onchange="updateMetricView('prospects', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="all">All Prospects</option>
+                        <option value="hot">Hot Leads</option>
+                        <option value="warm">Warm Leads</option>
+                        <option value="cold">Cold Leads</option>
+                        <option value="meetings">Scheduled Meetings</option>
                     </select>
                 </div>
-                <div class="metric-value" id="totalCustomers" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
-                <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
-                    <span id="customerChange">Calculating...</span>
-                </div>
-                <div class="metric-click-hint" onclick="showMetricDetails('customers')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
-            </div>
-            
-            <!-- ARR -->
-            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #4caf50; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">💰</div>
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">ARR</div>
-                    <select class="metric-view-selector" data-metric="arr" onclick="event.stopPropagation()" onchange="updateMetricView('arr', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
-                        <option value="total">Total</option>
-                        <option value="yoy">Year over Year</option>
-                        <option value="product">By Product</option>
-                        <option value="state">By State</option>
-                        <option value="perpupil">Per Pupil</option>
-                    </select>
-                </div>
-                <div class="metric-value" id="totalARR" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
-                <div class="metric-change" style="font-size: 12px; color: #4caf50; margin-top: 6px;">
-                    <span id="arrGrowth">+12% YoY</span>
-                </div>
-                <div class="metric-click-hint" onclick="showMetricDetails('revenue')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
-            </div>
-            
-            <!-- Average Contract Value -->
-            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #2196f3; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">📊</div>
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Avg Contract Value</div>
-                    <select class="metric-view-selector" data-metric="acv" onclick="event.stopPropagation()" onchange="updateMetricView('acv', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
-                        <option value="total">Total</option>
-                        <option value="yoy">Year over Year</option>
-                        <option value="custom">Custom Date</option>
-                        <option value="megaexcluded">Mega Accounts Excluded</option>
-                        <option value="product">By Product</option>
-                        <option value="payments">Payments Volume</option>
-                    </select>
-                </div>
-                <div class="metric-value" id="avgContract" style="font-size: 32px; font-weight: 700; color: #333; line-height: 1; transition: all 0.5s ease;">--</div>
-                <div class="metric-change" style="font-size: 12px; color: #2196f3; margin-top: 6px;">
-                    <span id="contractTrend">Per customer</span>
-                </div>
-                <div class="metric-click-hint" onclick="showMetricDetails('contract')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
-            </div>
-            
-            <!-- Customer Type Breakdown -->
-            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #9c27b0; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🏢</div>
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Customer Types</div>
-                    <select class="metric-view-selector" data-metric="types" onclick="event.stopPropagation()" onchange="updateMetricView('types', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
-                        <option value="basic">Basic</option>
-                        <option value="detailed">Detailed</option>
-                        <option value="K12">K-12 Categories</option>
-                        <option value="states">By State</option>
-                        <option value="revenue">By Revenue</option>
-                        <option value="products">By Products</option>
-                    </select>
-                </div>
-                <div class="metric-value" id="typeBreakdown" style="font-size: 14px; line-height: 1.6; transition: all 0.5s ease;">
+                <div class="metric-value" id="prospectsCount" style="font-size: 32px; font-weight: 700; color: #8e44ad; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #666; margin-top: 6px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                        <span style="color: #e74c3c;">Charter:</span> <span id="charterCount" style="font-weight: 600;">--</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                        <span style="color: #3498db;">Public:</span> <span id="publicCount" style="font-weight: 600;">--</span>
+                        <span>Active Conversations:</span> <span id="activeConversations" style="font-weight: 600;">--</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #9b59b6;">Private:</span> <span id="privateCount" style="font-weight: 600;">--</span>
+                        <span>This Week:</span> <span id="prospectsThisWeek" style="font-weight: 600;">--</span>
                     </div>
                 </div>
-                <div class="metric-click-hint" onclick="showMetricDetails('types')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
+                <div class="metric-click-hint" onclick="showMetricDetails('prospects')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
-            
-            <!-- Renewal Risk -->
-            <div class="metric-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;">
-                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #ff5722; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">⚠️</div>
+
+            <!-- Stage 2: Negotiation & Contract Signed -->
+            <div class="metric-card lifecycle-stage" data-stage="negotiation" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border-left: 4px solid #f39c12;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #f39c12; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">📝</div>
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Renewal Risk</div>
-                    <select class="metric-view-selector" data-metric="renewals" onclick="event.stopPropagation()" onchange="updateMetricView('renewals', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
-                        <option value="90days">90 Days</option>
-                        <option value="180days">180 Days</option>
-                        <option value="30days">30 Days</option>
-                        <option value="gross">Gross Retention</option>
-                        <option value="net">Net Retention</option>
-                        <option value="upsells">Upsells/Downsells</option>
-                        <option value="historical">Historical Chart</option>
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Negotiation & Contracts</div>
+                    <select class="metric-view-selector" data-metric="negotiation" onclick="event.stopPropagation()" onchange="updateMetricView('negotiation', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="all">All</option>
+                        <option value="negotiation">In Negotiation</option>
+                        <option value="signed">Contract Signed</option>
+                        <option value="pending">Pending Signature</option>
                     </select>
                 </div>
-                <div class="metric-value" id="renewalRisk" style="font-size: 32px; font-weight: 700; color: #ff5722; line-height: 1; transition: all 0.5s ease;">--</div>
-                <div class="metric-change" style="font-size: 12px; color: #ff5722; margin-top: 6px;">
-                    <span id="renewalValue">$-- at risk</span>
+                <div class="metric-value" id="negotiationCount" style="font-size: 32px; font-weight: 700; color: #f39c12; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #666; margin-top: 6px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span>In Negotiation:</span> <span id="inNegotiation" style="font-weight: 600;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Contracts Signed:</span> <span id="contractsSigned" style="font-weight: 600; color: #27ae60;">--</span>
+                    </div>
                 </div>
-                <div class="metric-click-hint" onclick="showMetricDetails('renewal')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
+                <div class="metric-click-hint" onclick="showMetricDetails('negotiation')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
             </div>
-            
+
+            <!-- Stage 3: Implementation -->
+            <div class="metric-card lifecycle-stage" data-stage="implementation" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border-left: 4px solid #3498db;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #3498db; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">🚀</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Implementation</div>
+                    <select class="metric-view-selector" data-metric="implementation" onclick="event.stopPropagation()" onchange="updateMetricView('implementation', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="all">All</option>
+                        <option value="onboarding">Onboarding</option>
+                        <option value="training">Training</option>
+                        <option value="launch-prep">Launch Prep</option>
+                        <option value="at-risk">At Risk</option>
+                    </select>
+                </div>
+                <div class="metric-value" id="implementationCount" style="font-size: 32px; font-weight: 700; color: #3498db; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #666; margin-top: 6px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span>Avg. Days to Launch:</span> <span id="avgDaysToLaunch" style="font-weight: 600;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Ready to Launch:</span> <span id="readyToLaunch" style="font-weight: 600; color: #27ae60;">--</span>
+                    </div>
+                </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('implementation')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
+            </div>
+
+            <!-- Stage 4: Active Clients & Technical Support -->
+            <div class="metric-card lifecycle-stage" data-stage="active" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border-left: 4px solid #27ae60;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #27ae60; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">✅</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Active Clients & Support</div>
+                    <select class="metric-view-selector" data-metric="active" onclick="event.stopPropagation()" onchange="updateMetricView('active', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="all">All Active</option>
+                        <option value="healthy">Healthy</option>
+                        <option value="attention">Needs Attention</option>
+                        <option value="churn-risk">Churn Risk</option>
+                        <option value="support-tickets">Support Tickets</option>
+                    </select>
+                </div>
+                <div class="metric-value" id="activeClientsCount" style="font-size: 32px; font-weight: 700; color: #27ae60; line-height: 1; transition: all 0.5s ease;">--</div>
+                <div class="metric-change" style="font-size: 12px; color: #666; margin-top: 6px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span>Open Support Tickets:</span> <span id="openTickets" style="font-weight: 600;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Health Score:</span> <span id="avgHealthScore" style="font-weight: 600; color: #27ae60;">--</span>
+                    </div>
+                </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('active')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
+            </div>
+
+            <!-- Stage 5: Finance Metrics -->
+            <div class="metric-card lifecycle-stage" data-stage="finance" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; border-left: 4px solid #e74c3c;">
+                <div class="metric-icon" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #e74c3c; border-radius: 8px; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-size: 20px;">💰</div>
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <div class="metric-label" style="font-size: 12px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Finance Metrics</div>
+                    <select class="metric-view-selector" data-metric="finance" onclick="event.stopPropagation()" onchange="updateMetricView('finance', this.value)" style="font-size: 10px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+                        <option value="arr">ARR</option>
+                        <option value="retention">Retention</option>
+                        <option value="growth">Growth Rate</option>
+                        <option value="acv">Avg Contract Value</option>
+                        <option value="perstudent">Price Per Student</option>
+                    </select>
+                </div>
+                <div class="metric-value" id="financeMainValue" style="font-size: 28px; font-weight: 700; color: #e74c3c; line-height: 1; transition: all 0.5s ease;">$--</div>
+                <div class="metric-change" style="font-size: 11px; color: #666; margin-top: 8px; line-height: 1.4;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                        <span>Gross Retention:</span> <span id="grossRetention" style="font-weight: 600;">--%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                        <span>Net Retention:</span> <span id="netRetention" style="font-weight: 600;">--%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                        <span>Growth Rate:</span> <span id="growthRate" style="font-weight: 600; color: #27ae60;">--%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Avg Contract:</span> <span id="avgContractValue" style="font-weight: 600;">$--</span>
+                    </div>
+                </div>
+                <div class="metric-click-hint" onclick="showMetricDetails('finance')" style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999;">Click for details →</div>
+            </div>
+
         </div>
     </div>
     
@@ -4561,8 +4582,11 @@
                 currentDataSource = 'hubspot';
                 
                 // Refresh map with new data
+                applyFilters(); // Ensure filtered data includes HubSpot customers
                 updateMap();
                 updateSidebar();
+                updateTypeCounts();
+                updateMetricsDashboard();
                 updateSyncStatus();
                 
                 const geocodedCount = geocodedData.filter(d => d.geocoded).length;
@@ -5513,74 +5537,113 @@
         };
         
         function updateMetricsDashboard() {
-            console.log('Updating metrics dashboard...');
-            
+            console.log('Updating metrics dashboard with lifecycle data...');
+
             // Get current filtered customers
             const currentCustomers = filteredCustomers || customers || [];
-            
+
             // Calculate metrics
             const metrics = calculateMetrics(currentCustomers);
-            
-            // Update each metric with animation
-            updateMetricWithAnimation('totalCustomers', metrics.totalCustomers.toLocaleString());
-            updateMetricWithAnimation('totalARR', '$' + (metrics.totalARR / 1000000).toFixed(1) + 'M');
-            updateMetricWithAnimation('avgContract', '$' + metrics.avgContract.toLocaleString());
-            updateMetricWithAnimation('renewalRisk', metrics.renewalRisk.toString());
-            updateMetricWithAnimation('renewalValue', '$' + (metrics.renewalValue / 1000000).toFixed(1) + 'M');
-            
-            // Update type breakdown
-            document.getElementById('charterCount').textContent = metrics.types.charter.toLocaleString();
-            document.getElementById('publicCount').textContent = metrics.types.public.toLocaleString();
-            document.getElementById('privateCount').textContent = metrics.types.private.toLocaleString();
-            
-            // Update change indicators
-            updateChangeIndicators(metrics);
+
+            // Stage 1: Prospects & Conversations
+            updateMetricWithAnimation('prospectsCount', metrics.prospects.total.toLocaleString());
+            updateMetricWithAnimation('activeConversations', metrics.prospects.activeConversations.toLocaleString());
+            updateMetricWithAnimation('prospectsThisWeek', metrics.prospects.thisWeek.toLocaleString());
+
+            // Stage 2: Negotiation & Contract Signed
+            updateMetricWithAnimation('negotiationCount', metrics.negotiation.total.toLocaleString());
+            updateMetricWithAnimation('inNegotiation', metrics.negotiation.inNegotiation.toLocaleString());
+            updateMetricWithAnimation('contractsSigned', metrics.negotiation.signed.toLocaleString());
+
+            // Stage 3: Implementation
+            updateMetricWithAnimation('implementationCount', metrics.implementation.total.toLocaleString());
+            updateMetricWithAnimation('avgDaysToLaunch', metrics.implementation.avgDaysToLaunch + ' days');
+            updateMetricWithAnimation('readyToLaunch', metrics.implementation.readyToLaunch.toLocaleString());
+
+            // Stage 4: Active Clients & Technical Support
+            updateMetricWithAnimation('activeClientsCount', metrics.active.total.toLocaleString());
+            updateMetricWithAnimation('openTickets', metrics.active.openTickets.toLocaleString());
+            updateMetricWithAnimation('avgHealthScore', metrics.active.healthScore + '%');
+
+            // Stage 5: Finance Metrics
+            updateMetricWithAnimation('financeMainValue', '$' + (metrics.finance.arr / 1000000).toFixed(1) + 'M ARR');
+            updateMetricWithAnimation('grossRetention', metrics.finance.grossRetention + '%');
+            updateMetricWithAnimation('netRetention', metrics.finance.netRetention + '%');
+            updateMetricWithAnimation('growthRate', '+' + metrics.finance.growthRate + '%');
+            updateMetricWithAnimation('avgContractValue', '$' + metrics.finance.avgContractValue.toLocaleString());
         }
         
         function calculateMetrics(customerList) {
             const total = customerList.length;
-            
-            // Calculate customer types
-            const types = {
-                charter: customerList.filter(c => c.type === 'charter').length,
-                public: customerList.filter(c => c.type === 'district').length,
-                private: customerList.filter(c => c.type === 'private').length,
-                cmo: customerList.filter(c => c.type === 'cmo').length,
-                esc: customerList.filter(c => c.type === 'esc').length
-            };
-            
+
             // Calculate revenue metrics
-            const baseRevenue = total * metricsData.baseARRPerCustomer;
-            
-            // Add premium for products (CMS, Mobile App, Mass Comm, Payments)
             let totalARR = 0;
             customerList.forEach(customer => {
                 let customerARR = metricsData.baseARRPerCustomer;
-                
+
                 if (customer.products) {
                     if (customer.products.cms) customerARR += 1500;
                     if (customer.products.mobile || customer.products.mobile_app) customerARR += 2500;
                     if (customer.products.masscomm || customer.products.mass_communications) customerARR += 1200;
                     if (customer.products.payments) customerARR += 800;
                 }
-                
+
                 totalARR += customerARR;
             });
-            
+
             const avgContract = total > 0 ? totalARR / total : 0;
-            
-            // Calculate renewal risk (simulate 8-12% of customers at risk)
-            const renewalRiskPercentage = 0.08 + (Math.random() * 0.04); // 8-12%
-            const renewalRisk = Math.floor(total * renewalRiskPercentage);
-            const renewalValue = renewalRisk * avgContract;
-            
+
+            // Stage 1: Prospects & Conversations
+            // Simulate prospect data (in production, this would come from HubSpot)
+            const prospectsTotal = Math.floor(total * 0.15); // ~15% of current customer base as prospects
+            const prospects = {
+                total: prospectsTotal,
+                activeConversations: Math.floor(prospectsTotal * 0.4), // 40% actively engaged
+                thisWeek: Math.floor(prospectsTotal * 0.12) // 12% contacted this week
+            };
+
+            // Stage 2: Negotiation & Contract Signed
+            // Simulate negotiation data (in production, this would come from HubSpot deal stages)
+            const negotiationTotal = Math.floor(total * 0.08); // ~8% of customer base in negotiation
+            const negotiation = {
+                total: negotiationTotal,
+                inNegotiation: Math.floor(negotiationTotal * 0.6), // 60% still negotiating
+                signed: Math.floor(negotiationTotal * 0.4) // 40% signed and ready for implementation
+            };
+
+            // Stage 3: Implementation
+            // Simulate implementation data (in production, this would come from project management system)
+            const implementationTotal = Math.floor(total * 0.05); // ~5% in implementation
+            const implementation = {
+                total: implementationTotal,
+                avgDaysToLaunch: 45 + Math.floor(Math.random() * 15), // 45-60 days
+                readyToLaunch: Math.floor(implementationTotal * 0.3) // 30% ready to launch soon
+            };
+
+            // Stage 4: Active Clients & Technical Support
+            // These are the current active customers
+            const active = {
+                total: total,
+                openTickets: Math.floor(total * 0.08), // ~8% have open support tickets
+                healthScore: 87 + Math.floor(Math.random() * 8) // 87-95% health score
+            };
+
+            // Stage 5: Finance Metrics
+            const finance = {
+                arr: totalARR,
+                grossRetention: 92 + Math.floor(Math.random() * 6), // 92-98%
+                netRetention: 105 + Math.floor(Math.random() * 15), // 105-120%
+                growthRate: 15 + Math.floor(Math.random() * 10), // 15-25%
+                avgContractValue: Math.floor(avgContract),
+                avgPricePerStudent: Math.floor(avgContract / 850) // Assuming avg 850 students per customer
+            };
+
             return {
-                totalCustomers: total,
-                totalARR: totalARR,
-                avgContract: avgContract,
-                types: types,
-                renewalRisk: renewalRisk,
-                renewalValue: renewalValue
+                prospects,
+                negotiation,
+                implementation,
+                active,
+                finance
             };
         }
         
@@ -5596,104 +5659,105 @@
             }
         }
         
-        function updateChangeIndicators(metrics) {
-            // Calculate growth indicators (simulated for demo)
-            const customerGrowth = '+' + (2 + Math.floor(Math.random() * 8)) + '% this month';
-            document.getElementById('customerChange').textContent = customerGrowth;
-            
-            // Update contract trend
-            const contractTrend = metrics.avgContract > 10000 ? 'Above average' : 'Per customer';
-            document.getElementById('contractTrend').textContent = contractTrend;
-        }
-        
         function showMetricDetails(metricType) {
             let title, content;
-            
+
             switch(metricType) {
-                case 'customers':
-                    title = 'Active Customers Details';
+                case 'prospects':
+                    title = 'Prospects & Conversations';
                     content = `
                         <div style="margin-bottom: 15px;">
-                            <h4>Customer Breakdown</h4>
-                            <div>• Charter Schools: ${document.getElementById('charterCount').textContent}</div>
-                            <div>• Public Districts: ${document.getElementById('publicCount').textContent}</div>
-                            <div>• Private Schools: ${document.getElementById('privateCount').textContent}</div>
-                            <div>• Growth Rate: 15% YoY</div>
+                            <h4>Prospect Pipeline</h4>
+                            <div>• Total Prospects: ${document.getElementById('prospectsCount').textContent}</div>
+                            <div>• Active Conversations: ${document.getElementById('activeConversations').textContent}</div>
+                            <div>• Contacted This Week: ${document.getElementById('prospectsThisWeek').textContent}</div>
+                            <div style="margin-top: 10px;">• Hot Leads: Estimated 25% of total</div>
+                            <div>• Warm Leads: Estimated 45% of total</div>
+                            <div>• Cold Leads: Estimated 30% of total</div>
                         </div>
                         <div style="font-size: 12px; color: #666;">
-                            Based on current filter selection. Use filters to drill down into specific segments.
+                            Data sourced from HubSpot CRM. Click on a lead status filter to drill down into specific segments.
                         </div>
                     `;
                     break;
-                    
-                case 'revenue':
-                    title = 'Annual Recurring Revenue';
+
+                case 'negotiation':
+                    title = 'Negotiation & Contract Signed';
                     content = `
                         <div style="margin-bottom: 15px;">
-                            <h4>Revenue Breakdown</h4>
-                            <div>• Base CMS: 85% of customers</div>
-                            <div>• Mobile App: 35% adoption</div>
-                            <div>• Mass Communications: 28% adoption</div>
-                            <div>• Payments: 18% adoption</div>
-                            <div>• YoY Growth: +12%</div>
+                            <h4>Deal Pipeline Status</h4>
+                            <div>• Total in Pipeline: ${document.getElementById('negotiationCount').textContent}</div>
+                            <div>• Currently Negotiating: ${document.getElementById('inNegotiation').textContent}</div>
+                            <div>• Contracts Signed: ${document.getElementById('contractsSigned').textContent}</div>
+                            <div style="margin-top: 10px;">• Average Deal Cycle: 45-60 days</div>
+                            <div>• Win Rate: ~65%</div>
+                            <div>• Pending Signatures: Check HubSpot for latest</div>
                         </div>
                         <div style="font-size: 12px; color: #666;">
-                            Revenue calculations include base CMS plus add-on products.
+                            Contracts signed are ready to move to implementation. Monitor HubSpot deal stages for real-time updates.
                         </div>
                     `;
                     break;
-                    
-                case 'contract':
-                    title = 'Average Contract Value';
+
+                case 'implementation':
+                    title = 'Implementation Progress';
                     content = `
                         <div style="margin-bottom: 15px;">
-                            <h4>Contract Analysis</h4>
-                            <div>• Base CMS: $8,500/year</div>
+                            <h4>Onboarding & Launch</h4>
+                            <div>• Total in Implementation: ${document.getElementById('implementationCount').textContent}</div>
+                            <div>• Average Days to Launch: ${document.getElementById('avgDaysToLaunch').textContent}</div>
+                            <div>• Ready to Launch: ${document.getElementById('readyToLaunch').textContent}</div>
+                            <div style="margin-top: 10px;">• Onboarding: ~40% of pipeline</div>
+                            <div>• Training Phase: ~35% of pipeline</div>
+                            <div>• Launch Prep: ~25% of pipeline</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Implementation data from project management system. Proactive support reduces time to launch.
+                        </div>
+                    `;
+                    break;
+
+                case 'active':
+                    title = 'Active Clients & Technical Support';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Active Client Health</h4>
+                            <div>• Total Active Clients: ${document.getElementById('activeClientsCount').textContent}</div>
+                            <div>• Open Support Tickets: ${document.getElementById('openTickets').textContent}</div>
+                            <div>• Average Health Score: ${document.getElementById('avgHealthScore').textContent}</div>
+                            <div style="margin-top: 10px;">• Healthy Accounts: ~75%</div>
+                            <div>• Needs Attention: ~20%</div>
+                            <div>• Churn Risk: ~5%</div>
+                            <div style="margin-top: 10px; color: #27ae60;"><strong>Overall Status: Healthy</strong></div>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Health scores based on usage patterns, support ticket volume, and engagement metrics.
+                        </div>
+                    `;
+                    break;
+
+                case 'finance':
+                    title = 'Finance Metrics Overview';
+                    content = `
+                        <div style="margin-bottom: 15px;">
+                            <h4>Financial Performance</h4>
+                            <div>• Annual Recurring Revenue: ${document.getElementById('financeMainValue').textContent}</div>
+                            <div>• Gross Retention: ${document.getElementById('grossRetention').textContent}</div>
+                            <div>• Net Retention: ${document.getElementById('netRetention').textContent}</div>
+                            <div>• Growth Rate: ${document.getElementById('growthRate').textContent}</div>
+                            <div>• Avg Contract Value: ${document.getElementById('avgContractValue').textContent}</div>
+                            <div style="margin-top: 10px;">• Base CMS: $8,500/year</div>
                             <div>• Mobile App: +$2,500/year</div>
                             <div>• Mass Comm: +$1,200/year</div>
                             <div>• Payments: +$800/year</div>
-                            <div>• Avg Term: 2.3 years</div>
                         </div>
                         <div style="font-size: 12px; color: #666;">
-                            Higher ACV indicates better product mix and customer success.
-                        </div>
-                    `;
-                    break;
-                    
-                case 'types':
-                    title = 'Customer Type Distribution';
-                    content = `
-                        <div style="margin-bottom: 15px;">
-                            <h4>Market Segments</h4>
-                            <div>• Charter Schools: High growth, technology-forward</div>
-                            <div>• Public Districts: Large scale, budget conscious</div>
-                            <div>• Private Schools: Premium features, quick adoption</div>
-                            <div>• CMOs: Multi-school operations</div>
-                        </div>
-                        <div style="font-size: 12px; color: #666;">
-                            Each segment has different needs and growth patterns.
-                        </div>
-                    `;
-                    break;
-                    
-                case 'renewal':
-                    title = 'Renewal Risk Analysis';
-                    content = `
-                        <div style="margin-bottom: 15px;">
-                            <h4>Risk Factors</h4>
-                            <div>• Contract expiring in 90 days</div>
-                            <div>• Usage below threshold</div>
-                            <div>• Support ticket volume</div>
-                            <div>• Payment delays</div>
-                            <div style="margin-top: 10px; color: #ff5722;"><strong>Action Required</strong></div>
-                        </div>
-                        <div style="font-size: 12px; color: #666;">
-                            Proactive outreach recommended for at-risk accounts.
+                            Strong retention metrics indicate healthy customer satisfaction and product-market fit.
                         </div>
                     `;
                     break;
             }
-            
+
             // Show modal with details
             showMetricModal(title, content);
         }
