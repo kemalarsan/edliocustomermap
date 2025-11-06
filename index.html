@@ -10,6 +10,8 @@
     <!-- Leaflet MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <!-- ApexCharts for Finance Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js"></script>
     <!-- API Configuration -->
     <script src="api-config.js"></script>
     <!-- HubSpot API Module -->
@@ -1039,7 +1041,7 @@
 
     <!-- Expandable Finance Metrics Dashboard -->
     <div id="financeDetailsDashboard" class="finance-details-dashboard" style="background: white; max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.5s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; z-index: 390;">
-        <div class="finance-dashboard-content" style="max-width: 1600px; margin: 0 auto;">
+        <div class="finance-dashboard-content" style="max-width: 1600px; margin: 0 auto; overflow: visible;">
 
             <!-- Header with Close Button -->
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 10px 20px; border-bottom: 2px solid #f0f0f0;">
@@ -1049,6 +1051,75 @@
                 <button onclick="toggleFinanceDashboard()" style="background: #f5f5f5; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; transition: all 0.3s ease;">
                     ✕ Close
                 </button>
+            </div>
+
+            <!-- Data Source Status & Refresh Controls -->
+            <div style="padding: 15px 20px; background: #f8f9fa; border-bottom: 1px solid #e0e0e0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+
+                    <!-- Connection Status -->
+                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                        <span style="font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">Data Sources:</span>
+
+                        <!-- Maxio Status -->
+                        <div id="maxioStatus" class="data-source-status" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+                            <div class="status-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #95a5a6;"></div>
+                            <span style="font-size: 12px; font-weight: 600; color: #666;">Maxio</span>
+                            <span class="status-text" style="font-size: 11px; color: #999;">Checking...</span>
+                        </div>
+
+                        <!-- QuickBooks Status -->
+                        <div id="quickbooksStatus" class="data-source-status" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+                            <div class="status-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #95a5a6;"></div>
+                            <span style="font-size: 12px; font-weight: 600; color: #666;">QuickBooks</span>
+                            <span class="status-text" style="font-size: 11px; color: #999;">Checking...</span>
+                        </div>
+
+                        <!-- Last Updated -->
+                        <div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+                            <span style="font-size: 11px; color: #666;">Last updated:</span>
+                            <span id="lastUpdatedTime" style="font-size: 11px; font-weight: 600; color: #333;">Never</span>
+                        </div>
+                    </div>
+
+                    <!-- Refresh Button -->
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button id="refreshDataBtn" onclick="refreshFinancialData()" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);">
+                            <span>🔄</span>
+                            <span id="refreshBtnText">Refresh Data</span>
+                        </button>
+
+                        <button onclick="showConnectionSettings()" style="background: white; color: #666; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease;">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Range Selector -->
+            <div style="padding: 15px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-size: 13px; font-weight: 600; color: #666; margin-right: 5px;">Time Range:</span>
+                    <button class="time-range-btn active" data-range="1M" onclick="updateTimeRange('1M')" style="background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        1M
+                    </button>
+                    <button class="time-range-btn" data-range="3M" onclick="updateTimeRange('3M')" style="background: white; color: #666; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        3M
+                    </button>
+                    <button class="time-range-btn" data-range="6M" onclick="updateTimeRange('6M')" style="background: white; color: #666; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        6M
+                    </button>
+                    <button class="time-range-btn" data-range="1Y" onclick="updateTimeRange('1Y')" style="background: white; color: #666; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        1Y
+                    </button>
+                    <button class="time-range-btn" data-range="YTD" onclick="updateTimeRange('YTD')" style="background: white; color: #666; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        YTD
+                    </button>
+                    <button class="time-range-btn" data-range="ALL" onclick="updateTimeRange('ALL')" style="background: white; color: #666; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s ease;">
+                        All Time
+                    </button>
+                </div>
             </div>
 
             <!-- Tabs Navigation -->
@@ -1133,6 +1204,20 @@
 
                     </div>
 
+                    <!-- ARR Waterfall Chart - NEW! -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">📊 ARR Movement Waterfall</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Visual breakdown of how ARR changed this period</div>
+                        <div id="arrWaterfallChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 350px;"></div>
+                    </div>
+
+                    <!-- New Revenue Trendline with Forecast - NEW! -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">📈 New Revenue Trend & Forecast</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">New ARR acquisition trend with 3-month projection</div>
+                        <div id="newRevenueTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 350px;"></div>
+                    </div>
+
                     <!-- ARR Breakdown by Product -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                         <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">ARR by Product</h3>
@@ -1166,7 +1251,7 @@
                     </div>
 
                     <!-- ARR by Customer Segment -->
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                         <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">ARR by Customer Segment</h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
 
@@ -1189,6 +1274,18 @@
                             </div>
 
                         </div>
+                    </div>
+
+                    <!-- ARR Trend Chart -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">ARR Trend (Last 24 Months)</h3>
+                        <div id="arrTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 320px;"></div>
+                    </div>
+
+                    <!-- ARR Breakdown Chart -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">ARR Breakdown Over Time</h3>
+                        <div id="arrBreakdownChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
                     </div>
                 </div>
 
@@ -1259,14 +1356,11 @@
                         </div>
                     </div>
 
-                    <!-- Cohort Analysis -->
+                    <!-- Retention Trends Chart -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
-                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Retention by Cohort</h3>
-                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Customers grouped by signup year showing retention over time</div>
-                        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; color: #999;">
-                            📊 Cohort retention chart placeholder
-                            <div style="margin-top: 10px; font-size: 12px;">Visual chart showing year-over-year retention by cohort</div>
-                        </div>
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Retention Trends Over Time</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Gross, Net, and Logo retention rates tracked monthly</div>
+                        <div id="retentionTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
                     </div>
                 </div>
 
@@ -1300,13 +1394,11 @@
 
                     </div>
 
-                    <!-- Growth Trend Chart Placeholder -->
+                    <!-- Growth Trend Chart -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
-                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Growth Trend</h3>
-                        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; color: #999; min-height: 250px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            📈 ARR growth trend chart placeholder
-                            <div style="margin-top: 10px; font-size: 12px;">Line chart showing monthly ARR growth over the past 24 months</div>
-                        </div>
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Growth Rates Over Time</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Year-over-year, quarter-over-quarter, and month-over-month growth trends</div>
+                        <div id="growthTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
                     </div>
                 </div>
 
@@ -1373,7 +1465,7 @@
                     </div>
 
                     <!-- Contract Value Metrics -->
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                         <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 20px;">Contract Value Metrics</h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
 
@@ -1402,6 +1494,20 @@
                             </div>
 
                         </div>
+                    </div>
+
+                    <!-- Margin Trends Chart -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Margin Trends Over Time</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Gross, Operating, and Net margins tracked monthly</div>
+                        <div id="marginTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
+                    </div>
+
+                    <!-- Cash Flow Waterfall Chart -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Cash Flow Trends</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Operating, Investing, Financing, and Free Cash Flow</div>
+                        <div id="cashFlowChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
                     </div>
                 </div>
 
@@ -1501,11 +1607,9 @@
 
                     <!-- Expense Trends -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
-                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Expense Trends</h3>
-                        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; color: #999; min-height: 200px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            📊 Department expense trend chart placeholder
-                            <div style="margin-top: 10px; font-size: 12px;">Shows monthly expense trends by department over the past 12 months</div>
-                        </div>
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Expense Trends by Department</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Monthly expenses broken down by department</div>
+                        <div id="expenseTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 420px;"></div>
                     </div>
                 </div>
 
@@ -1516,8 +1620,9 @@
     <style>
         /* Finance Dashboard Styles */
         .finance-details-dashboard.expanded {
-            max-height: 2000px !important;
+            max-height: 5000px !important;
             padding: 0 0 20px 0;
+            overflow-y: auto;
         }
 
         .finance-tab:hover {
@@ -1527,6 +1632,17 @@
         .finance-tab.active {
             color: #e74c3c !important;
             border-bottom-color: #e74c3c !important;
+        }
+
+        .time-range-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .time-range-btn.active {
+            background: #e74c3c !important;
+            color: white !important;
+            border-color: #e74c3c !important;
         }
 
         .metric-card:hover {
@@ -6318,11 +6434,230 @@
                 dashboard.classList.add('expanded');
                 // Update all finance metrics
                 updateFinanceDetailMetrics();
-                // Smooth scroll to show the expanded section
+                // Check connection status
+                checkDataSourceConnections();
+                // Initialize charts for the default (revenue) tab
                 setTimeout(() => {
+                    initializeTabCharts('revenue');
                     dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                }, 300);
             }
+        }
+
+        // Check Data Source Connections
+        async function checkDataSourceConnections() {
+            console.log('🔍 Checking data source connections...');
+
+            // Check Maxio connection
+            updateConnectionStatus('maxio', 'checking', 'Checking...');
+
+            try {
+                const maxioResponse = await fetch('/api/maxio?endpoint=subscriptions&page=1&per_page=1');
+                const maxioData = await maxioResponse.json();
+
+                if (maxioData.success) {
+                    updateConnectionStatus('maxio', 'connected', 'Connected');
+                    console.log('✅ Maxio connected');
+                } else {
+                    updateConnectionStatus('maxio', 'error', 'Not configured');
+                    console.warn('⚠️ Maxio not configured');
+                }
+            } catch (error) {
+                updateConnectionStatus('maxio', 'error', 'Connection failed');
+                console.error('❌ Maxio connection failed:', error);
+            }
+
+            // Check QuickBooks connection
+            updateConnectionStatus('quickbooks', 'checking', 'Checking...');
+
+            try {
+                const qboResponse = await fetch('/api/quickbooks?type=query&query=SELECT * FROM Account MAXRESULTS 1');
+                const qboData = await qboResponse.json();
+
+                if (qboData.success) {
+                    updateConnectionStatus('quickbooks', 'connected', 'Connected');
+                    console.log('✅ QuickBooks connected');
+                } else if (qboData.needsAuth) {
+                    updateConnectionStatus('quickbooks', 'warning', 'Needs auth');
+                    console.warn('⚠️ QuickBooks needs authentication');
+                } else {
+                    updateConnectionStatus('quickbooks', 'error', 'Not configured');
+                    console.warn('⚠️ QuickBooks not configured');
+                }
+            } catch (error) {
+                updateConnectionStatus('quickbooks', 'error', 'Connection failed');
+                console.error('❌ QuickBooks connection failed:', error);
+            }
+        }
+
+        // Update Connection Status UI
+        function updateConnectionStatus(source, status, message) {
+            const statusElement = document.getElementById(source === 'maxio' ? 'maxioStatus' : 'quickbooksStatus');
+            const indicator = statusElement.querySelector('.status-indicator');
+            const statusText = statusElement.querySelector('.status-text');
+
+            // Update status text
+            statusText.textContent = message;
+
+            // Update indicator color
+            const colors = {
+                checking: '#95a5a6',
+                connected: '#27ae60',
+                warning: '#f39c12',
+                error: '#e74c3c'
+            };
+
+            indicator.style.background = colors[status] || colors.error;
+
+            // Add pulse animation for checking state
+            if (status === 'checking') {
+                indicator.style.animation = 'pulse 1.5s ease-in-out infinite';
+            } else {
+                indicator.style.animation = 'none';
+            }
+        }
+
+        // Refresh Financial Data
+        async function refreshFinancialData() {
+            const refreshBtn = document.getElementById('refreshDataBtn');
+            const refreshBtnText = document.getElementById('refreshBtnText');
+
+            // Disable button and show loading state
+            refreshBtn.disabled = true;
+            refreshBtn.style.opacity = '0.6';
+            refreshBtn.style.cursor = 'not-allowed';
+            refreshBtnText.textContent = 'Refreshing...';
+
+            console.log('🔄 Starting financial data refresh...');
+
+            try {
+                // Call sync service
+                const response = await fetch('/api/sync-financial-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Financial data refreshed successfully');
+
+                    // Update last updated timestamp
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    document.getElementById('lastUpdatedTime').textContent = timeString;
+
+                    // Update metrics if available
+                    if (result.syncResults && result.syncResults.metrics) {
+                        updateDashboardWithRealData(result.syncResults.metrics);
+                    }
+
+                    // Show success feedback
+                    refreshBtnText.textContent = 'Data Updated!';
+                    setTimeout(() => {
+                        refreshBtnText.textContent = 'Refresh Data';
+                    }, 2000);
+
+                    // Recheck connections
+                    checkDataSourceConnections();
+                } else {
+                    console.error('❌ Financial data refresh failed:', result);
+                    refreshBtnText.textContent = 'Refresh Failed';
+
+                    setTimeout(() => {
+                        refreshBtnText.textContent = 'Refresh Data';
+                    }, 2000);
+
+                    alert('Failed to refresh data. Check console for details.');
+                }
+            } catch (error) {
+                console.error('💥 Refresh error:', error);
+                refreshBtnText.textContent = 'Error';
+
+                setTimeout(() => {
+                    refreshBtnText.textContent = 'Refresh Data';
+                }, 2000);
+
+                alert('Error refreshing data: ' + error.message);
+            } finally {
+                // Re-enable button
+                refreshBtn.disabled = false;
+                refreshBtn.style.opacity = '1';
+                refreshBtn.style.cursor = 'pointer';
+            }
+        }
+
+        // Update Dashboard with Real Data
+        function updateDashboardWithRealData(metrics) {
+            console.log('📊 Updating dashboard with real data:', metrics);
+
+            // Update ARR metrics
+            if (metrics.arr) {
+                updateMetricWithAnimation('detailTotalARR', '$' + (metrics.arr / 1000000).toFixed(2) + 'M');
+            }
+
+            if (metrics.mrr) {
+                updateMetricWithAnimation('detailMRR', '$' + (metrics.mrr / 1000000).toFixed(2) + 'M');
+            }
+
+            if (metrics.newARR) {
+                updateMetricWithAnimation('detailNewARR', '$' + (metrics.newARR / 1000000).toFixed(2) + 'M');
+            }
+
+            if (metrics.expansionARR) {
+                updateMetricWithAnimation('detailExpansionARR', '$' + (metrics.expansionARR / 1000000).toFixed(2) + 'M');
+            }
+
+            if (metrics.churnedARR) {
+                updateMetricWithAnimation('detailChurnedARR', '$' + (metrics.churnedARR / 1000000).toFixed(2) + 'M');
+            }
+
+            // Update retention metrics
+            if (metrics.grossRetention) {
+                updateMetricWithAnimation('detailGrossRetention', metrics.grossRetention.toFixed(1) + '%');
+            }
+
+            if (metrics.netRetention) {
+                updateMetricWithAnimation('detailNetRetention', metrics.netRetention.toFixed(1) + '%');
+            }
+
+            if (metrics.logoRetention) {
+                updateMetricWithAnimation('detailLogoRetention', metrics.logoRetention.toFixed(1) + '%');
+            }
+
+            // Update contract metrics
+            if (metrics.avgContractValue) {
+                updateMetricWithAnimation('detailAvgContractValue', '$' + (metrics.avgContractValue / 1000).toFixed(0) + 'K');
+            }
+
+            // Refresh charts if historical data is available
+            if (metrics.historicalData) {
+                console.log('📈 Historical data available, updating charts...');
+                // TODO: Update charts with real historical data
+            }
+        }
+
+        // Show Connection Settings Modal
+        function showConnectionSettings() {
+            alert('Connection Settings\n\n' +
+                  'To configure data source connections:\n\n' +
+                  '1. Add environment variables in Vercel:\n' +
+                  '   - MAXIO_API_TOKEN\n' +
+                  '   - QBO_CLIENT_ID\n' +
+                  '   - QBO_CLIENT_SECRET\n' +
+                  '   - QBO_ACCESS_TOKEN\n\n' +
+                  '2. Follow setup guide in INTEGRATION_SETUP.md\n\n' +
+                  '3. Redeploy application after adding variables\n\n' +
+                  'For detailed instructions, see:\n' +
+                  'https://github.com/your-repo/INTEGRATION_SETUP.md');
+
+            // TODO: Create a proper settings modal UI
         }
 
         // Switch Finance Tabs
@@ -6351,6 +6686,404 @@
             const selectedPanel = document.getElementById(tabName + 'Tab');
             if (selectedPanel) {
                 selectedPanel.style.display = 'block';
+            }
+
+            // Initialize charts for the selected tab if not already done
+            setTimeout(() => {
+                initializeTabCharts(tabName);
+            }, 100);
+        }
+
+        // Initialize charts for a specific tab
+        function initializeTabCharts(tabName) {
+            const fullData = generateHistoricalData(24);
+            const currentRange = document.querySelector('.time-range-btn.active')?.dataset.range || '1Y';
+            const filteredData = filterDataByRange(fullData, currentRange);
+
+            switch(tabName) {
+                case 'revenue':
+                    // ARR Trend Chart
+                    if (!financeCharts.arrTrend && document.getElementById('arrTrendChart')) {
+                        financeCharts.arrTrend = new ApexCharts(document.getElementById('arrTrendChart'), {
+                            chart: {
+                                type: 'line',
+                                height: 300,
+                                toolbar: { show: true },
+                                animations: { enabled: true }
+                            },
+                            series: [{
+                                name: 'ARR',
+                                data: filteredData.arr.map(v => (v / 1000000).toFixed(2))
+                            }],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'ARR ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            colors: ['#e74c3c'],
+                            stroke: { width: 3, curve: 'smooth' },
+                            markers: { size: 4 },
+                            tooltip: {
+                                y: { formatter: (val) => '$' + val + 'M' }
+                            }
+                        });
+                        financeCharts.arrTrend.render();
+                    }
+
+                    // ARR Breakdown Chart
+                    if (!financeCharts.arrBreakdown && document.getElementById('arrBreakdownChart')) {
+                        financeCharts.arrBreakdown = new ApexCharts(document.getElementById('arrBreakdownChart'), {
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                stacked: true,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'New ARR', data: filteredData.newARR.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Expansion ARR', data: filteredData.expansionARR.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Churned ARR', data: filteredData.churnedARR.map(v => -(v / 1000000).toFixed(2)) }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'ARR Movement ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            colors: ['#27ae60', '#3498db', '#e67e22'],
+                            stroke: { width: 2, curve: 'smooth' },
+                            fill: { opacity: 0.7 },
+                            tooltip: {
+                                y: { formatter: (val) => '$' + Math.abs(val) + 'M' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.arrBreakdown.render();
+                    }
+
+                    // ARR Waterfall Chart - NEW!
+                    if (!financeCharts.arrWaterfall && document.getElementById('arrWaterfallChart')) {
+                        // Calculate month-over-month movement for waterfall
+                        const lastMonth = filteredData.months.length - 2;
+                        const currentMonth = filteredData.months.length - 1;
+
+                        const startingARR = filteredData.arr[lastMonth] / 1000000;
+                        const newARRValue = filteredData.newARR[currentMonth] / 1000000;
+                        const expansionValue = filteredData.expansionARR[currentMonth] / 1000000;
+                        const churnValue = filteredData.churnedARR[currentMonth] / 1000000;
+                        const endingARR = filteredData.arr[currentMonth] / 1000000;
+
+                        financeCharts.arrWaterfall = new ApexCharts(document.getElementById('arrWaterfallChart'), {
+                            chart: {
+                                type: 'bar',
+                                height: 350,
+                                toolbar: { show: true }
+                            },
+                            series: [{
+                                name: 'ARR Movement',
+                                data: [
+                                    { x: 'Starting ARR', y: startingARR.toFixed(2) },
+                                    { x: '+ New ARR', y: newARRValue.toFixed(2) },
+                                    { x: '+ Expansion', y: expansionValue.toFixed(2) },
+                                    { x: '- Churn', y: -churnValue.toFixed(2) },
+                                    { x: 'Ending ARR', y: endingARR.toFixed(2) }
+                                ]
+                            }],
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: '50%',
+                                    dataLabels: { position: 'top' }
+                                }
+                            },
+                            colors: ['#95a5a6', '#27ae60', '#3498db', '#e74c3c', '#2c3e50'],
+                            dataLabels: {
+                                enabled: true,
+                                formatter: (val) => '$' + Math.abs(val).toFixed(2) + 'M',
+                                style: { fontSize: '12px', fontWeight: 600 }
+                            },
+                            xaxis: {
+                                labels: { style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'ARR ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            tooltip: {
+                                y: { formatter: (val) => '$' + Math.abs(val).toFixed(2) + 'M' }
+                            },
+                            grid: { borderColor: '#e0e0e0' }
+                        });
+                        financeCharts.arrWaterfall.render();
+                    }
+
+                    // New Revenue Trendline with Forecast - NEW!
+                    if (!financeCharts.newRevenueTrend && document.getElementById('newRevenueTrendChart')) {
+                        // Historical new ARR data
+                        const historicalNewARR = filteredData.newARR.map(v => (v / 1000000).toFixed(3));
+
+                        // Calculate simple linear trendline for forecast
+                        const n = historicalNewARR.length;
+                        const x = Array.from({length: n}, (_, i) => i);
+                        const y = historicalNewARR.map(v => parseFloat(v));
+
+                        // Linear regression
+                        const sumX = x.reduce((a, b) => a + b, 0);
+                        const sumY = y.reduce((a, b) => a + b, 0);
+                        const sumXY = x.reduce((acc, xi, i) => acc + xi * y[i], 0);
+                        const sumX2 = x.reduce((acc, xi) => acc + xi * xi, 0);
+
+                        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                        const intercept = (sumY - slope * sumX) / n;
+
+                        // Generate 3-month forecast
+                        const forecastMonths = ['Forecast +1', 'Forecast +2', 'Forecast +3'];
+                        const forecastData = [
+                            (slope * n + intercept).toFixed(3),
+                            (slope * (n + 1) + intercept).toFixed(3),
+                            (slope * (n + 2) + intercept).toFixed(3)
+                        ];
+
+                        financeCharts.newRevenueTrend = new ApexCharts(document.getElementById('newRevenueTrendChart'), {
+                            chart: {
+                                type: 'line',
+                                height: 350,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                {
+                                    name: 'Historical New ARR',
+                                    data: historicalNewARR
+                                },
+                                {
+                                    name: 'Forecast',
+                                    data: Array(n).fill(null).concat(forecastData)
+                                }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months.concat(forecastMonths),
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'New ARR ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            colors: ['#27ae60', '#95a5a6'],
+                            stroke: {
+                                width: [3, 2],
+                                curve: 'smooth',
+                                dashArray: [0, 5]
+                            },
+                            markers: {
+                                size: [4, 0]
+                            },
+                            fill: {
+                                type: 'solid',
+                                opacity: [1, 0.3]
+                            },
+                            tooltip: {
+                                shared: true,
+                                y: {
+                                    formatter: (val) => val ? '$' + parseFloat(val).toFixed(3) + 'M' : ''
+                                }
+                            },
+                            legend: { position: 'top' },
+                            annotations: {
+                                xaxis: [{
+                                    x: filteredData.months[filteredData.months.length - 1],
+                                    borderColor: '#e74c3c',
+                                    strokeDashArray: 3,
+                                    label: {
+                                        text: 'Forecast Start',
+                                        style: { fontSize: '10px', color: '#fff', background: '#e74c3c' }
+                                    }
+                                }]
+                            }
+                        });
+                        financeCharts.newRevenueTrend.render();
+                    }
+                    break;
+
+                case 'contracts':
+                    // Retention Trend Chart
+                    if (!financeCharts.retentionTrend && document.getElementById('retentionTrendChart')) {
+                        financeCharts.retentionTrend = new ApexCharts(document.getElementById('retentionTrendChart'), {
+                            chart: {
+                                type: 'line',
+                                height: 350,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'Gross Retention', data: filteredData.grossRetention },
+                                { name: 'Net Retention', data: filteredData.netRetention },
+                                { name: 'Logo Retention', data: filteredData.logoRetention }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'Retention Rate (%)' },
+                                labels: { formatter: (val) => val + '%' },
+                                min: 75,
+                                max: 125
+                            },
+                            colors: ['#27ae60', '#3498db', '#e67e22'],
+                            stroke: { width: 3, curve: 'smooth' },
+                            markers: { size: 4 },
+                            tooltip: {
+                                y: { formatter: (val) => val + '%' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.retentionTrend.render();
+                    }
+                    break;
+
+                case 'profitability':
+                    // Margin Trend Chart
+                    if (!financeCharts.marginTrend && document.getElementById('marginTrendChart')) {
+                        financeCharts.marginTrend = new ApexCharts(document.getElementById('marginTrendChart'), {
+                            chart: {
+                                type: 'line',
+                                height: 350,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'Gross Margin', data: filteredData.grossMargin },
+                                { name: 'Operating Margin', data: filteredData.operatingMargin },
+                                { name: 'Net Margin', data: filteredData.netMargin }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'Margin (%)' },
+                                labels: { formatter: (val) => val + '%' }
+                            },
+                            colors: ['#27ae60', '#3498db', '#9b59b6'],
+                            stroke: { width: 3, curve: 'smooth' },
+                            markers: { size: 4 },
+                            tooltip: {
+                                y: { formatter: (val) => val + '%' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.marginTrend.render();
+                    }
+
+                    // Cash Flow Chart
+                    if (!financeCharts.cashFlowTrend && document.getElementById('cashFlowChart')) {
+                        financeCharts.cashFlowTrend = new ApexCharts(document.getElementById('cashFlowChart'), {
+                            chart: {
+                                type: 'bar',
+                                height: 350,
+                                stacked: false,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'Operating Cash Flow', data: filteredData.operatingCashFlow.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Free Cash Flow', data: filteredData.freeCashFlow.map(v => (v / 1000000).toFixed(2)) }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'Cash Flow ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            colors: ['#27ae60', '#e74c3c'],
+                            plotOptions: {
+                                bar: { columnWidth: '60%', dataLabels: { position: 'top' } }
+                            },
+                            tooltip: {
+                                y: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.cashFlowTrend.render();
+                    }
+                    break;
+
+                case 'growth':
+                    // Growth Trend Chart
+                    if (!financeCharts.growthTrend && document.getElementById('growthTrendChart')) {
+                        financeCharts.growthTrend = new ApexCharts(document.getElementById('growthTrendChart'), {
+                            chart: {
+                                type: 'line',
+                                height: 350,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'YoY Growth', data: filteredData.yoyGrowth },
+                                { name: 'MoM Growth', data: filteredData.momGrowth },
+                                { name: 'Customer Growth', data: filteredData.customerGrowth }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'Growth Rate (%)' },
+                                labels: { formatter: (val) => val + '%' }
+                            },
+                            colors: ['#8e44ad', '#27ae60', '#e74c3c'],
+                            stroke: { width: 3, curve: 'smooth' },
+                            markers: { size: 4 },
+                            tooltip: {
+                                y: { formatter: (val) => val + '%' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.growthTrend.render();
+                    }
+                    break;
+
+                case 'expenses':
+                    // Expenses Trend Chart
+                    if (!financeCharts.expensesTrend && document.getElementById('expenseTrendChart')) {
+                        financeCharts.expensesTrend = new ApexCharts(document.getElementById('expenseTrendChart'), {
+                            chart: {
+                                type: 'bar',
+                                height: 400,
+                                stacked: true,
+                                toolbar: { show: true }
+                            },
+                            series: [
+                                { name: 'Sales & Marketing', data: filteredData.expenses.sales.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Product & Engineering', data: filteredData.expenses.product.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Customer Success', data: filteredData.expenses.customerSuccess.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Operations', data: filteredData.expenses.operations.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'Finance & Admin', data: filteredData.expenses.finance.map(v => (v / 1000000).toFixed(2)) },
+                                { name: 'HR & People', data: filteredData.expenses.hr.map(v => (v / 1000000).toFixed(2)) }
+                            ],
+                            xaxis: {
+                                categories: filteredData.months,
+                                labels: { rotate: -45, style: { fontSize: '11px' } }
+                            },
+                            yaxis: {
+                                title: { text: 'Expenses ($M)' },
+                                labels: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            colors: ['#e74c3c', '#3498db', '#27ae60', '#f39c12', '#9b59b6', '#16a085'],
+                            plotOptions: {
+                                bar: { columnWidth: '70%' }
+                            },
+                            tooltip: {
+                                y: { formatter: (val) => '$' + val + 'M' }
+                            },
+                            legend: { position: 'top' }
+                        });
+                        financeCharts.expensesTrend.render();
+                    }
+                    break;
             }
         }
 
@@ -6521,6 +7254,266 @@
             `;
 
             showMetricModal(title, content);
+        }
+
+        // Global variable to track current time range and chart instances
+        let currentTimeRange = '1M';
+        let financeCharts = {};
+
+        // Generate Historical Data
+        function generateHistoricalData(months = 24) {
+            const currentCustomers = filteredCustomers || customers || [];
+            const totalARR = calculateMetrics(currentCustomers).finance.arr;
+
+            const data = {
+                months: [],
+                arr: [],
+                newARR: [],
+                expansionARR: [],
+                churnedARR: [],
+                gaapRevenue: [],
+                cashRevenue: [],
+                grossRetention: [],
+                netRetention: [],
+                logoRetention: [],
+                churnRate: [],
+                yoyGrowth: [],
+                momGrowth: [],
+                customerGrowth: [],
+                grossMargin: [],
+                operatingMargin: [],
+                netMargin: [],
+                ebitda: [],
+                operatingCashFlow: [],
+                freeCashFlow: [],
+                expenses: {
+                    sales: [],
+                    product: [],
+                    customerSuccess: [],
+                    operations: [],
+                    finance: [],
+                    hr: []
+                }
+            };
+
+            const today = new Date();
+            let baseARR = totalARR * 0.60; // Start at 60% of current ARR
+
+            for (let i = months - 1; i >= 0; i--) {
+                const date = new Date(today);
+                date.setMonth(date.getMonth() - i);
+                const monthName = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+                // Monthly growth with some variation
+                const growthRate = 0.015 + (Math.random() * 0.01); // 1.5-2.5% monthly growth
+                baseARR = baseARR * (1 + growthRate);
+
+                data.months.push(monthName);
+                data.arr.push(Math.floor(baseARR));
+
+                // ARR components
+                const newARR = baseARR * (0.02 + Math.random() * 0.01); // 2-3% new
+                const expansionARR = baseARR * (0.01 + Math.random() * 0.005); // 1-1.5% expansion
+                const churnedARR = baseARR * (0.005 + Math.random() * 0.003); // 0.5-0.8% churn
+
+                data.newARR.push(Math.floor(newARR));
+                data.expansionARR.push(Math.floor(expansionARR));
+                data.churnedARR.push(Math.floor(churnedARR));
+
+                // Revenue Recognition
+                data.gaapRevenue.push(Math.floor(baseARR * 0.92));
+                data.cashRevenue.push(Math.floor(baseARR * 1.15));
+
+                // Retention Metrics
+                data.grossRetention.push(92 + Math.floor(Math.random() * 6));
+                data.netRetention.push(105 + Math.floor(Math.random() * 15));
+                data.logoRetention.push(94 + Math.floor(Math.random() * 5));
+                data.churnRate.push(5 + Math.floor(Math.random() * 3));
+
+                // Growth Metrics
+                data.yoyGrowth.push(15 + Math.floor(Math.random() * 10));
+                data.momGrowth.push(growthRate * 100);
+                data.customerGrowth.push(12 + Math.floor(Math.random() * 8));
+
+                // Profitability Metrics
+                data.grossMargin.push(75 + Math.floor(Math.random() * 10));
+                data.operatingMargin.push(20 + Math.floor(Math.random() * 15));
+                data.netMargin.push(10 + Math.floor(Math.random() * 15));
+                data.ebitda.push(Math.floor(baseARR * 0.25));
+
+                // Cash Flow
+                data.operatingCashFlow.push(Math.floor(baseARR * 0.28));
+                data.freeCashFlow.push(Math.floor(baseARR * 0.20));
+
+                // Department Expenses
+                const totalExpenses = baseARR * 0.65;
+                data.expenses.sales.push(Math.floor(totalExpenses * 0.30));
+                data.expenses.product.push(Math.floor(totalExpenses * 0.25));
+                data.expenses.customerSuccess.push(Math.floor(totalExpenses * 0.20));
+                data.expenses.operations.push(Math.floor(totalExpenses * 0.15));
+                data.expenses.finance.push(Math.floor(totalExpenses * 0.07));
+                data.expenses.hr.push(Math.floor(totalExpenses * 0.03));
+            }
+
+            return data;
+        }
+
+        // Update Time Range
+        function updateTimeRange(range) {
+            currentTimeRange = range;
+
+            // Update button states
+            document.querySelectorAll('.time-range-btn').forEach(btn => {
+                if (btn.dataset.range === range) {
+                    btn.classList.add('active');
+                    btn.style.background = '#e74c3c';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#e74c3c';
+                } else {
+                    btn.classList.remove('active');
+                    btn.style.background = 'white';
+                    btn.style.color = '#666';
+                    btn.style.borderColor = '#ddd';
+                }
+            });
+
+            // Update all visible charts
+            updateAllCharts(range);
+        }
+
+        // Filter Data by Time Range
+        function filterDataByRange(data, range) {
+            let monthsToShow;
+
+            switch(range) {
+                case '1M': monthsToShow = 1; break;
+                case '3M': monthsToShow = 3; break;
+                case '6M': monthsToShow = 6; break;
+                case '1Y': monthsToShow = 12; break;
+                case 'YTD':
+                    const today = new Date();
+                    const jan1 = new Date(today.getFullYear(), 0, 1);
+                    monthsToShow = Math.floor((today - jan1) / (1000 * 60 * 60 * 24 * 30));
+                    break;
+                case 'ALL':
+                default:
+                    monthsToShow = data.months.length;
+            }
+
+            const startIndex = Math.max(0, data.months.length - monthsToShow);
+
+            return {
+                months: data.months.slice(startIndex),
+                arr: data.arr.slice(startIndex),
+                newARR: data.newARR.slice(startIndex),
+                expansionARR: data.expansionARR.slice(startIndex),
+                churnedARR: data.churnedARR.slice(startIndex),
+                gaapRevenue: data.gaapRevenue.slice(startIndex),
+                cashRevenue: data.cashRevenue.slice(startIndex),
+                grossRetention: data.grossRetention.slice(startIndex),
+                netRetention: data.netRetention.slice(startIndex),
+                logoRetention: data.logoRetention.slice(startIndex),
+                churnRate: data.churnRate.slice(startIndex),
+                yoyGrowth: data.yoyGrowth.slice(startIndex),
+                momGrowth: data.momGrowth.slice(startIndex),
+                customerGrowth: data.customerGrowth.slice(startIndex),
+                grossMargin: data.grossMargin.slice(startIndex),
+                operatingMargin: data.operatingMargin.slice(startIndex),
+                netMargin: data.netMargin.slice(startIndex),
+                ebitda: data.ebitda.slice(startIndex),
+                operatingCashFlow: data.operatingCashFlow.slice(startIndex),
+                freeCashFlow: data.freeCashFlow.slice(startIndex),
+                expenses: {
+                    sales: data.expenses.sales.slice(startIndex),
+                    product: data.expenses.product.slice(startIndex),
+                    customerSuccess: data.expenses.customerSuccess.slice(startIndex),
+                    operations: data.expenses.operations.slice(startIndex),
+                    finance: data.expenses.finance.slice(startIndex),
+                    hr: data.expenses.hr.slice(startIndex)
+                }
+            };
+        }
+
+        // Update All Charts Based on Time Range
+        function updateAllCharts(range) {
+            const fullData = generateHistoricalData(24);
+            const filteredData = filterDataByRange(fullData, range);
+
+            // Update charts based on current tab
+            const activeTab = document.querySelector('.finance-tab.active').dataset.tab;
+
+            switch(activeTab) {
+                case 'revenue':
+                    if (financeCharts.arrTrend) financeCharts.arrTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [{ data: filteredData.arr.map(v => (v / 1000000).toFixed(2)) }]
+                    });
+                    if (financeCharts.arrBreakdown) financeCharts.arrBreakdown.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'New ARR', data: filteredData.newARR.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Expansion', data: filteredData.expansionARR.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Churned', data: filteredData.churnedARR.map(v => -(v / 1000000).toFixed(2)) }
+                        ]
+                    });
+                    if (financeCharts.revenueComparison) financeCharts.revenueComparison.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'GAAP Revenue', data: filteredData.gaapRevenue.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Cash Revenue', data: filteredData.cashRevenue.map(v => (v / 1000000).toFixed(2)) }
+                        ]
+                    });
+                    break;
+                case 'contracts':
+                    if (financeCharts.retentionTrend) financeCharts.retentionTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'Gross Retention', data: filteredData.grossRetention },
+                            { name: 'Net Retention', data: filteredData.netRetention },
+                            { name: 'Logo Retention', data: filteredData.logoRetention }
+                        ]
+                    });
+                    break;
+                case 'profitability':
+                    if (financeCharts.marginTrend) financeCharts.marginTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'Gross Margin', data: filteredData.grossMargin },
+                            { name: 'Operating Margin', data: filteredData.operatingMargin },
+                            { name: 'Net Margin', data: filteredData.netMargin }
+                        ]
+                    });
+                    if (financeCharts.cashFlowTrend) financeCharts.cashFlowTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'Operating Cash Flow', data: filteredData.operatingCashFlow.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Free Cash Flow', data: filteredData.freeCashFlow.map(v => (v / 1000000).toFixed(2)) }
+                        ]
+                    });
+                    break;
+                case 'growth':
+                    if (financeCharts.growthTrend) financeCharts.growthTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'YoY Growth', data: filteredData.yoyGrowth },
+                            { name: 'Customer Growth', data: filteredData.customerGrowth }
+                        ]
+                    });
+                    break;
+                case 'expenses':
+                    if (financeCharts.expensesTrend) financeCharts.expensesTrend.updateOptions({
+                        xaxis: { categories: filteredData.months },
+                        series: [
+                            { name: 'Sales & Marketing', data: filteredData.expenses.sales.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Product & Engineering', data: filteredData.expenses.product.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Customer Success', data: filteredData.expenses.customerSuccess.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Operations', data: filteredData.expenses.operations.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'Finance & Admin', data: filteredData.expenses.finance.map(v => (v / 1000000).toFixed(2)) },
+                            { name: 'HR & People', data: filteredData.expenses.hr.map(v => (v / 1000000).toFixed(2)) }
+                        ]
+                    });
+                    break;
+            }
         }
 
         // Handle metric view changes from dropdown selectors
