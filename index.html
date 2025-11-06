@@ -1276,6 +1276,13 @@
                         </div>
                     </div>
 
+                    <!-- Product x Customer Type Matrix - NEW! -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">📊 Product × Customer Type Matrix</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">ARR breakdown by product line and customer segment</div>
+                        <div id="productCustomerMatrixChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 400px;"></div>
+                    </div>
+
                     <!-- ARR Trend Chart -->
                     <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                         <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">ARR Trend (Last 24 Months)</h3>
@@ -1357,10 +1364,17 @@
                     </div>
 
                     <!-- Retention Trends Chart -->
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
                         <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">Retention Trends Over Time</h3>
                         <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Gross, Net, and Logo retention rates tracked monthly</div>
                         <div id="retentionTrendChart" style="background: white; padding: 15px; border-radius: 8px; min-height: 370px;"></div>
+                    </div>
+
+                    <!-- Cohort Retention Heatmap - NEW! -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">🔥 Cohort Retention Heatmap</h3>
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Customer retention by signup cohort over time - darker colors indicate higher retention</div>
+                        <div id="cohortRetentionHeatmap" style="background: white; padding: 15px; border-radius: 8px; min-height: 450px;"></div>
                     </div>
                 </div>
 
@@ -6907,6 +6921,74 @@
                         });
                         financeCharts.newRevenueTrend.render();
                     }
+
+                    // Product × Customer Type Matrix - NEW!
+                    if (!financeCharts.productCustomerMatrix && document.getElementById('productCustomerMatrixChart')) {
+                        // Sample data: ARR by product and customer type
+                        const products = ['CMS Platform', 'Mobile App', 'Mass Comm', 'Payments'];
+                        const customerTypes = ['Charter Schools', 'Public Districts', 'Private Schools'];
+
+                        // Generate matrix data (ARR in millions)
+                        const matrixData = [
+                            { name: 'Charter Schools', data: [8.5, 3.2, 2.1, 1.4] },
+                            { name: 'Public Districts', data: [12.3, 4.8, 3.6, 2.2] },
+                            { name: 'Private Schools', data: [6.7, 2.1, 1.8, 0.9] }
+                        ];
+
+                        financeCharts.productCustomerMatrix = new ApexCharts(document.getElementById('productCustomerMatrixChart'), {
+                            chart: {
+                                type: 'bar',
+                                height: 400,
+                                stacked: false,
+                                toolbar: { show: true }
+                            },
+                            series: matrixData,
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: '75%',
+                                    dataLabels: {
+                                        position: 'top'
+                                    }
+                                }
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                formatter: (val) => '$' + val + 'M',
+                                offsetY: -20,
+                                style: {
+                                    fontSize: '10px',
+                                    colors: ['#333']
+                                }
+                            },
+                            xaxis: {
+                                categories: products,
+                                labels: {
+                                    style: { fontSize: '11px' }
+                                }
+                            },
+                            yaxis: {
+                                title: { text: 'ARR ($M)' },
+                                labels: {
+                                    formatter: (val) => '$' + val + 'M'
+                                }
+                            },
+                            colors: ['#e74c3c', '#3498db', '#9b59b6'],
+                            legend: {
+                                position: 'top',
+                                horizontalAlign: 'left'
+                            },
+                            tooltip: {
+                                y: {
+                                    formatter: (val) => '$' + val.toFixed(1) + 'M ARR'
+                                }
+                            },
+                            grid: {
+                                borderColor: '#e0e0e0'
+                            }
+                        });
+                        financeCharts.productCustomerMatrix.render();
+                    }
                     break;
 
                 case 'contracts':
@@ -6942,6 +7024,122 @@
                             legend: { position: 'top' }
                         });
                         financeCharts.retentionTrend.render();
+                    }
+
+                    // Cohort Retention Heatmap - NEW!
+                    if (!financeCharts.cohortHeatmap && document.getElementById('cohortRetentionHeatmap')) {
+                        // Generate cohort retention data
+                        // Y-axis: Cohorts (by signup month)
+                        // X-axis: Months since signup (Month 0, Month 1, Month 2, etc.)
+                        // Values: Retention percentage
+
+                        const cohortMonths = filteredData.months.slice(-12); // Last 12 cohorts
+                        const monthsTracked = 12; // Track retention up to 12 months
+
+                        // Generate heatmap series (each series is a row in the heatmap)
+                        const heatmapSeries = cohortMonths.map((cohort, cohortIndex) => {
+                            const data = [];
+                            const monthsAvailable = Math.min(monthsTracked, cohortMonths.length - cohortIndex);
+
+                            // Generate retention data for each month since signup
+                            for (let month = 0; month < monthsTracked; month++) {
+                                if (month < monthsAvailable) {
+                                    // Simulate retention degradation: starts at ~95%, degrades over time
+                                    const baseRetention = 95;
+                                    const churnRate = 2; // ~2% monthly churn
+                                    const retention = Math.max(70, baseRetention - (month * churnRate) + (Math.random() * 4 - 2));
+                                    data.push({
+                                        x: 'Month ' + month,
+                                        y: Math.round(retention)
+                                    });
+                                } else {
+                                    // No data yet for future months
+                                    data.push({
+                                        x: 'Month ' + month,
+                                        y: null
+                                    });
+                                }
+                            }
+                            return {
+                                name: cohort,
+                                data: data
+                            };
+                        });
+
+                        financeCharts.cohortHeatmap = new ApexCharts(document.getElementById('cohortRetentionHeatmap'), {
+                            chart: {
+                                type: 'heatmap',
+                                height: 450,
+                                toolbar: { show: true }
+                            },
+                            series: heatmapSeries,
+                            plotOptions: {
+                                heatmap: {
+                                    shadeIntensity: 0.5,
+                                    radius: 0,
+                                    useFillColorAsStroke: false,
+                                    colorScale: {
+                                        ranges: [
+                                            { from: 0, to: 70, name: 'Critical (<70%)', color: '#e74c3c' },
+                                            { from: 70, to: 80, name: 'Low (70-80%)', color: '#f39c12' },
+                                            { from: 80, to: 90, name: 'Good (80-90%)', color: '#f1c40f' },
+                                            { from: 90, to: 95, name: 'Great (90-95%)', color: '#2ecc71' },
+                                            { from: 95, to: 100, name: 'Excellent (>95%)', color: '#27ae60' }
+                                        ]
+                                    }
+                                }
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    colors: ['#fff'],
+                                    fontSize: '10px'
+                                },
+                                formatter: (val) => val ? val + '%' : '-'
+                            },
+                            xaxis: {
+                                type: 'category',
+                                labels: {
+                                    rotate: -45,
+                                    style: { fontSize: '10px' }
+                                }
+                            },
+                            yaxis: {
+                                labels: {
+                                    style: { fontSize: '10px' }
+                                }
+                            },
+                            title: {
+                                text: 'Reading: Each row = customer cohort by signup month. Each column = months since signup.',
+                                style: { fontSize: '11px', color: '#666', fontWeight: 400 }
+                            },
+                            tooltip: {
+                                custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                                    const cohort = w.config.series[seriesIndex].name;
+                                    const month = w.config.series[seriesIndex].data[dataPointIndex].x;
+                                    const retention = w.config.series[seriesIndex].data[dataPointIndex].y;
+
+                                    if (retention === null) {
+                                        return '<div style="padding: 10px;">No data yet</div>';
+                                    }
+
+                                    return `
+                                        <div style="padding: 10px; background: white; border-radius: 4px;">
+                                            <div style="font-weight: 600; margin-bottom: 5px;">Cohort: ${cohort}</div>
+                                            <div style="font-size: 12px; color: #666;">${month}</div>
+                                            <div style="font-size: 16px; font-weight: 700; color: #27ae60; margin-top: 5px;">
+                                                ${retention}% retained
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                            },
+                            legend: {
+                                show: true,
+                                position: 'bottom'
+                            }
+                        });
+                        financeCharts.cohortHeatmap.render();
                     }
                     break;
 
